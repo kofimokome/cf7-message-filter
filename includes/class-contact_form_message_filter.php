@@ -153,35 +153,30 @@ class Contact_form_message_filter {
 	private function define_admin_hooks() {
 
 		//
-		$enable_message_filter        = get_option( 'kmcfmf_message_filter_toggle' ) == 'on' ? true : false;
-		$enable_email_filter          = get_option( 'kmcfmf_email_filter_toggle' ) == 'on' ? true : false;
+		$enable_message_filter = get_option( 'kmcfmf_message_filter_toggle' ) == 'on' ? true : false;
+		$enable_email_filter = get_option( 'kmcfmf_email_filter_toggle' ) == 'on' ? true : false;
 		$reset_message_filter_counter = get_option( 'kmcfmf_message_filter_reset' ) == 'on' ? true : false;
 
-		$option_name = 'kmcfmf_messages_blocked';
+		$option_names = array(
+			'kmcfmf_messages_blocked',
+			'kmcfmf_emails_blocked',
+			'kmcfmf_last_email_blocked',
+			'kmcfmf_last_message_blocked',
+			'kmcfmf_message_filter_reset'
+		);
 
-		if ( get_option( $option_name ) == false ) {
-			// The option hasn't been added yet. We'll add it with $autoload set to 'no'.
-			$deprecated = null;
-			$autoload   = 'no';
-			add_option( $option_name, 0, $deprecated, $autoload );
-		}
+		foreach ( $option_names as $option_name ) {
+			if ( get_option( $option_name ) == false ) {
+				// The option hasn't been added yet. We'll add it with $autoload set to 'no'.
+				$deprecated = null;
+				$autoload   = 'no';
+				add_option( $option_name, 0, $deprecated, $autoload );
+			}
 
-		if ( $reset_message_filter_counter ) {
-			update_option( $option_name, 0 );
-		}
+			if ( $reset_message_filter_counter ) {
+				update_option( $option_name, 0 );
+			}
 
-		$option_name = 'kmcfmf_emails_blocked';
-
-		if ( get_option( $option_name ) == false ) {
-			// The option hasn't been added yet. We'll add it with $autoload set to 'no'.
-			$deprecated = null;
-			$autoload   = 'no';
-			add_option( $option_name, 0, $deprecated, $autoload );
-		}
-
-		if ( $reset_message_filter_counter ) {
-			update_option( $option_name, 0 );
-			update_option('kmcfmf_message_filter_reset','');
 		}
 
 		$plugin_admin = new Contact_form_message_filter_Admin( $this->get_plugin_name(), $this->get_version() );

@@ -137,6 +137,8 @@ class Contact_form_message_filter_Admin {
         <h2>Statistics</h2>
         <h3>Total Messages Blocked: <?php echo get_option( 'kmcfmf_messages_blocked' ); ?></h3>
         <h3>Total Emails Blocked: <?php echo get_option( 'kmcfmf_emails_blocked' ); ?></h3>
+        <h3>Last Message Blocked: </h3><?php echo get_option( 'kmcfmf_last_message_blocked' ); ?>
+        <h3>Last Email Blocked: </h3><?php echo get_option( 'kmcfmf_last_email_blocked' ); ?>
 		<?php
 	}
 
@@ -145,6 +147,7 @@ class Contact_form_message_filter_Admin {
         <div class="wrap">
             <div id="icon-options-general" class="icon32"></div>
             <h1>Message Filter Options</h1>
+            <strong>Please enter each word separated by a space in the boxes below</strong>
 			<?php settings_errors(); ?>
             <form method="post" action="options.php">
 				<?php
@@ -162,7 +165,7 @@ class Contact_form_message_filter_Admin {
 		// Add the section for user to enter restricted words
 		add_settings_section(
 			'kmcfmf_message_filter_option',
-			'Restricted Area',
+			'',
 			array( $this, 'kmcfmf_restricted_callback' ),
 			'contact_form_message_filter_option' );
 
@@ -212,13 +215,13 @@ class Contact_form_message_filter_Admin {
 			'contact_form_message_filter_option',
 			'kmcfmf_message_filter_option'
 		);
-		register_setting('kmcfmf_message_filter_option','kmcfmf_message_filter_reset');
+		register_setting( 'kmcfmf_message_filter_option', 'kmcfmf_message_filter_reset' );
 	}
 
 	function kmcfmf_message_filter_reset_callblack() {
-	    ?>
+		?>
         <input type="checkbox" name="kmcfmf_message_filter_reset" id="kmcfmf_message_filter_reset">
-        <?php
+		<?php
 	}
 
 	function kmcfmf_email_filter_toggle_callback() {
@@ -286,6 +289,7 @@ class Contact_form_message_filter_Admin {
 		if ( $found == true ) {
 			$result->invalidate( $tag, wpcf7_get_message( 'validation_error' ) );
 			update_option( 'kmcfmf_messages_blocked', get_option( 'kmcfmf_messages_blocked' ) + 1 );
+			update_option( 'kmcfmf_last_message_blocked', '<b>Time: </b>'.Date( 'd-m-y h:ia' ) . ' <br/><b>Message: </b> ' . $value );
 		}
 
 		if ( '' !== $value ) {
@@ -334,6 +338,7 @@ class Contact_form_message_filter_Admin {
 					if ( strpos( $value, $check_word ) !== false ) {
 						$result->invalidate( $tag, wpcf7_get_message( 'invalid_email' ) );
 						update_option( 'kmcfmf_emails_blocked', get_option( 'kmcfmf_emails_blocked' ) + 1 );
+						update_option( 'kmcfmf_last_email_blocked', '<b>Time: </b>'.Date( 'd-m-y  h:ia' ) . ' <br/> <b>Email: </b> ' . $value );
 					}
 				}
 			}

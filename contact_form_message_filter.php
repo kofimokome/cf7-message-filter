@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       Contact Form Message Filter
  * Plugin URI:        zingersystems.com
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Description:       Filters messages submitted from contact form seven if it has words or email marked as spam by the user
  * Version:           1.0.0
  * Author:            Kofi Mokome
  * Author URI:        www.kofimokome.ml
