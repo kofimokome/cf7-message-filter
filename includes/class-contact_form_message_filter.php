@@ -153,8 +153,8 @@ class Contact_form_message_filter {
 	private function define_admin_hooks() {
 
 		//
-		$enable_message_filter = get_option( 'kmcfmf_message_filter_toggle' ) == 'on' ? true : false;
-		$enable_email_filter = get_option( 'kmcfmf_email_filter_toggle' ) == 'on' ? true : false;
+		$enable_message_filter        = get_option( 'kmcfmf_message_filter_toggle' ) == 'on' ? true : false;
+		$enable_email_filter          = get_option( 'kmcfmf_email_filter_toggle' ) == 'on' ? true : false;
 		$reset_message_filter_counter = get_option( 'kmcfmf_message_filter_reset' ) == 'on' ? true : false;
 
 		$option_names = array(
@@ -162,7 +162,10 @@ class Contact_form_message_filter {
 			'kmcfmf_emails_blocked',
 			'kmcfmf_last_email_blocked',
 			'kmcfmf_last_message_blocked',
-			'kmcfmf_message_filter_reset'
+			'kmcfmf_message_filter_reset',
+			'kmcfmf_date_of_today',
+			'kmcfmf_messages_blocked_today',
+			'kmcfmf_emails_blocked_today'
 		);
 
 		foreach ( $option_names as $option_name ) {
@@ -177,6 +180,13 @@ class Contact_form_message_filter {
 				update_option( $option_name, 0 );
 			}
 
+		}
+		$date = get_option( 'kmcfmf_date_of_today' );
+		$now  = Date( "mdy" );
+		if ( $date != $now ) {
+			update_option( "kmcfmf_date_of_today", $now );
+			update_option( "kmcfmf_messages_blocked_today", 0 );
+			update_option( "kmcfmf_emails_blocked_today", 0 );
 		}
 
 		$plugin_admin = new Contact_form_message_filter_Admin( $this->get_plugin_name(), $this->get_version() );

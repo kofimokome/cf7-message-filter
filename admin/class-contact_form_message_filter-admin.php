@@ -134,11 +134,17 @@ class Contact_form_message_filter_Admin {
         <hr>
         Contact Form Message Filter filters messages submitted from contact form 7. You can choose to filter emails or messages or both.
 
-        <h2>Statistics</h2>
+        <h2>General Statistics For <?php echo Date("l, dS F Y"); ?></h2>
+        <hr>
+        <h3>Messages Blocked Today : <?php echo get_option( 'kmcfmf_messages_blocked_today' ); ?></h3>
+        <h3>Emails Blocked Today: <?php echo get_option( 'kmcfmf_emails_blocked_today' ); ?></h3>
+        <hr>
         <h3>Total Messages Blocked: <?php echo get_option( 'kmcfmf_messages_blocked' ); ?></h3>
         <h3>Total Emails Blocked: <?php echo get_option( 'kmcfmf_emails_blocked' ); ?></h3>
+        <hr>
         <h3>Last Message Blocked: </h3><?php echo get_option( 'kmcfmf_last_message_blocked' ); ?>
         <h3>Last Email Blocked: </h3><?php echo get_option( 'kmcfmf_last_email_blocked' ); ?>
+        <hr>
 		<?php
 	}
 
@@ -246,7 +252,7 @@ class Contact_form_message_filter_Admin {
 		?>
         <textarea name="kmcfmf_restricted_words" id="kmcfmf_restricted_words" cols="40"
                   rows="2"
-                  placeholder="eg john doe baby man earth"> <?php echo get_option( 'kmcfmf_restricted_words' ); ?></textarea>
+                  placeholder="eg john doe baby man earth"><?php echo get_option( 'kmcfmf_restricted_words' ); ?></textarea>
 		<?php
 	}
 
@@ -254,7 +260,7 @@ class Contact_form_message_filter_Admin {
 		?>
         <textarea name="kmcfmf_restricted_emails" id="kmcfmf_restricted_emails" cols="40"
                   rows="2"
-                  placeholder="eg john@localhost.com john "> <?php echo get_option( 'kmcfmf_restricted_emails' ); ?></textarea>
+                  placeholder="eg john@localhost.com john "><?php echo get_option( 'kmcfmf_restricted_emails' ); ?></textarea>
         <br/>
         <strong>Note: If you write john, we will check for ( john@gmail.com, john@yahoo.com, john@hotmail.com
             etc... ) </strong>
@@ -289,7 +295,8 @@ class Contact_form_message_filter_Admin {
 		if ( $found == true ) {
 			$result->invalidate( $tag, wpcf7_get_message( 'validation_error' ) );
 			update_option( 'kmcfmf_messages_blocked', get_option( 'kmcfmf_messages_blocked' ) + 1 );
-			update_option( 'kmcfmf_last_message_blocked', '<b>Time: </b>'.Date( 'd-m-y h:ia' ) . ' <br/><b>Message: </b> ' . $value );
+			update_option( 'kmcfmf_last_message_blocked', '<b>Time: </b>' . Date( 'd-m-y h:ia' ) . ' <br/><b>Message: </b> ' . $value );
+			update_option( "kmcfmf_messages_blocked_today", get_option( "kmcfmf_messages_blocked_today" ) + 1 );
 		}
 
 		if ( '' !== $value ) {
@@ -338,7 +345,8 @@ class Contact_form_message_filter_Admin {
 					if ( strpos( $value, $check_word ) !== false ) {
 						$result->invalidate( $tag, wpcf7_get_message( 'invalid_email' ) );
 						update_option( 'kmcfmf_emails_blocked', get_option( 'kmcfmf_emails_blocked' ) + 1 );
-						update_option( 'kmcfmf_last_email_blocked', '<b>Time: </b>'.Date( 'd-m-y  h:ia' ) . ' <br/> <b>Email: </b> ' . $value );
+						update_option( 'kmcfmf_last_email_blocked', '<b>Time: </b>' . Date( 'd-m-y  h:ia' ) . ' <br/> <b>Email: </b> ' . $value );
+						update_option( "kmcfmf_emails_blocked_today", get_option( "kmcfmf_emails_blocked_today" ) + 1 );
 					}
 				}
 			}
