@@ -154,7 +154,23 @@ class Contact_form_message_filter_Admin {
         <hr>
         <h3>Total Messages Blocked: <?php echo get_option( 'kmcfmf_messages_blocked' ); ?></h3>
         <hr>
-        <h3>Last Message Blocked: </h3><?php echo get_option( 'kmcfmf_last_message_blocked' ); ?>
+        <h3>Last Message Blocked: </h3>
+        <table class="kmcfmf_table">
+            <tr>
+                <td>
+                    <center><b>Time</b></center>
+                </td>
+                <td>
+                    <center><b>Email</b></center>
+                </td>
+                <td>
+                    <center><b>Message</b></center>
+                </td>
+            </tr>
+            <tr>
+				<?php echo get_option( 'kmcfmf_last_message_blocked' ); ?>
+            </tr>
+        </table>
         <hr>
 		<?php
 	}
@@ -374,7 +390,7 @@ class Contact_form_message_filter_Admin {
 			$this->temp_email = $_POST['your-email'];
 
 			if ( ! $this->count_updated && $this->temp_email != '' ) {
-				update_option( 'kmcfmf_last_message_blocked', '<b>Time: </b>' . Date( 'd-m-y h:ia' ) . ' <br/><b>Message: </b> ' . $value . ' <br/><b>Email: </b> ' . $this->temp_email );
+				update_option( 'kmcfmf_last_message_blocked', '<td>' . Date( 'd-m-y h:ia' ) . ' </td><td>' . $this->temp_email . '</td><td>' . $value . ' </td>' );
 				update_option( "kmcfmf_messages", get_option( "kmcfmf_messages" ) . "]kmcfmf_message[ kmcfmf_data=" . $value . " kmcfmf_data=" . $this->temp_email . " kmcfmf_data=" . Date( 'd-m-y  h:ia' ) );
 
 				update_option( 'kmcfmf_messages_blocked', get_option( 'kmcfmf_messages_blocked' ) + 1 );
@@ -431,7 +447,7 @@ class Contact_form_message_filter_Admin {
 						$result->invalidate( $tag, wpcf7_get_message( 'invalid_email' ) );
 
 						if ( ! $this->count_updated && $this->temp_message != '' ) {
-							update_option( 'kmcfmf_last_message_blocked', '<b>Time: </b>' . Date( 'd-m-y h:ia' ) . ' <br/><b>Message: </b> ' . $this->temp_message . ' <br/><b>Email: </b> ' . $value );
+							update_option( 'kmcfmf_last_message_blocked', '<td>' . Date( 'd-m-y h:ia' ) . ' </td><td>' . $value . '</td><td>' . $this->temp_message . ' </td>' );
 							update_option( "kmcfmf_messages", get_option( "kmcfmf_messages" ) . "]kmcfmf_message[ kmcfmf_data=" . $this->temp_message . " kmcfmf_data=" . $value . " kmcfmf_data=" . Date( 'd-m-y  h:ia' ) );
 							update_option( 'kmcfmf_messages_blocked', get_option( 'kmcfmf_messages_blocked' ) + 1 );
 							update_option( "kmcfmf_messages_blocked_today", get_option( "kmcfmf_messages_blocked_today" ) + 1 );
