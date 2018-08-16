@@ -40,6 +40,11 @@ class Contact_form_message_filter_Admin {
 	 */
 	private $version;
 
+	/*todo: add description*/
+	private $temp_email;
+	private $temp_message;
+	private $count_updated = false;
+
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -115,6 +120,15 @@ class Contact_form_message_filter_Admin {
 	public function kmcfmf_add_options_submenu() {
 		add_submenu_page(
 			'contact_form_message_filter',
+			'Blocked Messages',
+			'Blocked Messages',
+			'manage_options',
+			'contact_form_message_filter_messages',
+			array( $this, 'kmcfmf_messages_view' )
+		);
+
+		add_submenu_page(
+			'contact_form_message_filter',
 			'Options',
 			'Options',
 			'manage_options',
@@ -134,16 +148,13 @@ class Contact_form_message_filter_Admin {
         <hr>
         Contact Form Message Filter filters messages submitted from contact form 7. You can choose to filter emails or messages or both.
 
-        <h2>General Statistics For <?php echo Date("l, dS F Y"); ?></h2>
+        <h2>General Statistics For <?php echo Date( "l, dS F Y" ); ?></h2>
         <hr>
         <h3>Messages Blocked Today : <?php echo get_option( 'kmcfmf_messages_blocked_today' ); ?></h3>
-        <h3>Emails Blocked Today: <?php echo get_option( 'kmcfmf_emails_blocked_today' ); ?></h3>
         <hr>
         <h3>Total Messages Blocked: <?php echo get_option( 'kmcfmf_messages_blocked' ); ?></h3>
-        <h3>Total Emails Blocked: <?php echo get_option( 'kmcfmf_emails_blocked' ); ?></h3>
         <hr>
         <h3>Last Message Blocked: </h3><?php echo get_option( 'kmcfmf_last_message_blocked' ); ?>
-        <h3>Last Email Blocked: </h3><?php echo get_option( 'kmcfmf_last_email_blocked' ); ?>
         <hr>
 		<?php
 	}
@@ -165,6 +176,71 @@ class Contact_form_message_filter_Admin {
 
         </div>
 		<?php
+	}
+
+	public function kmcfmf_messages_view() {
+		$pagination = (int) $_GET['pagination'];
+
+		if ( $pagination <= 0 ) {
+			$pagination = 1;
+		}
+
+		$start           = 0;
+		$end             = - 1;
+		$number_per_page = 5;
+
+		$messages = explode( "]kmcfmf_message[", get_option( 'kmcfmf_messages' ) );
+		$messages = array_reverse( $messages, false );
+		$size     = ( sizeof( $messages ) - 1 );
+		if ( ( $pagination * $number_per_page ) > $size && ( ( $pagination * $number_per_page ) - $number_per_page ) < $size ) {
+			$start = ( ( $pagination * $number_per_page ) - ( $number_per_page ) );
+			$end   = ( $size );
+
+		} elseif ( ( $pagination * $number_per_page ) <= $size ) {
+			$start = ( ( $pagination * $number_per_page ) - ( $number_per_page ) );
+			$end   = ( $pagination * $number_per_page );
+		}
+		// echo "<br>we will search from " . $start . " to " . ( $end - 1 ) . "<br>";
+		?>
+        <h3><?php echo get_option( 'kmcfmf_messages_blocked' ); ?> messages have been blocked</h3>
+        <table class="kmcfmf_table">
+            <tr>
+                <td><b>S/N</b></td>
+                <td>
+                    <center><b>Time</b></center>
+                </td>
+                <td>
+                    <center><b>Email</b></center>
+                </td>
+                <td>
+                    <center><b>Message</b></center>
+                </td>
+            </tr>
+			<?php
+			for ( $i = $start; $i < $end; $i ++ ) {
+				$data = explode( "kmcfmf_data=", $messages[ $i ] );
+				if ( $data[1] != '' && $data[2] != '' && $data[3] != '' ) {
+					echo "<tr>";
+					echo "<td>" . ( $i + 1 ) . "</td>";
+					echo "<td>" . $data[3] . "</td>";
+					echo "<td>" . $data[2] . "</td>";
+					echo "<td>" . $data[1] . "</td>";
+					//echo $i . " message: " . $data[1] . " email: " . $data[2] . " time: " . $data[3] . "<br>";
+					echo "</tr>";
+				}
+			}
+			?>
+        </table>
+        <br>
+		<?php
+		if ( $pagination > 1 ) {
+			echo "<a href='?page=contact_form_message_filter_messages&pagination=" . ( $pagination - 1 ) . "' class='button button-primary'> < Prev page</a>";
+		}
+		if ( ( ( ( $pagination + 1 ) * $number_per_page ) - $number_per_page ) < $size ) {
+			echo " <a href='?page=contact_form_message_filter_messages&pagination=" . ( $pagination + 1 ) . "' class='button button-primary'> Next page > </a>";
+		}
+
+
 	}
 
 	function kmcfmf_register_settings_init() {
@@ -250,16 +326,16 @@ class Contact_form_message_filter_Admin {
 
 	function kmcfmf_restricted_words_callback() {
 		?>
-        <textarea name="kmcfmf_restricted_words" id="kmcfmf_restricted_words" cols="40"
-                  rows="2"
+        <textarea name="kmcfmf_restricted_words" id="kmcfmf_restricted_words" cols="80"
+                  rows="8"
                   placeholder="eg john doe baby man earth"><?php echo get_option( 'kmcfmf_restricted_words' ); ?></textarea>
 		<?php
 	}
 
 	function kmcfmf_restricted_emails_callback() {
 		?>
-        <textarea name="kmcfmf_restricted_emails" id="kmcfmf_restricted_emails" cols="40"
-                  rows="2"
+        <textarea name="kmcfmf_restricted_emails" id="kmcfmf_restricted_emails" cols="80"
+                  rows="8"
                   placeholder="eg john@localhost.com john "><?php echo get_option( 'kmcfmf_restricted_emails' ); ?></textarea>
         <br/>
         <strong>Note: If you write john, we will check for ( john@gmail.com, john@yahoo.com, john@hotmail.com
@@ -294,9 +370,17 @@ class Contact_form_message_filter_Admin {
 
 		if ( $found == true ) {
 			$result->invalidate( $tag, wpcf7_get_message( 'validation_error' ) );
-			update_option( 'kmcfmf_messages_blocked', get_option( 'kmcfmf_messages_blocked' ) + 1 );
-			update_option( 'kmcfmf_last_message_blocked', '<b>Time: </b>' . Date( 'd-m-y h:ia' ) . ' <br/><b>Message: </b> ' . $value );
-			update_option( "kmcfmf_messages_blocked_today", get_option( "kmcfmf_messages_blocked_today" ) + 1 );
+
+			$this->temp_email = $_POST['your-email'];
+
+			if ( ! $this->count_updated && $this->temp_email != '' ) {
+				update_option( 'kmcfmf_last_message_blocked', '<b>Time: </b>' . Date( 'd-m-y h:ia' ) . ' <br/><b>Message: </b> ' . $value . ' <br/><b>Email: </b> ' . $this->temp_email );
+				update_option( "kmcfmf_messages", get_option( "kmcfmf_messages" ) . "]kmcfmf_message[ kmcfmf_data=" . $value . " kmcfmf_data=" . $this->temp_email . " kmcfmf_data=" . Date( 'd-m-y  h:ia' ) );
+
+				update_option( 'kmcfmf_messages_blocked', get_option( 'kmcfmf_messages_blocked' ) + 1 );
+				update_option( "kmcfmf_messages_blocked_today", get_option( "kmcfmf_messages_blocked_today" ) + 1 );
+				$this->count_updated = true;
+			}
 		}
 
 		if ( '' !== $value ) {
@@ -343,10 +427,16 @@ class Contact_form_message_filter_Admin {
 			} else {
 				foreach ( $check_words as $check_word ) {
 					if ( strpos( $value, $check_word ) !== false ) {
+						$this->temp_message = $_POST['your-message'];
 						$result->invalidate( $tag, wpcf7_get_message( 'invalid_email' ) );
-						update_option( 'kmcfmf_emails_blocked', get_option( 'kmcfmf_emails_blocked' ) + 1 );
-						update_option( 'kmcfmf_last_email_blocked', '<b>Time: </b>' . Date( 'd-m-y  h:ia' ) . ' <br/> <b>Email: </b> ' . $value );
-						update_option( "kmcfmf_emails_blocked_today", get_option( "kmcfmf_emails_blocked_today" ) + 1 );
+
+						if ( ! $this->count_updated && $this->temp_message != '' ) {
+							update_option( 'kmcfmf_last_message_blocked', '<b>Time: </b>' . Date( 'd-m-y h:ia' ) . ' <br/><b>Message: </b> ' . $this->temp_message . ' <br/><b>Email: </b> ' . $value );
+							update_option( "kmcfmf_messages", get_option( "kmcfmf_messages" ) . "]kmcfmf_message[ kmcfmf_data=" . $this->temp_message . " kmcfmf_data=" . $value . " kmcfmf_data=" . Date( 'd-m-y  h:ia' ) );
+							update_option( 'kmcfmf_messages_blocked', get_option( 'kmcfmf_messages_blocked' ) + 1 );
+							update_option( "kmcfmf_messages_blocked_today", get_option( "kmcfmf_messages_blocked_today" ) + 1 );
+							$this->count_updated = true;
+						}
 					}
 				}
 			}

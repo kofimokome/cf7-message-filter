@@ -70,7 +70,7 @@ class Contact_form_message_filter {
 		if ( defined( 'PLUGIN_NAME_VERSION' ) ) {
 			$this->version = PLUGIN_NAME_VERSION;
 		} else {
-			$this->version = '1.0.0';
+			$this->version = '1.1.0';
 		}
 		$this->plugin_name = 'contact_form_message_filter';
 
@@ -159,13 +159,11 @@ class Contact_form_message_filter {
 
 		$option_names = array(
 			'kmcfmf_messages_blocked',
-			'kmcfmf_emails_blocked',
-			'kmcfmf_last_email_blocked',
 			'kmcfmf_last_message_blocked',
 			'kmcfmf_message_filter_reset',
 			'kmcfmf_date_of_today',
 			'kmcfmf_messages_blocked_today',
-			'kmcfmf_emails_blocked_today'
+			'kmcfmf_messages'
 		);
 
 		foreach ( $option_names as $option_name ) {
@@ -182,8 +180,8 @@ class Contact_form_message_filter {
 
 		}
 		$date = get_option( 'kmcfmf_date_of_today' );
-		$now  = Date( "mdy" );
-		if ( $date != $now ) {
+		$now  = strtotime( Date( "d F Y" ) );
+		if ( (int) $date < (int) $now ) {
 			update_option( "kmcfmf_date_of_today", $now );
 			update_option( "kmcfmf_messages_blocked_today", 0 );
 			update_option( "kmcfmf_emails_blocked_today", 0 );
@@ -198,13 +196,14 @@ class Contact_form_message_filter {
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'kmcfmf_add_options_submenu' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'kmcfmf_register_settings_init' );
 
-		if ( $enable_message_filter ) {
-			$this->loader->add_filter( 'wpcf7_validate_textarea', $plugin_admin, 'kmcfmf_textarea_validation_filter', 12, 2 );
-			$this->loader->add_filter( 'wpcf7_validate_textarea*', $plugin_admin, 'kmcfmf_textarea_validation_filter', 12, 2 );
-		}
 		if ( $enable_email_filter ) {
 			$this->loader->add_filter( 'wpcf7_validate_email', $plugin_admin, 'kmcfmf_text_validation_filter', 12, 2 );
 			$this->loader->add_filter( 'wpcf7_validate_email*', $plugin_admin, 'kmcfmf_text_validation_filter', 12, 2 );
+		}
+
+		if ( $enable_message_filter ) {
+			$this->loader->add_filter( 'wpcf7_validate_textarea', $plugin_admin, 'kmcfmf_textarea_validation_filter', 12, 2 );
+			$this->loader->add_filter( 'wpcf7_validate_textarea*', $plugin_admin, 'kmcfmf_textarea_validation_filter', 12, 2 );
 		}
 	}
 
