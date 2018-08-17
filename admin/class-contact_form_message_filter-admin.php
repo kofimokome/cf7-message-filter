@@ -44,6 +44,7 @@ class Contact_form_message_filter_Admin {
 	private $temp_email;
 	private $temp_message;
 	private $count_updated = false;
+	private $blocked;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -57,6 +58,7 @@ class Contact_form_message_filter_Admin {
 
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
+		$this->blocked     = get_option( "kmcfmf_messages_blocked_today" );
 
 	}
 
@@ -107,9 +109,13 @@ class Contact_form_message_filter_Admin {
 	}
 
 	public function kmcfmf_add_main_menu() {
+		$menu_title = 'Form Filter';
+		if ( $this->blocked > 0 ) {
+			$menu_title .= " <span class='update-plugins count-1'><span class='update-count'>$this->blocked </span></span>";
+		}
 		add_menu_page(
 			'Contact Form Message Filter',
-			'Contact Form Filter',
+			$menu_title,
 			'manage_options',
 			'contact_form_message_filter',
 			array( $this, 'kmcfmf_menu_view' ),
