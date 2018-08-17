@@ -16,7 +16,7 @@
  * Plugin Name:       Contact Form Message Filter
  * Plugin URI:        zingersystems.com
  * Description:       Filters messages submitted from contact form seven if it has words or email marked as spam by the user
- * Version:           1.0.0
+ * Version:           1.1.0
  * Author:            Kofi Mokome
  * Author URI:        www.kofimokome.ml
  * License:           GPL-2.0+
