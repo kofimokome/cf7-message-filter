@@ -67,8 +67,8 @@ class Contact_form_message_filter {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-		if ( defined( 'PLUGIN_NAME_VERSION' ) ) {
-			$this->version = PLUGIN_NAME_VERSION;
+		if ( defined( 'KMCFMF_PLUGIN_NAME_VERSION' ) ) {
+			$this->version = KMCFMF_PLUGIN_NAME_VERSION;
 		} else {
 			$this->version = '1.1.0';
 		}
