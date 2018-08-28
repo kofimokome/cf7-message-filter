@@ -34,7 +34,7 @@ Note: This is just an extension. This plugin is not affiliated with or endorsed 
 * Bug Fixes
 
 = 1.0.0 =
-* Filter messages submmited through contact form 7
+* Filter messages submitted through contact form 7
 
 == Upgrade Notice ==
 
