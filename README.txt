@@ -16,6 +16,8 @@ Filters messages submitted through contact form 7 based on words and/or emails l
 This plugin filters messages submitted from contact form 7. You can decide to either filter messages based on restricted words found in the content of the message or filter based on the email of the person submitting the form.
 Filters will be extended to other contact form plugins with time.
 
+Note: This is just an extension. This plugin is not affiliated with or endorsed by Contact Form 7.
+
 == Installation ==
 
 1. Download the plugin
