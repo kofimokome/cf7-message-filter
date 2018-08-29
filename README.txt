@@ -1,4 +1,4 @@
-=== Contact Form Message Filter ===
+=== Message Filter for Contact Form 7 ===
 Contributors: kofimokome
 Donate link: www.kofimokome.ml
 Tags: spam, filter
