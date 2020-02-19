@@ -119,7 +119,7 @@ class Contact_form_message_filter_Admin {
 			'manage_options',
 			'contact_form_message_filter',
 			array( $this, 'kmcfmf_menu_view' ),
-			'dasBut hicons-filter'
+			'dashicons-filter'
 		);
 	}
 
