@@ -373,11 +373,11 @@ class Contact_form_message_filter_Admin {
 
 		$check_words = explode( " ", get_option( 'kmcfmf_restricted_words' ) );
 
-		$value = isset( $_POST[ $name ] ) ? (string) $_POST[ $name ] : '';
+		$value = trim(isset( $_POST[ $name ] ) ? (string) $_POST[ $name ] : '');
 		//$value = '';
 
 		foreach ( $check_words as $check_word ) {
-			if ( preg_match( "/\b" . $check_word . "/mi", $value ) > 0 ) {
+			if ( preg_match( "/\b" . $check_word . "\b/miu", $value ) > 0 ) {
 				$found = true;
 			}
 
