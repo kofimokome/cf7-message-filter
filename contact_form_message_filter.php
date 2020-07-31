@@ -8,17 +8,17 @@
  * registers the activation and deactivation functions, and defines a function
  * that starts the plugin.
  *
- * @link              www.kofimokome.ml
+ * @link              www.kofimokome.stream
  * @since             1.0.0
  * @package           Contact_form_message_filter
  *
  * @wordpress-plugin
  * Plugin Name:       Message Filter for Contact Form 7
- * Plugin URI:        www.kofimokome.ml
+ * Plugin URI:        https://github.com/kofimokome/contact-form-filter
  * Description:       Filters messages submitted from contact form seven if it has words or email marked as spam by the user
  * Version:           1.1.0
  * Author:            Kofi Mokome
- * Author URI:        www.kofimokome.ml
+ * Author URI:        www.kofimokome.stream
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       contact_form_message_filter

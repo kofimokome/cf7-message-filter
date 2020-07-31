@@ -1,10 +1,10 @@
 === Message Filter for Contact Form 7 ===
 Contributors: kofimokome
-Donate link: www.kofimokome.ml
+Donate link: www.kofimokome.stream
 Tags: spam, filter
 Requires at least: 3.0.1
-Tested up to: 4.9.8
-Stable tag: 4.9
+Tested up to: 5.4.2
+Stable tag: 5.4
 Requires PHP: 5.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -13,6 +13,7 @@ Filters messages submitted through contact form 7 based on words and/or emails l
 
 == Description ==
 
+Do you receive spams every day? have you installed a dozen plugins and you still get spammed? Well this may be the solution to your problem.
 This plugin filters messages submitted from contact form 7. You can decide to either filter messages based on restricted words found in the content of the message or filter based on the email of the person submitting the form.
 Filters will be extended to other contact form plugins with time.
 

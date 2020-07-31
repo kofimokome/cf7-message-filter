@@ -209,7 +209,7 @@ class Contact_form_message_filter_Admin {
 
 		$start           = 0;
 		$end             = - 1;
-		$number_per_page = 5;
+		$number_per_page = 10;
 
 		$messages = explode( "]kmcfmf_message[", get_option( 'kmcfmf_messages' ) );
 		$messages = array_reverse( $messages, false );
