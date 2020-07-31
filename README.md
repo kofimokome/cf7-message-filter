@@ -9,6 +9,9 @@ Contact Form 7 must be installed and activated before you can use this plugin
 # This plugin is used by
 1. **[Cameroon Boyo](https://cameroonboyo.com)**
 
+# v 1.1.1 Changes
+1. Add support for unicode characters
+
 # v 1.1.0 Changes
 1. You can now view all blocked messages
 2. Optimized Code

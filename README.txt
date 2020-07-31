@@ -30,6 +30,10 @@ Note: This is just an extension. This plugin is not affiliated with or endorsed 
 
 == Changelog ==
 
+= 1.1.1 =
+* Add support for unicode characters
+* Bug Fixes
+
 = 1.1.0 =
 * View all messages blocked
 * Bug Fixes
