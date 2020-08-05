@@ -20,145 +20,152 @@
  * @subpackage Contact_form_message_filter/admin
  * @author     Kofi Mokome <kofimokome10@gmail.com>
  */
-class Contact_form_message_filter_Admin {
+class Contact_form_message_filter_Admin
+{
 
-	/**
-	 * The ID of this plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 * @var      string $plugin_name The ID of this plugin.
-	 */
-	private $plugin_name;
+    /**
+     * The ID of this plugin.
+     *
+     * @since    1.0.0
+     * @access   private
+     * @var      string $plugin_name The ID of this plugin.
+     */
+    private $plugin_name;
 
-	/**
-	 * The version of this plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 * @var      string $version The current version of this plugin.
-	 */
-	private $version;
+    /**
+     * The version of this plugin.
+     *
+     * @since    1.0.0
+     * @access   private
+     * @var      string $version The current version of this plugin.
+     */
+    private $version;
 
-	/*todo: add description*/
-	private $temp_email;
-	private $temp_message;
-	private $count_updated = false;
-	private $blocked;
+    /*todo: add description*/
+    private $temp_email;
+    private $temp_message;
+    private $count_updated = false;
+    private $blocked;
 
-	/**
-	 * Initialize the class and set its properties.
-	 *
-	 * @since    1.0.0
-	 *
-	 * @param      string $plugin_name The name of this plugin.
-	 * @param      string $version The version of this plugin.
-	 */
-	public function __construct( $plugin_name, $version ) {
+    /**
+     * Initialize the class and set its properties.
+     *
+     * @since    1.0.0
+     *
+     * @param      string $plugin_name The name of this plugin.
+     * @param      string $version The version of this plugin.
+     */
+    public function __construct($plugin_name, $version)
+    {
 
-		$this->plugin_name = $plugin_name;
-		$this->version     = $version;
-		$this->blocked     = get_option( "kmcfmf_messages_blocked_today" );
+        $this->plugin_name = $plugin_name;
+        $this->version = $version;
+        $this->blocked = get_option("kmcfmf_messages_blocked_today");
 
-	}
+    }
 
-	/**
-	 * Register the stylesheets for the admin area.
-	 *
-	 * @since    1.0.0
-	 */
-	public function enqueue_styles() {
+    /**
+     * Register the stylesheets for the admin area.
+     *
+     * @since    1.0.0
+     */
+    public function enqueue_styles()
+    {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Contact_form_message_filter_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Contact_form_message_filter_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
+        /**
+         * This function is provided for demonstration purposes only.
+         *
+         * An instance of this class should be passed to the run() function
+         * defined in Contact_form_message_filter_Loader as all of the hooks are defined
+         * in that particular class.
+         *
+         * The Contact_form_message_filter_Loader will then create the relationship
+         * between the defined hooks and the functions defined in this
+         * class.
+         */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/contact_form_message_filter-admin.css', array(), $this->version, 'all' );
+        wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/contact_form_message_filter-admin.css', array(), $this->version, 'all');
 
-	}
+    }
 
-	/**
-	 * Register the JavaScript for the admin area.
-	 *
-	 * @since    1.0.0
-	 */
-	public function enqueue_scripts() {
+    /**
+     * Register the JavaScript for the admin area.
+     *
+     * @since    1.0.0
+     */
+    public function enqueue_scripts()
+    {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Contact_form_message_filter_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Contact_form_message_filter_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
+        /**
+         * This function is provided for demonstration purposes only.
+         *
+         * An instance of this class should be passed to the run() function
+         * defined in Contact_form_message_filter_Loader as all of the hooks are defined
+         * in that particular class.
+         *
+         * The Contact_form_message_filter_Loader will then create the relationship
+         * between the defined hooks and the functions defined in this
+         * class.
+         */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/contact_form_message_filter-admin.js', array( 'jquery' ), $this->version, false );
+        wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/contact_form_message_filter-admin.js', array('jquery'), $this->version, false);
 
-	}
+    }
 
-	public function kmcfmf_add_main_menu() {
-		$menu_title = 'Form Filter';
-		if ( $this->blocked > 0 ) {
-			$menu_title .= " <span class='update-plugins count-1'><span class='update-count'>$this->blocked </span></span>";
-		}
-		add_menu_page(
-			'Contact Form Message Filter',
-			$menu_title,
-			'manage_options',
-			'contact_form_message_filter',
-			array( $this, 'kmcfmf_menu_view' ),
-			'dasBut hicons-filter'
-		);
-	}
+    public function kmcfmf_add_main_menu()
+    {
+        $menu_title = 'Form Filter';
+        if ($this->blocked > 0) {
+            $menu_title .= " <span class='update-plugins count-1'><span class='update-count'>$this->blocked </span></span>";
+        }
+        add_menu_page(
+            'Contact Form Message Filter',
+            $menu_title,
+            'manage_options',
+            'contact_form_message_filter',
+            array($this, 'kmcfmf_menu_view'),
+            'dashicons-filter'
+        );
+    }
 
-	public function kmcfmf_add_options_submenu() {
-		add_submenu_page(
-			'contact_form_message_filter',
-			'Blocked Messages',
-			'Blocked Messages',
-			'manage_options',
-			'contact_form_message_filter_messages',
-			array( $this, 'kmcfmf_messages_view' )
-		);
+    public function kmcfmf_add_options_submenu()
+    {
+        add_submenu_page(
+            'contact_form_message_filter',
+            'Blocked Messages',
+            'Blocked Messages',
+            'manage_options',
+            'contact_form_message_filter_messages',
+            array($this, 'kmcfmf_messages_view')
+        );
 
-		add_submenu_page(
-			'contact_form_message_filter',
-			'Options',
-			'Options',
-			'manage_options',
-			'contact_form_message_filter_option',
-			array( $this, 'kmcfmf_options_view' )
-		);
-	}
+        add_submenu_page(
+            'contact_form_message_filter',
+            'Options',
+            'Options',
+            'manage_options',
+            'contact_form_message_filter_option',
+            array($this, 'kmcfmf_options_view')
+        );
+    }
 
-	public function kmcfmf_menu_view() {
-		?>
+    public function kmcfmf_menu_view()
+    {
+        ?>
         <h1> Welcome To Your Dashboard </h1>
-		<?php if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ): ?>
-            <div class="notice notice-error is-dismissible">
-                <p><?php _e( 'Please Install / Enable Contact Form 7 Plugin First!', 'sample-text-domain' ); ?></p>
-            </div>
-		<?php endif; ?>
+        <?php if (!is_plugin_active('contact-form-7/wp-contact-form-7.php')): ?>
+        <div class="notice notice-error is-dismissible">
+            <p><?php _e('Please Install / Enable Contact Form 7 Plugin First!', 'sample-text-domain'); ?></p>
+        </div>
+    <?php endif; ?>
         <hr>
         Contact Form Message Filter filters messages submitted from contact form 7. You can choose to filter emails or messages or both.
 
-        <h2>General Statistics For <?php echo Date( "l, dS F Y" ); ?></h2>
+        <h2>General Statistics For <?php echo Date("l, dS F Y"); ?></h2>
         <hr>
-        <h3>Messages Blocked Today : <?php echo get_option( 'kmcfmf_messages_blocked_today' ); ?></h3>
+        <h3>Messages Blocked Today : <?php echo get_option('kmcfmf_messages_blocked_today'); ?></h3>
         <hr>
-        <h3>Total Messages Blocked: <?php echo get_option( 'kmcfmf_messages_blocked' ); ?></h3>
+        <h3>Total Messages Blocked: <?php echo get_option('kmcfmf_messages_blocked'); ?></h3>
         <hr>
         <h3>Last Message Blocked: </h3>
         <table class="kmcfmf_table">
@@ -174,57 +181,59 @@ class Contact_form_message_filter_Admin {
                 </td>
             </tr>
             <tr>
-				<?php echo get_option( 'kmcfmf_last_message_blocked' ); ?>
+                <?php echo get_option('kmcfmf_last_message_blocked'); ?>
             </tr>
         </table>
         <hr>
-		<?php
-	}
+        <?php
+    }
 
-	public function kmcfmf_options_view() {
-		?>
+    public function kmcfmf_options_view()
+    {
+        ?>
         <div class="wrap">
             <div id="icon-options-general" class="icon32"></div>
             <h1>Message Filter Options</h1>
             <strong>Please enter each word separated by a space in the boxes below</strong>
-			<?php settings_errors(); ?>
+            <?php settings_errors(); ?>
             <form method="post" action="options.php">
-				<?php
-				settings_fields( 'kmcfmf_message_filter_option' );
-				do_settings_sections( 'contact_form_message_filter_option' );
-				submit_button();
-				?>
+                <?php
+                settings_fields('kmcfmf_message_filter_option');
+                do_settings_sections('contact_form_message_filter_option');
+                submit_button();
+                ?>
             </form>
 
         </div>
-		<?php
-	}
+        <?php
+    }
 
-	public function kmcfmf_messages_view() {
-		$pagination = (int) $_GET['pagination'];
+    public function kmcfmf_messages_view()
+    {
+        $pagination = (int)$_GET['pagination'];
 
-		if ( $pagination <= 0 ) {
-			$pagination = 1;
-		}
+        if ($pagination <= 0) {
+            $pagination = 1;
+        }
 
-		$start           = 0;
-		$end             = - 1;
-		$number_per_page = 10;
+        $start = 0;
+        $end = -1;
+        $number_per_page = 10;
 
-		$messages = explode( "]kmcfmf_message[", get_option( 'kmcfmf_messages' ) );
-		$messages = array_reverse( $messages, false );
-		$size     = ( sizeof( $messages ) - 1 );
-		if ( ( $pagination * $number_per_page ) > $size && ( ( $pagination * $number_per_page ) - $number_per_page ) < $size ) {
-			$start = ( ( $pagination * $number_per_page ) - ( $number_per_page ) );
-			$end   = ( $size );
+        $messages = explode("]kmcfmf_message[", get_option('kmcfmf_messages'));
+        $messages = array_reverse($messages, false);
+        $size = (sizeof($messages) - 1);
+        if (($pagination * $number_per_page) > $size && (($pagination * $number_per_page) - $number_per_page) < $size) {
+            $start = (($pagination * $number_per_page) - ($number_per_page));
+            $end = ($size);
 
-		} elseif ( ( $pagination * $number_per_page ) <= $size ) {
-			$start = ( ( $pagination * $number_per_page ) - ( $number_per_page ) );
-			$end   = ( $pagination * $number_per_page );
-		}
-		// echo "<br>we will search from " . $start . " to " . ( $end - 1 ) . "<br>";
-		?>
-        <h3><?php echo get_option( 'kmcfmf_messages_blocked' ); ?> messages have been blocked</h3>
+        } elseif (($pagination * $number_per_page) <= $size) {
+            $start = (($pagination * $number_per_page) - ($number_per_page));
+            $end = ($pagination * $number_per_page);
+        }
+        // echo "<br>we will search from " . $start . " to " . ( $end - 1 ) . "<br>";
+        ?>
+        <h3><?php echo get_option('kmcfmf_messages_blocked'); ?> messages have been blocked</h3>
         <table class="kmcfmf_table">
             <tr>
                 <td><b>S/N</b></td>
@@ -238,251 +247,292 @@ class Contact_form_message_filter_Admin {
                     <center><b>Message</b></center>
                 </td>
             </tr>
-			<?php
-			for ( $i = $start; $i < $end; $i ++ ) {
-				$data = explode( "kmcfmf_data=", $messages[ $i ] );
-				if ( $data[1] != '' && $data[2] != '' && $data[3] != '' ) {
-					echo "<tr>";
-					echo "<td>" . ( $i + 1 ) . "</td>";
-					echo "<td>" . $data[3] . "</td>";
-					echo "<td>" . $data[2] . "</td>";
-					echo "<td>" . $data[1] . "</td>";
-					//echo $i . " message: " . $data[1] . " email: " . $data[2] . " time: " . $data[3] . "<br>";
-					echo "</tr>";
-				}
-			}
-			?>
+            <?php
+            for ($i = $start; $i < $end; $i++) {
+                $data = explode("kmcfmf_data=", $messages[$i]);
+                if ($data[1] != '' && $data[2] != '' && $data[3] != '') {
+                    echo "<tr>";
+                    echo "<td>" . ($i + 1) . "</td>";
+                    echo "<td>" . $data[3] . "</td>";
+                    echo "<td>" . $data[2] . "</td>";
+                    echo "<td>" . $data[1] . "</td>";
+                    //echo $i . " message: " . $data[1] . " email: " . $data[2] . " time: " . $data[3] . "<br>";
+                    echo "</tr>";
+                }
+            }
+            ?>
         </table>
         <br>
-		<?php
-		if ( $pagination > 1 ) {
-			echo "<a href='?page=contact_form_message_filter_messages&pagination=" . ( $pagination - 1 ) . "' class='button button-primary'> < Prev page</a>";
-		}
-		if ( ( ( ( $pagination + 1 ) * $number_per_page ) - $number_per_page ) < $size ) {
-			echo " <a href='?page=contact_form_message_filter_messages&pagination=" . ( $pagination + 1 ) . "' class='button button-primary'> Next page > </a>";
-		}
+        <?php
+        if ($pagination > 1) {
+            echo "<a href='?page=contact_form_message_filter_messages&pagination=" . ($pagination - 1) . "' class='button button-primary'> < Prev page</a>";
+        }
+        if (((($pagination + 1) * $number_per_page) - $number_per_page) < $size) {
+            echo " <a href='?page=contact_form_message_filter_messages&pagination=" . ($pagination + 1) . "' class='button button-primary'> Next page > </a>";
+        }
 
 
-	}
+    }
 
-	function kmcfmf_register_settings_init() {
-		// Add the section for user to enter restricted words
-		add_settings_section(
-			'kmcfmf_message_filter_option',
-			'',
-			array( $this, 'kmcfmf_restricted_callback' ),
-			'contact_form_message_filter_option' );
+    function kmcfmf_register_settings_init()
+    {
+        // Add the section for user to enter restricted words
+        add_settings_section(
+            'kmcfmf_message_filter_option',
+            '',
+            array($this, 'kmcfmf_restricted_callback'),
+            'contact_form_message_filter_option');
 
-		add_settings_field(
-			'kmcfmf_restricted_words',
-			'Restricted Words',
-			array( $this, 'kmcfmf_restricted_words_callback' ),
-			'contact_form_message_filter_option',
-			'kmcfmf_message_filter_option'
-		);
+        add_settings_field(
+            'kmcfmf_restricted_words',
+            'Restricted Words',
+            array($this, 'kmcfmf_restricted_words_callback'),
+            'contact_form_message_filter_option',
+            'kmcfmf_message_filter_option'
+        );
 
-		add_settings_field(
-			'kmcfmf_restricted_emails',
-			'Restricted Emails',
-			array( $this, 'kmcfmf_restricted_emails_callback' ),
-			'contact_form_message_filter_option',
-			'kmcfmf_message_filter_option'
-		);
+        add_settings_field(
+            'kmcfmf_restricted_emails',
+            'Restricted Emails',
+            array($this, 'kmcfmf_restricted_emails_callback'),
+            'contact_form_message_filter_option',
+            'kmcfmf_message_filter_option'
+        );
 
-		register_setting( 'kmcfmf_message_filter_option', 'kmcfmf_restricted_words' );
-		register_setting( 'kmcfmf_message_filter_option', 'kmcfmf_restricted_emails' );
+        register_setting('kmcfmf_message_filter_option', 'kmcfmf_restricted_words');
+        register_setting('kmcfmf_message_filter_option', 'kmcfmf_restricted_emails');
 
-		// Section to enable and disable functionalities
+        // Section to enable and disable functionalities
 
-		add_settings_field(
-			'kmcfmf_message_filter_toggle',
-			'Enable Message Filter?: ',
-			array( $this, 'kmcfmf_message_filter_toggle_callback' ),
-			'contact_form_message_filter_option',
-			'kmcfmf_message_filter_option'
-		);
+        add_settings_field(
+            'kmcfmf_message_filter_toggle',
+            'Enable Message Filter?: ',
+            array($this, 'kmcfmf_message_filter_toggle_callback'),
+            'contact_form_message_filter_option',
+            'kmcfmf_message_filter_option'
+        );
 
-		add_settings_field(
-			'kmcfmf_email_filter_toggle',
-			'Enable Email Filter?: ',
-			array( $this, 'kmcfmf_email_filter_toggle_callback' ),
-			'contact_form_message_filter_option',
-			'kmcfmf_message_filter_option'
-		);
-		register_setting( 'kmcfmf_message_filter_option', 'kmcfmf_email_filter_toggle' );
-		register_setting( 'kmcfmf_message_filter_option', 'kmcfmf_message_filter_toggle' );
+        add_settings_field(
+            'kmcfmf_email_filter_toggle',
+            'Enable Email Filter?: ',
+            array($this, 'kmcfmf_email_filter_toggle_callback'),
+            'contact_form_message_filter_option',
+            'kmcfmf_message_filter_option'
+        );
+        register_setting('kmcfmf_message_filter_option', 'kmcfmf_email_filter_toggle');
+        register_setting('kmcfmf_message_filter_option', 'kmcfmf_message_filter_toggle');
 
-		add_settings_field(
-			'kmcfmf_message_filter_reset',
-			'Reset Filter Count?: ',
-			array( $this, 'kmcfmf_message_filter_reset_callblack' ),
-			'contact_form_message_filter_option',
-			'kmcfmf_message_filter_option'
-		);
-		register_setting( 'kmcfmf_message_filter_option', 'kmcfmf_message_filter_reset' );
-	}
+        add_settings_field(
+            'kmcfmf_message_filter_reset',
+            'Reset Filter Count?: ',
+            array($this, 'kmcfmf_message_filter_reset_callblack'),
+            'contact_form_message_filter_option',
+            'kmcfmf_message_filter_option'
+        );
+        register_setting('kmcfmf_message_filter_option', 'kmcfmf_message_filter_reset');
+    }
 
-	function kmcfmf_message_filter_reset_callblack() {
-		?>
+    function kmcfmf_message_filter_reset_callblack()
+    {
+        ?>
         <input type="checkbox" name="kmcfmf_message_filter_reset" id="kmcfmf_message_filter_reset">
-		<?php
-	}
+        <?php
+    }
 
-	function kmcfmf_email_filter_toggle_callback() {
-		?>
+    function kmcfmf_email_filter_toggle_callback()
+    {
+        ?>
         <input type="checkbox" name="kmcfmf_email_filter_toggle"
-               id="kmcfmf_email_filter_toggle" <?php echo get_option( 'kmcfmf_email_filter_toggle' ) == 'on' ? 'checked' : '' ?>>
-		<?php
-	}
+               id="kmcfmf_email_filter_toggle" <?php echo get_option('kmcfmf_email_filter_toggle') == 'on' ? 'checked' : '' ?>>
+        <?php
+    }
 
-	function kmcfmf_message_filter_toggle_callback() {
-		?>
+    function kmcfmf_message_filter_toggle_callback()
+    {
+        ?>
         <input type="checkbox" name="kmcfmf_message_filter_toggle"
-               id="kmcfmf_message_filter_toggle" <?php echo get_option( 'kmcfmf_message_filter_toggle' ) == 'on' ? 'checked' : '' ?>>
-		<?php
-	}
+               id="kmcfmf_message_filter_toggle" <?php echo get_option('kmcfmf_message_filter_toggle') == 'on' ? 'checked' : '' ?>>
+        <?php
+    }
 
-	function kmcfmf_restricted_callback() {
+    function kmcfmf_restricted_callback()
+    {
 
-	}
+    }
 
-	function kmcfmf_restricted_words_callback() {
-		?>
+    function kmcfmf_restricted_words_callback()
+    {
+        ?>
         <textarea name="kmcfmf_restricted_words" id="kmcfmf_restricted_words" cols="80"
                   rows="8"
-                  placeholder="eg john doe baby man earth"><?php echo get_option( 'kmcfmf_restricted_words' ); ?></textarea>
-		<?php
-	}
+                  placeholder="eg john doe baby man earth"><?php echo get_option('kmcfmf_restricted_words'); ?></textarea>
+        <?php
+    }
 
-	function kmcfmf_restricted_emails_callback() {
-		?>
+    function kmcfmf_restricted_emails_callback()
+    {
+        ?>
         <textarea name="kmcfmf_restricted_emails" id="kmcfmf_restricted_emails" cols="80"
                   rows="8"
-                  placeholder="eg john@localhost.com john "><?php echo get_option( 'kmcfmf_restricted_emails' ); ?></textarea>
+                  placeholder="eg john@localhost.com john "><?php echo get_option('kmcfmf_restricted_emails'); ?></textarea>
         <br/>
         <strong>Note: If you write john, we will check for ( john@gmail.com, john@yahoo.com, john@hotmail.com
             etc... ) </strong>
-		<?php
-	}
+        <?php
+    }
 
-	function kmcfmf_textarea_validation_filter( $result, $tag ) {
-		$type = $tag->type;
-		$name = $tag->name;
+    function kmcfmf_textarea_validation_filter($result, $tag)
+    {
+        $type = $tag->type;
+        $name = $tag->name;
 
-		$found = false;
+        $found = false;
 
-		$check_words = explode( " ", get_option( 'kmcfmf_restricted_words' ) );
+        $check_words = explode(" ", get_option('kmcfmf_restricted_words'));
 
-		$value = trim(isset( $_POST[ $name ] ) ? (string) $_POST[ $name ] : '');
-		//$value = '';
+        $values = ' ' . trim(isset($_POST[$name]) ? (string)$_POST[$name] : '');
+        //$value = '';
 
-		foreach ( $check_words as $check_word ) {
-			if ( preg_match( "/\b" . $check_word . "\b/miu", $value ) > 0 ) {
-				$found = true;
-			}
 
-			/*if ( strpos( $value, $check_word ) !== false ) {
-				$found = true;
-			}*/
-		}
+        $values = explode(" ", $values);
+        foreach ($values as $value) {
+            if ($found == true) {
+                break;
+            }
+            foreach ($check_words as $check_word) {
+                /*if (preg_match("/^\.\w+/miu", $value) > 0) {
+                    $found = true;
+                }else if (preg_match("/\b" . $check_word . "\b/miu", $value) > 0) {
+                    $found = true;
+                }*/
 
-		if ( $tag->is_required() && '' == $value ) {
-			$result->invalidate( $tag, wpcf7_get_message( 'invalid_required' ) );
-		}
+                $check_word = trim($check_word);
+                if (preg_match("/(^\.\w+)/miu", $check_word) > 0) {
+                    //$found = true;
+                    if (preg_match("/(^\." . substr($check_word, 1) . ")|(\b" . $check_word . "\b)/miu", $value) > 0) {
+                        $found = true;
+                        break;
+                    }
+                } else if ($check_word == '[russian]') {
+                    // } else if (preg_match('/^\[\w+\]/miu', $check_word) > 0) {
+                    if (preg_match("/[а-яА-Я]/miu", $value) > 0) {
+                        // if (preg_match("/[\u0400-\u04FF]/", $value) > 0) {
+                        $found = true;
+                        break;
+                    }
+                } else {
+                    if (preg_match("/\b" . $check_word . "\b/miu", $value) > 0) {
+                        $found = true;
+                        break;
+                    }
+                }
 
-		if ( $found == true ) {
-			$result->invalidate( $tag, wpcf7_get_message( 'validation_error' ) );
 
-			$this->temp_email = $_POST['your-email'];
+            }
 
-			if ( ! $this->count_updated && $this->temp_email != '' ) {
-				update_option( 'kmcfmf_last_message_blocked', '<td>' . Date( 'd-m-y h:ia' ) . ' </td><td>' . $this->temp_email . '</td><td>' . $value . ' </td>' );
-				update_option( "kmcfmf_messages", get_option( "kmcfmf_messages" ) . "]kmcfmf_message[ kmcfmf_data=" . $value . " kmcfmf_data=" . $this->temp_email . " kmcfmf_data=" . Date( 'd-m-y  h:ia' ) );
+            /*if ( strpos( $value, $check_word ) !== false ) {
+                $found = true;
+            }*/
+        }
 
-				update_option( 'kmcfmf_messages_blocked', get_option( 'kmcfmf_messages_blocked' ) + 1 );
-				update_option( "kmcfmf_messages_blocked_today", get_option( "kmcfmf_messages_blocked_today" ) + 1 );
-				$this->count_updated = true;
-			}
-		}
+        if ($tag->is_required() && '' == $value) {
+            $result->invalidate($tag, wpcf7_get_message('invalid_required'));
+        }
 
-		if ( '' !== $value ) {
-			$maxlength = $tag->get_maxlength_option();
-			$minlength = $tag->get_minlength_option();
+        if ($found == true) {
+            $result->invalidate($tag, wpcf7_get_message('validation_error'));
 
-			if ( $maxlength && $minlength && $maxlength < $minlength ) {
-				$maxlength = $minlength = null;
-			}
+            $this->temp_email = $_POST['your-email'];
 
-			$code_units = wpcf7_count_code_units( stripslashes( $value ) );
+            if (!$this->count_updated && $this->temp_email != '') {
+                update_option('kmcfmf_last_message_blocked', '<td>' . Date('d-m-y h:ia') . ' </td><td>' . $this->temp_email . '</td><td>' . $value . ' </td>');
+                update_option("kmcfmf_messages", get_option("kmcfmf_messages") . "]kmcfmf_message[ kmcfmf_data=" . $value . " kmcfmf_data=" . $this->temp_email . " kmcfmf_data=" . Date('d-m-y  h:ia'));
 
-			if ( false !== $code_units ) {
-				if ( $maxlength && $maxlength < $code_units ) {
-					$result->invalidate( $tag, wpcf7_get_message( 'invalid_too_long' ) );
-				} elseif ( $minlength && $code_units < $minlength ) {
-					$result->invalidate( $tag, wpcf7_get_message( 'invalid_too_short' ) );
-				}
-			}
-		}
+                update_option('kmcfmf_messages_blocked', get_option('kmcfmf_messages_blocked') + 1);
+                update_option("kmcfmf_messages_blocked_today", get_option("kmcfmf_messages_blocked_today") + 1);
+                $this->count_updated = true;
+            }
+        }
 
-		return $result;
-	}
+        if ('' !== $value) {
+            $maxlength = $tag->get_maxlength_option();
+            $minlength = $tag->get_minlength_option();
 
-	function kmcfmf_text_validation_filter( $result, $tag ) {
-		$name        = $tag->name;
-		$check_words = explode( " ", get_option( 'kmcfmf_restricted_emails' ) );
+            if ($maxlength && $minlength && $maxlength < $minlength) {
+                $maxlength = $minlength = null;
+            }
 
-		$value = isset( $_POST[ $name ] )
-			? trim( wp_unslash( strtr( (string) $_POST[ $name ], "\n", " " ) ) )
-			: '';
+            $code_units = wpcf7_count_code_units(stripslashes($value));
 
-		if ( 'text' == $tag->basetype ) {
-			if ( $tag->is_required() && '' == $value ) {
-				$result->invalidate( $tag, wpcf7_get_message( 'invalid_required' ) );
-			}
-		}
+            if (false !== $code_units) {
+                if ($maxlength && $maxlength < $code_units) {
+                    $result->invalidate($tag, wpcf7_get_message('invalid_too_long'));
+                } elseif ($minlength && $code_units < $minlength) {
+                    $result->invalidate($tag, wpcf7_get_message('invalid_too_short'));
+                }
+            }
+        }
 
-		if ( 'email' == $tag->basetype ) {
-			if ( $tag->is_required() && '' == $value ) {
-				$result->invalidate( $tag, wpcf7_get_message( 'invalid_required' ) );
-			} elseif ( '' != $value && ! wpcf7_is_email( $value ) ) {
-				$result->invalidate( $tag, wpcf7_get_message( 'invalid_email' ) );
-			} else {
-				foreach ( $check_words as $check_word ) {
-					if ( strpos( $value, $check_word ) !== false ) {
-						$this->temp_message = $_POST['your-message'];
-						$result->invalidate( $tag, wpcf7_get_message( 'invalid_email' ) );
+        return $result;
+    }
 
-						if ( ! $this->count_updated && $this->temp_message != '' ) {
-							update_option( 'kmcfmf_last_message_blocked', '<td>' . Date( 'd-m-y h:ia' ) . ' </td><td>' . $value . '</td><td>' . $this->temp_message . ' </td>' );
-							update_option( "kmcfmf_messages", get_option( "kmcfmf_messages" ) . "]kmcfmf_message[ kmcfmf_data=" . $this->temp_message . " kmcfmf_data=" . $value . " kmcfmf_data=" . Date( 'd-m-y  h:ia' ) );
-							update_option( 'kmcfmf_messages_blocked', get_option( 'kmcfmf_messages_blocked' ) + 1 );
-							update_option( "kmcfmf_messages_blocked_today", get_option( "kmcfmf_messages_blocked_today" ) + 1 );
-							$this->count_updated = true;
-						}
-					}
-				}
-			}
-		}
+    function kmcfmf_text_validation_filter($result, $tag)
+    {
+        $name = $tag->name;
+        $check_words = explode(" ", get_option('kmcfmf_restricted_emails'));
 
-		if ( '' !== $value ) {
-			$maxlength = $tag->get_maxlength_option();
-			$minlength = $tag->get_minlength_option();
+        $value = isset($_POST[$name])
+            ? trim(wp_unslash(strtr((string)$_POST[$name], "\n", " ")))
+            : '';
 
-			if ( $maxlength && $minlength && $maxlength < $minlength ) {
-				$maxlength = $minlength = null;
-			}
+        if ('text' == $tag->basetype) {
+            if ($tag->is_required() && '' == $value) {
+                $result->invalidate($tag, wpcf7_get_message('invalid_required'));
+            }
+        }
 
-			$code_units = wpcf7_count_code_units( stripslashes( $value ) );
+        if ('email' == $tag->basetype) {
+            if ($tag->is_required() && '' == $value) {
+                $result->invalidate($tag, wpcf7_get_message('invalid_required'));
+            } elseif ('' != $value && !wpcf7_is_email($value)) {
+                $result->invalidate($tag, wpcf7_get_message('invalid_email'));
+            } else {
+                foreach ($check_words as $check_word) {
+                    if (strpos($value, $check_word) !== false) {
+                        $this->temp_message = $_POST['your-message'];
+                        $result->invalidate($tag, wpcf7_get_message('invalid_email'));
 
-			if ( false !== $code_units ) {
-				if ( $maxlength && $maxlength < $code_units ) {
-					$result->invalidate( $tag, wpcf7_get_message( 'invalid_too_long' ) );
-				} elseif ( $minlength && $code_units < $minlength ) {
-					$result->invalidate( $tag, wpcf7_get_message( 'invalid_too_short' ) );
-				}
-			}
-		}
+                        if (!$this->count_updated && $this->temp_message != '') {
+                            update_option('kmcfmf_last_message_blocked', '<td>' . Date('d-m-y h:ia') . ' </td><td>' . $value . '</td><td>' . $this->temp_message . ' </td>');
+                            update_option("kmcfmf_messages", get_option("kmcfmf_messages") . "]kmcfmf_message[ kmcfmf_data=" . $this->temp_message . " kmcfmf_data=" . $value . " kmcfmf_data=" . Date('d-m-y  h:ia'));
+                            update_option('kmcfmf_messages_blocked', get_option('kmcfmf_messages_blocked') + 1);
+                            update_option("kmcfmf_messages_blocked_today", get_option("kmcfmf_messages_blocked_today") + 1);
+                            $this->count_updated = true;
+                        }
+                    }
+                }
+            }
+        }
 
-		return $result;
-	}
+        if ('' !== $value) {
+            $maxlength = $tag->get_maxlength_option();
+            $minlength = $tag->get_minlength_option();
+
+            if ($maxlength && $minlength && $maxlength < $minlength) {
+                $maxlength = $minlength = null;
+            }
+
+            $code_units = wpcf7_count_code_units(stripslashes($value));
+
+            if (false !== $code_units) {
+                if ($maxlength && $maxlength < $code_units) {
+                    $result->invalidate($tag, wpcf7_get_message('invalid_too_long'));
+                } elseif ($minlength && $code_units < $minlength) {
+                    $result->invalidate($tag, wpcf7_get_message('invalid_too_short'));
+                }
+            }
+        }
+
+        return $result;
+    }
 }
