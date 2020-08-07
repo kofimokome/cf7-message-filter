@@ -391,7 +391,7 @@ class Contact_form_message_filter_Admin
         $check_words = explode(" ", get_option('kmcfmf_restricted_words'));
 
         $message = isset($_POST[$name]) ? (string)$_POST[$name] : '';
-        $values = ' ' . trim($message);
+        $values = trim($message);
         //$value = '';
 
 
