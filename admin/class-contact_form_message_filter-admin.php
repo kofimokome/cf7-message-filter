@@ -390,7 +390,8 @@ class Contact_form_message_filter_Admin
 
         $check_words = explode(" ", get_option('kmcfmf_restricted_words'));
 
-        $values = ' ' . trim(isset($_POST[$name]) ? (string)$_POST[$name] : '');
+        $message = isset($_POST[$name]) ? (string)$_POST[$name] : '';
+        $values = ' ' . trim($message);
         //$value = '';
 
 
@@ -445,8 +446,8 @@ class Contact_form_message_filter_Admin
             $this->temp_email = $_POST['your-email'];
 
             if (!$this->count_updated && $this->temp_email != '') {
-                update_option('kmcfmf_last_message_blocked', '<td>' . Date('d-m-y h:ia') . ' </td><td>' . $this->temp_email . '</td><td>' . $value . ' </td>');
-                update_option("kmcfmf_messages", get_option("kmcfmf_messages") . "]kmcfmf_message[ kmcfmf_data=" . $value . " kmcfmf_data=" . $this->temp_email . " kmcfmf_data=" . Date('d-m-y  h:ia'));
+                update_option('kmcfmf_last_message_blocked', '<td>' . Date('d-m-y h:ia') . ' </td><td>' . $this->temp_email . '</td><td>' . $message . ' </td>');
+                update_option("kmcfmf_messages", get_option("kmcfmf_messages") . "]kmcfmf_message[ kmcfmf_data=" . $message . " kmcfmf_data=" . $this->temp_email . " kmcfmf_data=" . Date('d-m-y  h:ia'));
 
                 update_option('kmcfmf_messages_blocked', get_option('kmcfmf_messages_blocked') + 1);
                 update_option("kmcfmf_messages_blocked_today", get_option("kmcfmf_messages_blocked_today") + 1);
