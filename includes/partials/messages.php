@@ -27,6 +27,10 @@ if (($pagination * $number_per_page) > $size && (($pagination * $number_per_page
 // echo "<br>we will search from " . $start . " to " . ( $end - 1 ) . "<br>";
 ?>
     <h3><?php echo get_option('kmcfmf_messages_blocked'); ?> messages have been blocked</h3>
+    <div class="alert alert-info alert-dismissible">
+        <p><b>Note: </b> If you can't view your messages after an update, please reset the plugin from the settings/options page
+        </p>
+    </div>
     <table class="kmcfmf_table table table-striped">
         <tr>
             <td><b>S/N</b></td>
