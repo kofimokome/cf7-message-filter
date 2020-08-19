@@ -4,7 +4,7 @@ Donate link: www.kofimokome.stream
 Tags: spam, filter
 Requires at least: 3.0.1
 Tested up to: 5.4.2
-Stable tag: 1.1.3
+Stable tag: 1.2.0
 Requires PHP: 5.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -29,6 +29,10 @@ Note: This is just an extension. This plugin is not affiliated with or endorsed 
 6. Save and wait for someone to submit
 
 == Changelog ==
+
+= 1.2.0 =
+* Refactored Codes
+* New dashboard UI
 
 = 1.1.2 =
 * Bug Fixes
@@ -60,4 +64,4 @@ Filter messages submitted through your contact form.
 3. Options
 
 == How to Contribute ==
-The source codes can be downloaded here [GitHub](https://github.com/kofimokome/contact-form-filter)
+The source codes can be downloaded here [GitHub](https://github.com/kofimokome/cf7-message-filter)
