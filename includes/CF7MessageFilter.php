@@ -16,12 +16,17 @@ class CF7MessageFilter
     private $temp_message;
     private $count_updated = false;
     private $blocked;
+    private $log_file;
+    private $version;
 
     public function __construct()
     {
         // our constructor
         $this->blocked = get_option("kmcfmf_messages_blocked_today");
         //  $this->error_notice("hi there");
+        $logs_root = plugin_dir_path(dirname(__FILE__)) . 'logs/';
+        $this->log_file = $logs_root . 'messages.txt';
+        $this->version = '1.2.0';
 
     }
 
@@ -31,6 +36,7 @@ class CF7MessageFilter
         $this->add_options();
         $this->add_filters();
         $this->add_main_menu();
+        $this->transfer_old_data();
     }
 
     private function add_actions()
@@ -82,7 +88,7 @@ class CF7MessageFilter
         if ($this->blocked > 0) {
             $menu_title .= " <span class='update-plugins count-1'><span class='update-count'>$this->blocked </span></span>";
         }
-        $menu_page = new KmMenuPage('CF7 Form Filter', $menu_title, 'read', 'kmcf7-message-filter', 'dashicons-filter', null, array($this, 'menu_view'));
+        $menu_page = new KmMenuPage('CF7 Form Filter', $menu_title, 'read', 'kmcf7-message-filter', 'dashicons-filter', null, array($this, 'dashboard_view'));
 
         $messages_page = new KmSubMenuPage($menu_page->get_menu_slug(), 'Blocked Messages', 'Blocked Messages', 'manage_options', 'kmcf7-filtered-messages', array($this, 'messages_view'));
         $menu_page->add_sub_menu_page($messages_page);
@@ -176,6 +182,10 @@ class CF7MessageFilter
             }
 
         }
+        if ($reset_message_filter_counter || file_get_contents($this->log_file) == '') {
+            $content = "{}";
+            file_put_contents($this->log_file, $content);
+        }
         update_option('kmcfmf_message_filter_reset', 'off');
         update_option('kmcfmf_weekly_stats', get_option('kmcfmf_weekly_stats') == '0' ? '[0,0,0,0,0,0,0]' : get_option('kmcfmf_weekly_stats'));
 
@@ -213,16 +223,28 @@ class CF7MessageFilter
         }
     }
 
-    public function menu_view()
+    /**
+     * Displays Dashboard page
+     * @since 1.2.0
+     */
+    public function dashboard_view()
     {
         include "partials/dashboard.php";
     }
 
+    /**
+     * Displays messages page
+     * @since 1.2.0
+     */
     public function messages_view()
     {
         include "partials/messages.php";
     }
 
+    /**
+     * Filters text from textarea
+     * @since 1.0.0
+     */
     function textarea_validation_filter($result, $tag)
     {
         $type = $tag->type;
@@ -288,17 +310,7 @@ class CF7MessageFilter
             $this->temp_email = $_POST['your-email'];
 
             if (!$this->count_updated && $this->temp_email != '') {
-                update_option('kmcfmf_last_message_blocked', '<td>' . Date('d-m-y h:ia') . ' </td><td>' . $this->temp_email . '</td><td>' . $message . ' </td>');
-                update_option("kmcfmf_messages", get_option("kmcfmf_messages") . "]kmcfmf_message[ kmcfmf_data=" . $message . " kmcfmf_data=" . $this->temp_email . " kmcfmf_data=" . Date('d-m-y  h:ia'));
-
-                update_option('kmcfmf_messages_blocked', get_option('kmcfmf_messages_blocked') + 1);
-                update_option("kmcfmf_messages_blocked_today", get_option("kmcfmf_messages_blocked_today") + 1);
-                $today = date('N');
-                $weekly_stats = json_decode(get_option('kmcfmf_weekly_stats'));
-                $weekly_stats[$today - 1] = get_option("kmcfmf_messages_blocked_today");
-                update_option('kmcfmf_weekly_stats', json_encode($weekly_stats));
-
-                $this->count_updated = true;
+                $this->update_log($this->temp_email, $message);
             }
         }
 
@@ -324,6 +336,10 @@ class CF7MessageFilter
         return $result;
     }
 
+    /**
+     * Filters text from text input fields
+     * @since 1.0.0
+     */
     function text_validation_filter($result, $tag)
     {
         $name = $tag->name;
@@ -351,16 +367,7 @@ class CF7MessageFilter
                         $result->invalidate($tag, wpcf7_get_message('invalid_email'));
 
                         if (!$this->count_updated && $this->temp_message != '') {
-                            update_option('kmcfmf_last_message_blocked', '<td>' . Date('d-m-y h:ia') . ' </td><td>' . $value . '</td><td>' . $this->temp_message . ' </td>');
-                            update_option("kmcfmf_messages", get_option("kmcfmf_messages") . "]kmcfmf_message[ kmcfmf_data=" . $this->temp_message . " kmcfmf_data=" . $value . " kmcfmf_data=" . Date('d-m-y  h:ia'));
-                            update_option('kmcfmf_messages_blocked', get_option('kmcfmf_messages_blocked') + 1);
-                            update_option("kmcfmf_messages_blocked_today", get_option("kmcfmf_messages_blocked_today") + 1);
-                            $today = date('N');
-                            $weekly_stats = json_decode(get_option('kmcfmf_weekly_stats'));
-                            $weekly_stats[$today - 1] = get_option("kmcfmf_messages_blocked_today");
-                            update_option('kmcfmf_weekly_stats', json_encode($weekly_stats));
-
-                            $this->count_updated = true;
+                            $this->update_log($value, $this->temp_message);
                         }
                     }
                 }
@@ -387,6 +394,54 @@ class CF7MessageFilter
         }
 
         return $result;
+    }
+
+    /**
+     * Logs messages blockded to the log file
+     * @since 1.2.0
+     */
+    private function update_log($email, $message)
+    {
+        update_option('kmcfmf_last_message_blocked', '<td>' . Date('d-m-y h:ia') . ' </td><td>' . $email . '</td><td>' . $message . ' </td>');
+        //update_option("kmcfmf_messages", get_option("kmcfmf_messages") . "]kmcfmf_message[ kmcfmf_data=" . $message . " kmcfmf_data=" . $this->temp_email . " kmcfmf_data=" . Date('d-m-y  h:ia'));
+        $log_messages = (array)json_decode(file_get_contents($this->log_file));
+        $log_message = ['message' => $message, 'date' => Date('d-m-y  h:ia'), 'email' => $email];
+        array_push($log_messages, $log_message);
+
+        $log_messages = json_encode((object)$log_messages);
+        file_put_contents($this->log_file, $log_messages);
+        update_option('kmcfmf_messages_blocked', get_option('kmcfmf_messages_blocked') + 1);
+        update_option("kmcfmf_messages_blocked_today", get_option("kmcfmf_messages_blocked_today") + 1);
+        $today = date('N');
+        $weekly_stats = json_decode(get_option('kmcfmf_weekly_stats'));
+        $weekly_stats[$today - 1] = get_option("kmcfmf_messages_blocked_today");
+        update_option('kmcfmf_weekly_stats', json_encode($weekly_stats));
+
+        $this->count_updated = true;
+    }
+
+    /**
+     * Transfer data in old format to new format, when plugin is updated to from an older version to this version
+     * @since 1.2.0
+     */
+    private function transfer_old_data()
+    {
+        if (get_option('kmcfmf_messages') != '0') {
+            $messages = explode("]kmcfmf_message[", get_option('kmcfmf_messages'));
+            $log_messages = [];
+            for ($i = 0; $i < sizeof($messages); $i++) {
+                $data = explode("kmcfmf_data=", $messages[$i]);
+                if ($data[1] != '' && $data[2] != '' && $data[3] != '') {
+                    $log_message = ['message' => $data[1], 'date' => $data[3], 'email' => $data[2]];
+                    array_push($log_messages, $log_message);
+
+                }
+            }
+            $log_messages = json_encode((object)$log_messages);
+            file_put_contents($this->log_file, $log_messages);
+
+            update_option('kmcfmf_messages', 0);
+        }
     }
 
 }

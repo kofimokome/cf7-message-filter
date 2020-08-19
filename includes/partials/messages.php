@@ -12,7 +12,8 @@ $start = 0;
 $end = -1;
 $number_per_page = 10;
 
-$messages = explode("]kmcfmf_message[", get_option('kmcfmf_messages'));
+// $messages = explode("]kmcfmf_message[", get_option('kmcfmf_messages'));
+$messages = (array)json_decode(file_get_contents($this->log_file));
 $messages = array_reverse($messages, false);
 $size = (sizeof($messages) - 1);
 if (($pagination * $number_per_page) > $size && (($pagination * $number_per_page) - $number_per_page) < $size) {
@@ -40,17 +41,16 @@ if (($pagination * $number_per_page) > $size && (($pagination * $number_per_page
             </td>
         </tr>
         <?php
-        for ($i = $start; $i < $end; $i++) {
-            $data = explode("kmcfmf_data=", $messages[$i]);
-            if ($data[1] != '' && $data[2] != '' && $data[3] != '') {
-                echo "<tr>";
-                echo "<td>" . ($i + 1) . "</td>";
-                echo "<td>" . $data[3] . "</td>";
-                echo "<td>" . $data[2] . "</td>";
-                echo "<td>" . $data[1] . "</td>";
-                //echo $i . " message: " . $data[1] . " email: " . $data[2] . " time: " . $data[3] . "<br>";
-                echo "</tr>";
-            }
+        for ($i = $start; $i <= $end; $i++) {
+            $data = $messages[$i];
+            echo "<tr>";
+            echo "<td>" . ($i + 1) . "</td>";
+            echo "<td>" . $data->date . "</td>";
+            echo "<td>" . $data->email . "</td>";
+            echo "<td>" . $data->message . "</td>";
+            //echo $i . " message: " . $data[1] . " email: " . $data[2] . " time: " . $data[3] . "<br>";
+            echo "</tr>";
+
         }
         ?>
     </table>

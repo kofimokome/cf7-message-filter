@@ -20,7 +20,13 @@ namespace kmcf7_message_filter;
                     <p><?php _e('Please Install / Enable Contact Form 7 Plugin First!', 'cf7-message-filter'); ?></p>
                 </div>
             <?php endif; ?>
-
+            <div class="alert alert-info alert-dismissible">
+                <p>Hello There!. Thank for using this plugin. It will be great if you can take just 5 minutes of your
+                    time to leave a review<br>
+                    <a href="https://wordpress.org/support/plugin/cf7-message-filter/reviews/#new-post"
+                       class="btn btn-success" target="_blank">Submit Reveiw</a>
+                </p>
+            </div>
             <div class="container-fluid">
                 <div class="row page-title align-items-center">
                     <div class="col-sm-4 col-xl-6">
