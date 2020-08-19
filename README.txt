@@ -30,6 +30,10 @@ Note: This is just an extension. This plugin is not affiliated with or endorsed 
 
 == Changelog ==
 
+= 1.2.0 =
+* Refactored Codes
+* New dashboard UI
+
 = 1.1.2 =
 * Bug Fixes
 
@@ -60,4 +64,4 @@ Filter messages submitted through your contact form.
 3. Options
 
 == How to Contribute ==
-The source codes can be downloaded here [GitHub](https://github.com/kofimokome/contact-form-filter)
+The source codes can be downloaded here [GitHub](https://github.com/kofimokome/cf7-message-filter)

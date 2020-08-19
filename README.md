@@ -10,6 +10,10 @@ Contact Form 7 must be installed and activated before you can use this plugin
 1. **[Cameroon Boyo](https://cameroonboyo.com)**
 2. **[Luca Ortis](http://lucaortis.com/)**
 
+# v 1.2.0 Changes
+1. Refactored Codes
+2. New Dashboard UI
+
 # v 1.1.2 Changes
 1. Bug Fixes
 
