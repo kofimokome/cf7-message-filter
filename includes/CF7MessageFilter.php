@@ -26,7 +26,7 @@ class CF7MessageFilter
         //  $this->error_notice("hi there");
         $logs_root = plugin_dir_path(dirname(__FILE__)) . 'logs/';
         $this->log_file = $logs_root . 'messages.txt';
-        $this->version = '1.2.0';
+        $this->version = '1.2.2';
 
     }
 
@@ -38,6 +38,7 @@ class CF7MessageFilter
         $this->add_main_menu();
         $this->transfer_old_data();
     }
+
 
     private function add_actions()
     {
@@ -100,7 +101,17 @@ class CF7MessageFilter
                 "type" => "textarea",
                 "id" => "kmcfmf_restricted_words",
                 "label" => 'Restricted Words: ',
-                "tip" => ''
+                "tip" => 'type <code>[link]</code> to filter messages containing links',
+                "placeholder" => "eg john doe baby man [link] [russian]"
+            )
+        );
+        $settings_page->add_field(
+            array(
+                "type" => "textarea",
+                "id" => "kmcfmf_spam_word_error",
+                "label" => 'Error Message For Restricted Words: ',
+                "tip" => '',
+                "placeholder" => "You have entered a word marked as spam"
             )
         );
         $settings_page->add_field(
@@ -109,7 +120,17 @@ class CF7MessageFilter
                 "id" => "kmcfmf_restricted_emails",
                 "label" => 'Restricted Emails: ',
                 "tip" => 'Note: If you write john, we will check for ( john@gmail.com, john@yahoo.com, john@hotmail.com
-            etc... )'
+            etc... )',
+                'placeholder' => "eg john doe baby man earth"
+            )
+        );
+        $settings_page->add_field(
+            array(
+                "type" => "textarea",
+                "id" => "kmcfmf_spam_email_error",
+                "label" => 'Error Message For Restricted Emails: ',
+                "tip" => '',
+                "placeholder" => "The e-mail address entered is invalid.",
             )
         );
 
@@ -209,6 +230,8 @@ class CF7MessageFilter
 
     public function add_filters()
     {
+        add_filter('wpcf7_messages', array($this, 'add_custom_messages'), 10, 1);
+
         $enable_message_filter = get_option('kmcfmf_message_filter_toggle') == 'on' ? true : false;
         $enable_email_filter = get_option('kmcfmf_email_filter_toggle') == 'on' ? true : false;
 
@@ -221,6 +244,32 @@ class CF7MessageFilter
             add_filter('wpcf7_validate_textarea', array($this, 'textarea_validation_filter'), 12, 2);
             add_filter('wpcf7_validate_textarea*', array($this, 'textarea_validation_filter'), 12, 2);
         }
+    }
+
+    /**
+     * Adds a custom message for messages flagged as spam
+     * @since 1.2.2
+     */
+    public function add_custom_messages($messages)
+    {
+        $spam_word_eror = get_option('kmcfmf_spam_word_error') ? get_option('kmcfmf_spam_word_error') : 'One or more fields have an error. Please check and try again.';
+        $spam_email_error = get_option('kmcfmf_spam_email_error') ? get_option('kmcfmf_spam_email_error') : 'The e-mail address entered is invalid.';
+        $messages = array_merge($messages, array(
+            'spam_word_error' => array(
+                'description' =>
+                    __("Message contains a word marked as spam", 'contact-form-7'),
+                'default' =>
+                    __($spam_word_eror, 'contact-form-7'),
+            ),
+            'spam_email_error' => array(
+                'description' =>
+                    __("Email is an email marked as spam", 'contact-form-7'),
+                'default' =>
+                    __($spam_email_error, 'contact-form-7'),
+            ),
+        ));
+
+        return $messages;
     }
 
     /**
@@ -258,13 +307,13 @@ class CF7MessageFilter
         $values = trim($message);
         //$value = '';
 
-
         $values = explode(" ", $values);
         foreach ($values as $value) {
             if ($found == true) {
                 break;
             }
             foreach ($check_words as $check_word) {
+
                 /*if (preg_match("/^\.\w+/miu", $value) > 0) {
                     $found = true;
                 }else if (preg_match("/\b" . $check_word . "\b/miu", $value) > 0) {
@@ -272,32 +321,39 @@ class CF7MessageFilter
                 }*/
 
                 $check_word = trim($check_word);
-                if (preg_match("/(^\.\w+)/miu", $check_word) > 0) {
-                    //$found = true;
-                    if (preg_match("/(^\." . substr($check_word, 1) . ")|(\b" . $check_word . "\b)/miu", $value) > 0) {
-                        $found = true;
-                        break;
+                if ($check_word != '') {
+                    if (preg_match("/(^\.\w+)/miu", $check_word) > 0) {
+                        //$found = true;
+                        if (preg_match("/(^\." . substr($check_word, 1) . ")|(\b" . $check_word . "\b)/miu", $value) > 0) {
+                            $found = true;
+                            break;
+                        }
+                    } else if ($check_word == '[russian]') {
+                        // } else if (preg_match('/^\[\w+\]/miu', $check_word) > 0) {
+                        if (preg_match("/[а-яА-Я]/miu", $value) > 0) {
+                            // if (preg_match("/[\u0400-\u04FF]/", $value) > 0) {
+                            $found = true;
+                            break;
+                        }
+                    } else if ($check_word == '[link]') {
+                        if (preg_match("/(http)/miu", $value) > 0) {
+                            $found = true;
+                            break;
+                        }
+                    } else {
+                        if (preg_match("/\b" . $check_word . "\b/miu", $value) > 0) {
+                            $found = true;
+                            break;
+                        }
                     }
-                } else if ($check_word == '[russian]') {
-                    // } else if (preg_match('/^\[\w+\]/miu', $check_word) > 0) {
-                    if (preg_match("/[а-яА-Я]/miu", $value) > 0) {
-                        // if (preg_match("/[\u0400-\u04FF]/", $value) > 0) {
-                        $found = true;
-                        break;
-                    }
-                } else {
-                    if (preg_match("/\b" . $check_word . "\b/miu", $value) > 0) {
-                        $found = true;
-                        break;
-                    }
+
+
                 }
 
-
+                /*if ( strpos( $value, $check_word ) !== false ) {
+                    $found = true;
+                }*/
             }
-
-            /*if ( strpos( $value, $check_word ) !== false ) {
-                $found = true;
-            }*/
         }
 
         if ($tag->is_required() && '' == $value) {
@@ -305,7 +361,7 @@ class CF7MessageFilter
         }
 
         if ($found == true) {
-            $result->invalidate($tag, wpcf7_get_message('validation_error'));
+            $result->invalidate($tag, wpcf7_get_message('spam_word_error'));
 
             $this->temp_email = $_POST['your-email'];
 
@@ -364,7 +420,7 @@ class CF7MessageFilter
                 foreach ($check_words as $check_word) {
                     if (strpos($value, $check_word) !== false) {
                         $this->temp_message = $_POST['your-message'];
-                        $result->invalidate($tag, wpcf7_get_message('invalid_email'));
+                        $result->invalidate($tag, wpcf7_get_message('spam_email_error'));
 
                         if (!$this->count_updated && $this->temp_message != '') {
                             $this->update_log($value, $this->temp_message);

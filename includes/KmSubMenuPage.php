@@ -125,7 +125,7 @@ class KmSubMenuPage
             case 'textarea':
                 echo "<p><textarea name='{$data['id']}' id='{$data['id']}' cols='80'
                   rows='8'
-                  placeholder='eg john doe baby man earth'>" . get_option($data['id']) . "</textarea></p>";
+                  placeholder='{$data['placeholder']}'>" . get_option($data['id']) . "</textarea></p>";
                 echo "<strong>{$data['tip']} </strong>";
                 break;
             case 'checkbox':
