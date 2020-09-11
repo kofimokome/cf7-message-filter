@@ -10,6 +10,9 @@ Contact Form 7 must be installed and activated before you can use this plugin
 1. **[Cameroon Boyo](https://cameroonboyo.com)**
 2. **[Luca Ortis](http://lucaortis.com/)**
 
+# v 1.2.1 Changes
+1. Fix Unicode characters not displaying in all messages page
+
 # v 1.2.0 Changes
 1. Refactored Codes
 2. New Dashboard UI
