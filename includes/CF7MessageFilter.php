@@ -27,7 +27,7 @@ class CF7MessageFilter
         //  $this->error_notice("hi there");
         $logs_root = plugin_dir_path(dirname(__FILE__)) . 'logs/';
         $this->log_file = $logs_root . 'messages.txt';
-        $this->version = '1.2.2';
+        $this->version = '1.2.3';
 
     }
 
@@ -320,6 +320,7 @@ class CF7MessageFilter
     /**
      * Filters text from form text elements from elems_names List
      * @author: UnderWordPressure
+     * @since 1.2.3
      */
     function text_tags_by_name_validation_filter($result, $tag)
     {
