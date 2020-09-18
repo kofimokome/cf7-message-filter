@@ -4,6 +4,7 @@
  * User: kofi
  * Date: 18/8/20
  * Time: 08:10 PM
+ * Added by UnderWordPressure: [text <name> ...] filter.
  */
 
 namespace kmcf7_message_filter;
@@ -98,66 +99,85 @@ class CF7MessageFilter
         $settings_page->add_section('kmcfmf_message_filter_option');
         $settings_page->add_field(
             array(
-                "type" => "textarea",
-                "id" => "kmcfmf_restricted_words",
-                "label" => 'Restricted Words: ',
-                "tip" => 'type <code>[link]</code> to filter messages containing links',
-                "placeholder" => "eg john doe baby man [link] [russian]"
+                'type' => 'textarea',
+                'id' => 'kmcfmf_restricted_words',
+                'label' => 'Restricted Words: ',
+                'tip' => 'type <code>[link]</code> to filter messages containing links, type <code>[russian]</code> to filter messages contains russian characters',
+                'placeholder' => 'eg john, doe, baby, man, [link], [russian]'
             )
         );
         $settings_page->add_field(
             array(
-                "type" => "textarea",
-                "id" => "kmcfmf_spam_word_error",
-                "label" => 'Error Message For Restricted Words: ',
-                "tip" => '',
-                "placeholder" => "You have entered a word marked as spam"
+                'type' => 'textarea',
+                'id' => 'kmcfmf_spam_word_error',
+                'label' => 'Error Message For Restricted Words: ',
+                'tip' => '',
+                'placeholder' => 'You have entered a word marked as spam'
             )
         );
         $settings_page->add_field(
             array(
-                "type" => "textarea",
-                "id" => "kmcfmf_restricted_emails",
-                "label" => 'Restricted Emails: ',
-                "tip" => 'Note: If you write john, we will check for ( john@gmail.com, john@yahoo.com, john@hotmail.com
-            etc... )',
-                'placeholder' => "eg john doe baby man earth"
+                'type' => 'textarea',
+                'id' => 'kmcfmf_restricted_emails',
+                'label' => 'Restricted Emails: ',
+                'tip' => 'Note: If you write john, we will check for ( john@gmail.com, john@yahoo.com, john@hotmail.com, etc... )',
+                'placeholder' => 'eg john, doe, baby, man, earth'
             )
         );
         $settings_page->add_field(
             array(
-                "type" => "textarea",
-                "id" => "kmcfmf_spam_email_error",
-                "label" => 'Error Message For Restricted Emails: ',
-                "tip" => '',
-                "placeholder" => "The e-mail address entered is invalid.",
-            )
-        );
-
-        $settings_page->add_field(
-            array(
-                "type" => 'checkbox',
-                "id" => 'kmcfmf_message_filter_toggle',
-                "label" => 'Enable Message Filter?: ',
-                "tip" => ''
+                'type' => 'textarea',
+                'id' => 'kmcfmf_spam_email_error',
+                'label' => 'Error Message For Restricted Emails: ',
+                'tip' => '',
+                'placeholder' => 'The e-mail address entered is invalid.',
             )
         );
 
         $settings_page->add_field(
             array(
-                "type" => 'checkbox',
-                "id" => 'kmcfmf_email_filter_toggle',
-                "label" => 'Enable Email Filter?: ',
-                "tip" => ''
+                'type' => 'textarea',
+                'id' => 'kmcfmf_tags_by_name',
+                'label' => 'Analyze single line Text Fields with these names for restricted word, also: ',
+                'tip' => 'Note: your-subject, your-address, your-lastname, etc.',
+                'placeholder' => ''
+            )
+        );
+
+
+        $settings_page->add_field(
+            array(
+                'type' => 'checkbox',
+                'id' => 'kmcfmf_message_filter_toggle',
+                'label' => 'Enable Message Filter?: ',
+                'tip' => ''
             )
         );
 
         $settings_page->add_field(
             array(
-                "type" => 'checkbox',
-                "id" => 'kmcfmf_message_filter_reset',
-                "label" => 'Reset Filter Count?: ',
-                "tip" => ''
+                'type' => 'checkbox',
+                'id' => 'kmcfmf_email_filter_toggle',
+                'label' => 'Enable Email Filter?: ',
+                'tip' => ''
+            )
+        );
+
+        $settings_page->add_field(
+            array(
+                'type' => 'checkbox',
+                'id' => 'kmcfmf_tags_by_name_filter_toggle',
+                'label' => 'Enable Filter on single line Text Fields by Name?: ',
+                'tip' => ''
+            )
+        );
+
+        $settings_page->add_field(
+            array(
+                'type' => 'checkbox',
+                'id' => 'kmcfmf_message_filter_reset',
+                'label' => 'Reset Filter Count?: ',
+                'tip' => ''
             )
         );
 
@@ -234,6 +254,7 @@ class CF7MessageFilter
 
         $enable_message_filter = get_option('kmcfmf_message_filter_toggle') == 'on' ? true : false;
         $enable_email_filter = get_option('kmcfmf_email_filter_toggle') == 'on' ? true : false;
+        $enable_tags_by_names_filter = get_option('kmcfmf_tags_by_name_filter_toggle') == 'on' ? true : false;
 
         if ($enable_email_filter) {
             add_filter('wpcf7_validate_email', array($this, 'text_validation_filter'), 12, 2);
@@ -244,6 +265,12 @@ class CF7MessageFilter
             add_filter('wpcf7_validate_textarea', array($this, 'textarea_validation_filter'), 12, 2);
             add_filter('wpcf7_validate_textarea*', array($this, 'textarea_validation_filter'), 12, 2);
         }
+
+        if ($enable_tags_by_names_filter) {
+            add_filter('wpcf7_validate_text', array($this, 'text_tags_by_name_validation_filter'), 12, 2);
+            add_filter('wpcf7_validate_text*', array($this, 'text_tags_by_name_validation_filter'), 12, 2);
+        }
+
     }
 
     /**
@@ -291,27 +318,47 @@ class CF7MessageFilter
     }
 
     /**
+     * Filters text from form text elements from elems_names List
+     * @author: UnderWordPressure
+     */
+    function text_tags_by_name_validation_filter($result, $tag)
+    {
+
+        $name = $tag->name;
+        $names = preg_split('/[\s,]+/', get_option('kmcfmf_tags_by_name'));
+        if (in_array($name, $names)) {
+            $result = $this->textarea_validation_filter($result, $tag);
+        }
+
+        return $result;
+
+    }
+
+    /**
      * Filters text from textarea
      * @since 1.0.0
      */
     function textarea_validation_filter($result, $tag)
     {
-        $type = $tag->type;
         $name = $tag->name;
 
         $found = false;
 
-        $check_words = explode(" ", get_option('kmcfmf_restricted_words'));
+        // UnderWordPressue: Change explode(" ", $values) to preg_split reason: whole whitespace range AND comma are valid separators
+        $check_words = preg_split('/[\s,]+/', get_option('kmcfmf_restricted_words'));
 
-        $message = isset($_POST[$name]) ? (string)$_POST[$name] : '';
-        $values = trim($message);
+        $message = isset($_POST[$name]) ? trim((string)$_POST[$name]) : '';
+
+        // UnderWordPressue: make all lowercase - safe is safe
+        $values = strtolower($message);
         //$value = '';
 
-        $values = explode(" ", $values);
+        // UnderWordPressue: Change explode(" ", $values) to preg_split([white-space]) -  reason: whole whitespace range are valid separators
+        //                   and rewrite the foreach loops
+        $values = preg_split('/\s+/', $values);
         foreach ($values as $value) {
-            if ($found == true) {
-                break;
-            }
+            $value = trim($value);
+
             foreach ($check_words as $check_word) {
 
                 /*if (preg_match("/^\.\w+/miu", $value) > 0) {
@@ -320,47 +367,50 @@ class CF7MessageFilter
                     $found = true;
                 }*/
 
-                $check_word = trim($check_word);
-                if ($check_word != '') {
-                    if (preg_match("/(^\.\w+)/miu", $check_word) > 0) {
-                        //$found = true;
-                        if (preg_match("/(^\." . substr($check_word, 1) . ")|(\b" . $check_word . "\b)/miu", $value) > 0) {
-                            $found = true;
-                            break;
-                        }
-                    } else if ($check_word == '[russian]') {
-                        // } else if (preg_match('/^\[\w+\]/miu', $check_word) > 0) {
-                        if (preg_match("/[а-яА-Я]/miu", $value) > 0) {
-                            // if (preg_match("/[\u0400-\u04FF]/", $value) > 0) {
-                            $found = true;
-                            break;
-                        }
-                    } else if ($check_word == '[link]') {
-                        if (preg_match("/(http)/miu", $value) > 0) {
-                            $found = true;
-                            break;
-                        }
-                    } else {
-                        if (preg_match("/\b" . $check_word . "\b/miu", $value) > 0) {
-                            $found = true;
-                            break;
-                        }
-                    }
+                $check_word = strtolower(trim($check_word));
+                switch ($check_word) {
+                    case '':
+                        break;
+                    case '[russian]':
+                        $found = preg_match('/[а-яА-Я]/miu', $value);
+                        break;
+                    case '[link]':
+                        $found = filter_var($value, FILTER_VALIDATE_URL);
+                        break;
+                    default:
 
+                        $like_start = (preg_match('/^\*/', $check_word));
+                        $like_end = (preg_match('/\*$/', $check_word));
 
+                        # Remove leading and trailing asterisks from $check_word
+                        $regex_pattern = preg_quote(trim($check_word, '*'));
+
+                        if ($like_start) {
+                            $regex_pattern = '.*' . $regex_pattern;
+                        }
+                        if ($like_end) {
+                            $regex_pattern = $regex_pattern . '+.*';
+                        }
+
+                        $found = preg_match('/^' . $regex_pattern . '$/miu', $value);
+
+                        break;
                 }
 
-                /*if ( strpos( $value, $check_word ) !== false ) {
-                    $found = true;
-                }*/
+                if ($found) {
+                    break;
+                }
             }
-        }
 
-        if ($tag->is_required() && '' == $value) {
-            $result->invalidate($tag, wpcf7_get_message('invalid_required'));
-        }
+        } // end of foreach($values...)
 
-        if ($found == true) {
+
+        #####################
+        # Final evaluation. #
+        #####################
+
+        // Spam word is recognized
+        if ($found) {
             $result->invalidate($tag, wpcf7_get_message('spam_word_error'));
 
             $this->temp_email = $_POST['your-email'];
@@ -368,23 +418,31 @@ class CF7MessageFilter
             if (!$this->count_updated && $this->temp_email != '') {
                 $this->update_log($this->temp_email, $message);
             }
-        }
+        } else {
 
-        if ('' !== $value) {
-            $maxlength = $tag->get_maxlength_option();
-            $minlength = $tag->get_minlength_option();
+            // Check additional conditions on $message
+            if (empty($message)) {
+                // No content ($message) in a required Tag
+                if ($tag->is_required()) {
+                    $result->invalidate($tag, wpcf7_get_message('invalid_required'));
+                }
+            } else {
 
-            if ($maxlength && $minlength && $maxlength < $minlength) {
-                $maxlength = $minlength = null;
-            }
+                $maxlength = $tag->get_maxlength_option();
+                $minlength = $tag->get_minlength_option();
 
-            $code_units = wpcf7_count_code_units(stripslashes($value));
+                if ($maxlength && $minlength && $maxlength < $minlength) {
+                    $maxlength = $minlength = null;
+                }
 
-            if (false !== $code_units) {
-                if ($maxlength && $maxlength < $code_units) {
-                    $result->invalidate($tag, wpcf7_get_message('invalid_too_long'));
-                } elseif ($minlength && $code_units < $minlength) {
-                    $result->invalidate($tag, wpcf7_get_message('invalid_too_short'));
+                $code_units = wpcf7_count_code_units(stripslashes($message));
+
+                if ($code_units) {
+                    if ($maxlength && $maxlength < $code_units) {
+                        $result->invalidate($tag, wpcf7_get_message('invalid_too_long'));
+                    } elseif ($minlength && $code_units < $minlength) {
+                        $result->invalidate($tag, wpcf7_get_message('invalid_too_short'));
+                    }
                 }
             }
         }
