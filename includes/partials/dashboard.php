@@ -24,7 +24,7 @@ namespace kmcf7_message_filter;
                 <p>Hello There!. Thank for using this plugin. It will be great if you can take just 5 minutes of your
                     time to leave a review<br>
                     <a href="https://wordpress.org/support/plugin/cf7-message-filter/reviews/#new-post"
-                       class="btn btn-success" target="_blank">Submit Reveiw</a>
+                       class="btn btn-success" target="_blank" rel="noopener noreferrer">Submit Reveiw</a>
                 </p>
             </div>
             <div class="container-fluid">
