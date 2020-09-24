@@ -1,5 +1,10 @@
 # Change Log
 
+## v1.2.3 Changes
+1. Add option to filter other text fields
+2. Update [link] filter to filter urls without protocols
+3. Other Bug Fixes
+
 ## v1.2.2 Changes
 1. Add custom error messages
 2. Add ability to filter messages containing links using `[link]` keyword

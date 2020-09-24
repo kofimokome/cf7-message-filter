@@ -30,6 +30,11 @@ Note: This is just an extension. This plugin is not affiliated with or endorsed 
 
 == Changelog ==
 
+= 1.2.3 =
+* Add option to filter other text fields
+* Update [link] filter to filter urls without protocols
+* Other Bug Fixes
+
 = 1.2.2 =
 * Add custom error messages
 * Add ability to filter messages containing links using [link] keyword
