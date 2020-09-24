@@ -376,7 +376,8 @@ class CF7MessageFilter
                         $found = preg_match('/[а-яА-Я]/miu', $value);
                         break;
                     case '[link]':
-                        $found = filter_var($value, FILTER_VALIDATE_URL);
+                        $pattern = '/((ftp|http|https):\/\/\w+)|(www\.\w+\.\w+)/ium'; // filters http://google.com and http://www.google.com and www.google.com
+                        $found = preg_match($pattern, $value);
                         break;
                     default:
 
