@@ -2,7 +2,7 @@
 Contributors: kofimokome
 Donate link: www.kofimokome.stream
 Tags: spam, filter
-Requires at least: 3.0.1
+Requires at least: 5.4
 Tested up to: 5.5.1
 Stable tag: 1.2.4
 Requires PHP: 5.2.4
