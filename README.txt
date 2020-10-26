@@ -2,9 +2,9 @@
 Contributors: kofimokome
 Donate link: www.kofimokome.stream
 Tags: spam, filter
-Requires at least: 3.0.1
+Requires at least: 5.4
 Tested up to: 5.5.1
-Stable tag: 1.2.3
+Stable tag: 1.2.4
 Requires PHP: 5.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -30,6 +30,9 @@ Note: This is just an extension. This plugin is not affiliated with or endorsed 
 
 == Changelog ==
 
+= 1.2.4 =
+* Fix bug with some messages with links bypassing the checks
+
 = 1.2.3 =
 * Add option to filter other text fields
 * Update [link] filter to filter urls without protocols
@@ -46,28 +49,6 @@ Note: This is just an extension. This plugin is not affiliated with or endorsed 
 = 1.2.0 =
 * Refactored Codes
 * New dashboard UI
-
-= 1.1.2 =
-* Bug Fixes
-
-= 1.1.1 =
-* Add support for unicode characters
-* Bug Fixes
-
-= 1.1.0 =
-* View all messages blocked
-* Bug Fixes
-
-= 1.0.0 =
-* Filter messages submitted through contact form 7
-
-== Upgrade Notice ==
-
-= 1.0 =
-View all messages filtered.
-
-= 1.0.0 =
-Filter messages submitted through your contact form.
 
 
 == Screenshots ==

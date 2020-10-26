@@ -27,7 +27,7 @@ class CF7MessageFilter
         //  $this->error_notice("hi there");
         $logs_root = plugin_dir_path(dirname(__FILE__)) . 'logs/';
         $this->log_file = $logs_root . 'messages.txt';
-        $this->version = '1.2.3';
+        $this->version = '1.2.4';
 
     }
 
@@ -400,7 +400,7 @@ class CF7MessageFilter
                 }
 
                 if ($found) {
-                    break;
+                    break 2; // stops the first foreach loop since we have already identified a spam word
                 }
             }
 

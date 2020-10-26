@@ -1,5 +1,8 @@
 # Change Log
 
+## v1.2.4 Changes
+1. Fix bug with some messages with links bypassing the checks
+
 ## v1.2.3 Changes
 1. Add option to filter other text fields
 2. Update [link] filter to filter urls without protocols
