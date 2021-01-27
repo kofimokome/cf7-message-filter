@@ -25,14 +25,29 @@ class CF7MessageFilter
         // our constructor
         $this->blocked = get_option("kmcfmf_messages_blocked_today");
         //  $this->error_notice("hi there");
-        $logs_root = plugin_dir_path(dirname(__FILE__)) . 'logs/';
-        $this->log_file = $logs_root . 'messages.txt';
-        $this->version = '1.2.4';
+        $this->version = '1.2.5';
 
+    }
+
+    /**
+     * Creates a directory in wordpress upload folder if it does not exist
+     * @since 1.2.5
+     */
+    private function init_upload_dir()
+    {
+        $logs_root = wp_upload_dir()['basedir'] . '/kmcf7mf_logs/';
+        if (!is_dir($logs_root)) {
+            mkdir($logs_root, 0700);
+        }
+        $this->log_file = $logs_root . 'messages.txt';
+        if (!is_file($this->log_file)) {
+            file_put_contents($this->log_file, '{}');
+        }
     }
 
     public function run()
     {
+        $this->init_upload_dir();
         $this->add_actions();
         $this->add_options();
         $this->add_filters();
@@ -90,13 +105,15 @@ class CF7MessageFilter
         if ($this->blocked > 0) {
             $menu_title .= " <span class='update-plugins count-1'><span class='update-count'>$this->blocked </span></span>";
         }
-        $menu_page = new KmMenuPage('CF7 Form Filter', $menu_title, 'read', 'kmcf7-message-filter', 'dashicons-filter', null, array($this, 'dashboard_view'));
+        $menu_page = new MenuPage('CF7 Form Filter', $menu_title, 'read', 'kmcf7-message-filter', 'dashicons-filter', null, array($this, 'dashboard_view'));
 
-        $messages_page = new KmSubMenuPage($menu_page->get_menu_slug(), 'Blocked Messages', 'Blocked Messages', 'manage_options', 'kmcf7-filtered-messages', array($this, 'messages_view'));
+        $messages_page = new SubMenuPage($menu_page->get_menu_slug(), 'Blocked Messages', 'Blocked Messages', 'manage_options', 'kmcf7-filtered-messages', array($this, 'messages_view'));
         $menu_page->add_sub_menu_page($messages_page);
 
-        $settings_page = new KmSubMenuPage($menu_page->get_menu_slug(), 'Options', 'Options', 'manage_options', 'kmcf7-message-filter-options', null, true);
+        $settings_page = new SubMenuPage($menu_page->get_menu_slug(), 'Options', 'Options', 'manage_options', 'kmcf7-message-filter-options', null, true);
+       //  $settings = new Setting($menu_page->get_menu_slug());
         $settings_page->add_section('kmcfmf_message_filter_option');
+        // $settings_page->add_tab('test','Test');
         $settings_page->add_field(
             array(
                 'type' => 'textarea',
@@ -181,6 +198,7 @@ class CF7MessageFilter
             )
         );
 
+        // $settings_page->add_tab('new','New');
         $menu_page->add_sub_menu_page($settings_page);
 
         $menu_page->run();
@@ -205,7 +223,7 @@ class CF7MessageFilter
             'kmcfmf_message_filter_reset',
             'kmcfmf_date_of_today',
             'kmcfmf_messages_blocked_today',
-            'kmcfmf_messages',
+            'kmcfmf_messages', // todo: remove this as it is no longer used
             'kmcfmf_weekly_stats',
             'kmcfmf_weekend',
         );
@@ -542,7 +560,15 @@ class CF7MessageFilter
      */
     private function transfer_old_data()
     {
-        if (get_option('kmcfmf_messages') != '0') {
+        if (get_option('kmcfmf_messages') == '0') {
+            // for those migrating from =<v1.2.4 to >=v1.2.5
+            $old_logs_root = plugin_dir_path(dirname(__FILE__)) . 'logs/';
+            $old_logs_file = $old_logs_root . 'messages.txt';
+            if (is_file($old_logs_file)) {
+                rename($old_logs_file, $this->log_file);
+            }
+        } else {
+            // for those migrating from v1.1.x to >=v1.2.0
             $messages = explode("]kmcfmf_message[", get_option('kmcfmf_messages'));
             $log_messages = [];
             for ($i = 0; $i < sizeof($messages); $i++) {
@@ -559,5 +585,4 @@ class CF7MessageFilter
             update_option('kmcfmf_messages', 0);
         }
     }
-
 }

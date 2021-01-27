@@ -8,7 +8,7 @@
 
 namespace kmcf7_message_filter;
 
-class KmMenuPage
+class MenuPage
 {
     private $page_title;
     private $menu_title;

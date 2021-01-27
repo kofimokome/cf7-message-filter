@@ -42,8 +42,8 @@ function kmcf7_loader()
     global $error;
     $classes = array(
         'CF7MessageFilter.php', //
-        'KmMenuPage.php', //
-        'KmSubMenuPage.php', //
+        'MenuPage.php', //
+        'SubMenuPage.php', //
         // 'admin_menu.php', //
 
     );

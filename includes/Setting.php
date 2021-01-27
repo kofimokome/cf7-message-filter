@@ -9,32 +9,23 @@
 namespace kmcf7_message_filter;
 
 
-class KmSubMenuPage
+class Setting
 {
     private $page_title;
-    private $menu_title;
-    private $capability;
     private $menu_slug;
-    private $parent_slug;
     private $function;
     private $default_content;
     private $fields;
     private $section_id;
     private $sections;
 
-
-    public function __construct($parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function = null, $use_default_menu = false)
+    public function __construct($menu_slug, $use_default_menu = true)
     {
-        $this->page_title = $page_title;
-        $this->menu_title = $menu_title;
-        $this->capability = $capability;
         $this->menu_slug = $menu_slug;
-        $this->parent_slug = $parent_slug;
-        $this->function = $function;
+
         if ($use_default_menu) {
             $this->function = array(&$this, 'default_function');
         }
-
         $this->default_content = '';
         $this->fields = array();
         $this->sections = array();
@@ -42,11 +33,13 @@ class KmSubMenuPage
 
     public function default_function()
     {
+        $current_tab = isset($_GET['tab']) ? $_GET['tab'] : null;
         ?>
         <div class="wrap">
             <div id="icon-options-general" class="icon32"></div>
             <h1><?php echo $this->page_title ?></h1>
-            <strong>Please enter each word separated by white-spaces (spaces, newline, etc.) or comma in the boxes below</strong>
+            <strong>Please enter each word separated by white-spaces (spaces, newline, etc.) or comma in the boxes
+                below</strong>
             <?php settings_errors(); ?>
             <form method="post" action="options.php">
                 <?php
@@ -60,13 +53,11 @@ class KmSubMenuPage
 
         </div>
         <?php
-
         //echo $this->default_content;
     }
 
     public function run()
     {
-        $this->create_sub_menu_page();
         add_action('admin_init', array($this, 'add_settings'));
     }
 
@@ -91,19 +82,6 @@ class KmSubMenuPage
             );
             register_setting($field['section_id'], $field['id']);
         }
-    }
-
-    public function create_sub_menu_page()
-    {
-        add_submenu_page(
-            $this->parent_slug,
-            $this->page_title,
-            $this->menu_title,
-            $this->capability,
-            $this->menu_slug,
-            $this->function
-
-        );
     }
 
     public function add_field($data)
