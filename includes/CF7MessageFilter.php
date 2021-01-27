@@ -51,8 +51,8 @@ class CF7MessageFilter
         $this->add_options();
         $this->add_filters();
         $this->add_main_menu();
-        $this->transfer_old_data();
         $this->add_settings();
+        $this->transfer_old_data();
     }
 
 
