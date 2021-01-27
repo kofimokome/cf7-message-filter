@@ -31,7 +31,6 @@ Note: This is just an extension. This plugin is not affiliated with or endorsed 
 == Changelog ==
 
 = 1.2.5 =
-* Add auto-clear messages option
 * Move log file to uploads folder
 
 = 1.2.4 =

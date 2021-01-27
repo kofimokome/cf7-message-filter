@@ -6,7 +6,7 @@
  *
  * @wordpress-plugin
  * Plugin Name: Message Filter for Contact Form 7
- * Plugin URI: https://github.com/kofimokome/contact-form-filter
+ * Plugin URI: https://github.com/kofimokome/cf7-message-filter
  * Description: Filters messages submitted from contact form seven if it has words or email marked as spam by the user
  * Version: 1.2.5
  * Author: Kofi Mokome

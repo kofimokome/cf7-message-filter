@@ -14,6 +14,9 @@ Bear in mind that the codes in the `develop` branch may be unstable. If you are 
 1. **[Cameroon Boyo](https://cameroonboyo.com)**
 2. **[Luca Ortis](http://lucaortis.com/)**
 
+## v1.2.5 Changes
+1. Move log file to uploads folder
+
 ## v1.2.4 Changes
 1. Fix bug with some messages with links bypassing the checks
 
@@ -21,11 +24,3 @@ Bear in mind that the codes in the `develop` branch may be unstable. If you are 
 1. Add option to filter other text fields
 2. Update [link] filter to filter urls without protocols
 3. Other Bug Fixes
-
-## v1.2.2 Changes
-1. Add custom error messages
-2. Add ability to filter messages containing links using `[link]` keyword
-3. Bug Fixes
-
-## v1.2.1 Changes
-1. Fix Unicode characters not displaying in all messages page

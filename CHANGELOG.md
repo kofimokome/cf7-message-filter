@@ -1,4 +1,6 @@
 # Change Log
+## v1.2.5 Changes
+1. Move log file to uploads folder
 
 ## v1.2.4 Changes
 1. Fix bug with some messages with links bypassing the checks
