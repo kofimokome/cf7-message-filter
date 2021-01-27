@@ -26,7 +26,6 @@ class CF7MessageFilter
         $this->blocked = get_option("kmcfmf_messages_blocked_today");
         //  $this->error_notice("hi there");
         $this->version = '1.2.5';
-
     }
 
     /**
@@ -53,6 +52,7 @@ class CF7MessageFilter
         $this->add_filters();
         $this->add_main_menu();
         $this->transfer_old_data();
+        $this->add_settings();
     }
 
 
@@ -69,7 +69,7 @@ class CF7MessageFilter
         if (trim($message) != ''):
             ?>
             <div class="error notice is-dismissible">
-                <p><b>Gifted Mom Comment: </b><?php echo $message ?></p>
+                <p><b>Contact Form Message Filter: </b><?php echo $message ?></p>
             </div>
         <?php
         endif;
@@ -98,7 +98,7 @@ class CF7MessageFilter
         }
     }
 
-    public function add_main_menu()
+    private function add_main_menu()
     {
         // Create the menu page
         $menu_title = 'CF7 Form Filter';
@@ -106,15 +106,51 @@ class CF7MessageFilter
             $menu_title .= " <span class='update-plugins count-1'><span class='update-count'>$this->blocked </span></span>";
         }
         $menu_page = new MenuPage('CF7 Form Filter', $menu_title, 'read', 'kmcf7-message-filter', 'dashicons-filter', null, array($this, 'dashboard_view'));
-
         $messages_page = new SubMenuPage($menu_page->get_menu_slug(), 'Blocked Messages', 'Blocked Messages', 'manage_options', 'kmcf7-filtered-messages', array($this, 'messages_view'));
         $menu_page->add_sub_menu_page($messages_page);
+        $settings_page = new SubMenuPage($menu_page->get_menu_slug(), 'Options', 'Options', 'manage_options', 'kmcf7-message-filter-options', array($this, 'settings_view'), true);
+        $settings_page->add_tab('status', 'Plugin Status', array($this, 'status_tab_view'), array('tab' => 'status'));
+        $settings_page->add_tab('words', 'Restricted Content', array($this, 'status_tab_view'), array('tab' => 'words'));
+        $settings_page->add_tab('messages', 'Error Messages', array($this, 'status_tab_view'), array('tab' => 'messages'));
+        $settings_page->add_tab('plugins', 'More Plugins', array($this, 'status_tab_view'), array('tab' => 'plugins'));
+        $menu_page->add_sub_menu_page($settings_page);
 
-        $settings_page = new SubMenuPage($menu_page->get_menu_slug(), 'Options', 'Options', 'manage_options', 'kmcf7-message-filter-options', null, true);
-       //  $settings = new Setting($menu_page->get_menu_slug());
-        $settings_page->add_section('kmcfmf_message_filter_option');
-        // $settings_page->add_tab('test','Test');
-        $settings_page->add_field(
+        $menu_page->run();
+
+    }
+
+    /**
+     * Displays settings page
+     * @since 1.2.5
+     */
+    public function status_tab_view($args)
+    {
+        switch ($args['tab']) {
+            case 'words':
+                include "views/settings/words.php";
+                break;
+            case 'messages':
+                include "views/settings/messages.php";
+                break;
+            case 'plugins':
+                include "views/settings/plugins.php";
+                break;
+            default:
+                include "views/settings/status.php";
+                break;
+        }
+    }
+
+    /**
+     * Adds Settings
+     * @since 1.2.5
+     */
+    private function add_settings()
+    {
+
+        $settings = new Setting('kmcf7-message-filter-options&tab=words');
+        $settings->add_section('kmcfmf_message_filter_words');
+        $settings->add_field(
             array(
                 'type' => 'textarea',
                 'id' => 'kmcfmf_restricted_words',
@@ -123,16 +159,7 @@ class CF7MessageFilter
                 'placeholder' => 'eg john, doe, baby, man, [link], [russian]'
             )
         );
-        $settings_page->add_field(
-            array(
-                'type' => 'textarea',
-                'id' => 'kmcfmf_spam_word_error',
-                'label' => 'Error Message For Restricted Words: ',
-                'tip' => '',
-                'placeholder' => 'You have entered a word marked as spam'
-            )
-        );
-        $settings_page->add_field(
+        $settings->add_field(
             array(
                 'type' => 'textarea',
                 'id' => 'kmcfmf_restricted_emails',
@@ -141,17 +168,7 @@ class CF7MessageFilter
                 'placeholder' => 'eg john, doe, baby, man, earth'
             )
         );
-        $settings_page->add_field(
-            array(
-                'type' => 'textarea',
-                'id' => 'kmcfmf_spam_email_error',
-                'label' => 'Error Message For Restricted Emails: ',
-                'tip' => '',
-                'placeholder' => 'The e-mail address entered is invalid.',
-            )
-        );
-
-        $settings_page->add_field(
+        $settings->add_field(
             array(
                 'type' => 'textarea',
                 'id' => 'kmcfmf_tags_by_name',
@@ -160,9 +177,33 @@ class CF7MessageFilter
                 'placeholder' => ''
             )
         );
+        $settings->save();
 
+        $settings = new Setting('kmcf7-message-filter-options&tab=messages');
+        $settings->add_section('kmcfmf_message_filter_messages');
+        $settings->add_field(
+            array(
+                'type' => 'textarea',
+                'id' => 'kmcfmf_spam_word_error',
+                'label' => 'Error Message For Restricted Words: ',
+                'tip' => '',
+                'placeholder' => 'You have entered a word marked as spam'
+            )
+        );
+        $settings->add_field(
+            array(
+                'type' => 'textarea',
+                'id' => 'kmcfmf_spam_email_error',
+                'label' => 'Error Message For Restricted Emails: ',
+                'tip' => '',
+                'placeholder' => 'The e-mail address entered is invalid.',
+            )
+        );
+        $settings->save();
 
-        $settings_page->add_field(
+        $settings = new Setting('kmcf7-message-filter-options&tab=status');
+        $settings->add_section('kmcfmf_message_filter_status');
+        $settings->add_field(
             array(
                 'type' => 'checkbox',
                 'id' => 'kmcfmf_message_filter_toggle',
@@ -171,7 +212,7 @@ class CF7MessageFilter
             )
         );
 
-        $settings_page->add_field(
+        $settings->add_field(
             array(
                 'type' => 'checkbox',
                 'id' => 'kmcfmf_email_filter_toggle',
@@ -180,7 +221,7 @@ class CF7MessageFilter
             )
         );
 
-        $settings_page->add_field(
+        $settings->add_field(
             array(
                 'type' => 'checkbox',
                 'id' => 'kmcfmf_tags_by_name_filter_toggle',
@@ -189,7 +230,7 @@ class CF7MessageFilter
             )
         );
 
-        $settings_page->add_field(
+        $settings->add_field(
             array(
                 'type' => 'checkbox',
                 'id' => 'kmcfmf_message_filter_reset',
@@ -198,17 +239,12 @@ class CF7MessageFilter
             )
         );
 
-        // $settings_page->add_tab('new','New');
-        $menu_page->add_sub_menu_page($settings_page);
-
-        $menu_page->run();
-
+        $settings->save();
     }
 
     /**
      * Todo: Add Description
-     *
-     * @since    2.0.0
+     * @since    1.0.0
      * @access   public
      */
     private function add_options()
@@ -266,7 +302,7 @@ class CF7MessageFilter
         }
     }
 
-    public function add_filters()
+    private function add_filters()
     {
         add_filter('wpcf7_messages', array($this, 'add_custom_messages'), 10, 1);
 
@@ -295,7 +331,7 @@ class CF7MessageFilter
      * Adds a custom message for messages flagged as spam
      * @since 1.2.2
      */
-    public function add_custom_messages($messages)
+    private function add_custom_messages($messages)
     {
         $spam_word_eror = get_option('kmcfmf_spam_word_error') ? get_option('kmcfmf_spam_word_error') : 'One or more fields have an error. Please check and try again.';
         $spam_email_error = get_option('kmcfmf_spam_email_error') ? get_option('kmcfmf_spam_email_error') : 'The e-mail address entered is invalid.';
@@ -323,7 +359,7 @@ class CF7MessageFilter
      */
     public function dashboard_view()
     {
-        include "partials/dashboard.php";
+        include "views/dashboard.php";
     }
 
     /**
@@ -332,7 +368,7 @@ class CF7MessageFilter
      */
     public function messages_view()
     {
-        include "partials/messages.php";
+        include "views/messages.php";
     }
 
     /**
