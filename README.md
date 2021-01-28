@@ -16,6 +16,7 @@ Bear in mind that the codes in the `develop` branch may be unstable. If you are 
 
 ## v1.2.5 Changes
 1. Move log file to uploads folder
+2. Add auto clear message function
 
 ## v1.2.4 Changes
 1. Fix bug with some messages with links bypassing the checks
