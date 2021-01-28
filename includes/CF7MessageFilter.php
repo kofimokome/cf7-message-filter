@@ -108,10 +108,12 @@ class CF7MessageFilter
         $menu_page = new MenuPage('CF7 Form Filter', $menu_title, 'read', 'kmcf7-message-filter', 'dashicons-filter', null, array($this, 'dashboard_view'));
         $messages_page = new SubMenuPage($menu_page->get_menu_slug(), 'Blocked Messages', 'Blocked Messages', 'manage_options', 'kmcf7-filtered-messages', array($this, 'messages_view'));
         $menu_page->add_sub_menu_page($messages_page);
+
         $settings_page = new SubMenuPage($menu_page->get_menu_slug(), 'Options', 'Options', 'manage_options', 'kmcf7-message-filter-options', array($this, 'settings_view'), true);
         $settings_page->add_tab('status', 'Plugin Status', array($this, 'status_tab_view'), array('tab' => 'status'));
         $settings_page->add_tab('words', 'Restricted Content', array($this, 'status_tab_view'), array('tab' => 'words'));
         $settings_page->add_tab('messages', 'Error Messages', array($this, 'status_tab_view'), array('tab' => 'messages'));
+        $settings_page->add_tab('advanced', 'Advanced Settings', array($this, 'status_tab_view'), array('tab' => 'advanced'));
         $settings_page->add_tab('plugins', 'More Plugins', array($this, 'status_tab_view'), array('tab' => 'plugins'));
         $menu_page->add_sub_menu_page($settings_page);
 
@@ -134,6 +136,9 @@ class CF7MessageFilter
                 break;
             case 'plugins':
                 include "views/settings/plugins.php";
+                break;
+            case 'advanced':
+                include "views/settings/advanced.php";
                 break;
             default:
                 include "views/settings/status.php";
@@ -165,7 +170,7 @@ class CF7MessageFilter
                 'id' => 'kmcfmf_restricted_emails',
                 'label' => 'Restricted Emails: ',
                 'tip' => 'Note: If you write john, we will check for ( john@gmail.com, john@yahoo.com, john@hotmail.com, etc... )',
-                'placeholder' => 'eg john, doe, baby, man, earth'
+                'placeholder' => 'eg john, john@doe.com, mary@doman.tk, man, earth'
             )
         );
         $settings->add_field(
@@ -239,6 +244,55 @@ class CF7MessageFilter
             )
         );
 
+        $settings->save();
+
+
+        $settings = new Setting('kmcf7-message-filter-options&tab=advanced');
+        $settings->add_section('kmcfmf_message_filter_advanced');
+        $settings->add_field(
+            array(
+                'type' => 'checkbox',
+                'id' => 'kmcfmf_message_auto_delete_toggle',
+                'label' => 'Auto delete messages?: ',
+                'tip' => ''
+            )
+        );
+        $settings->add_field(
+            array(
+                'type' => 'number',
+                'id' => 'kmcfmf_message_auto_delete_duration',
+                'label' => 'Number of days: ',
+                'tip' => '',
+                'min' => 1,
+                'max' => ''
+            )
+        );
+        $settings->add_field(
+            array(
+                'type' => 'number',
+                'id' => 'kmcfmf_message_auto_delete_messages',
+                'label' => 'Number of messages to delete: ',
+                'tip' => 'Enter 0 to delete all messages',
+                'min' => 0,
+                'max' => '',
+            )
+        );
+        $settings->add_field(
+            array(
+                'type' => 'select',
+                'id' => 'kmcfmf_message_auto_delete_select',
+                'label' => 'Number of messages to delete: ',
+                'tip' => 'Enter 0 to delete all messages',
+                'min' => 0,
+                'max' => '',
+                'options' => array(
+                    'Select a value' => '',
+                    'name is a man' => 'value',
+                    'second' => 'value1',
+                ),
+                // 'default_option' => ''
+            )
+        );
         $settings->save();
     }
 
@@ -567,7 +621,7 @@ class CF7MessageFilter
     }
 
     /**
-     * Logs messages blockded to the log file
+     * Logs messages blocked to the log file
      * @since 1.2.0
      */
     private function update_log($email, $message)

@@ -72,25 +72,55 @@ class Setting
     {
         switch ($data['type']) {
             case 'text':
-                echo "<p><input type='text' name='{$data['id']}' value='" . get_option($data['id']) . "'></p>";
+                echo "<p><input type='text' name='{$data['id']}' value='" . get_option($data['id']) . "' class='{$data['input_class']}'></p>";
+                echo "<strong>{$data['tip']} </strong>";
+                break;
+            case 'number':
+                echo "<p><input type='number' name='{$data['id']}' value='" . get_option($data['id']) . "' min='" . $data['min'] . "' max='" . $data['max'] . "' class='{$data['input_class']}'></p>";
                 echo "<strong>{$data['tip']} </strong>";
                 break;
             case 'textarea':
                 echo "<p><textarea name='{$data['id']}' id='{$data['id']}' cols='80'
                   rows='8'
-                  placeholder='{$data['placeholder']}'>" . get_option($data['id']) . "</textarea></p>";
+                  placeholder='{$data['placeholder']}' class='{$data['input_class']}'>" . get_option($data['id']) . "</textarea></p>";
                 echo "<strong>{$data['tip']} </strong>";
                 break;
             case 'checkbox':
                 $state = get_option($data['id']) == 'on' ? 'checked' : '';
-                echo "<p><input type='checkbox' name='{$data['id']}' id='{$data['id']}' " . $state . " ></p>";
+                echo "<p><input type='checkbox' name='{$data['id']}' id='{$data['id']}' " . $state . " class='{$data['input_class']}'></p>";
                 echo "<strong>{$data['tip']} </strong>";
+                break;
+            case 'select':
+                $selected_value = get_option($data['id']);
+                echo "<p><select type='text' name='{$data['id']}' id='{$data['id']}' class='{$data['input_class']}'>";
+                foreach ($data['options'] as $key => $value):?>
+                    <option value='<?php echo $value ?>' <?php echo ($value === $selected_value) ? 'selected' : '' ?> ><?php echo $key ?></option>
+                <?php
+                endforeach;
+                echo "</select></p>";
+                echo "<strong>{$data['tip']} </strong>";
+                break;
+            default:
+                echo "<< <span style='color: red;'>Please enter a valid field type</span> >>";
                 break;
         }
     }
 
     public function add_field($data)
     {
+        $default_data = array(
+            'type' => '',
+            'id' => '',
+            'label' => '',
+            'tip' => '',
+            'min' => '',
+            'max' => '',
+            'input_class' => '', // class for input element
+            'class' => '', // class for parent element
+            'options' => array('Select a value' => ''),
+            'default_option' => ''
+        );
+        $data = array_merge($default_data, $data);
         // todo: compare two arrays
         $data['section_id'] = $this->section_id;
         array_push($this->fields, $data);
