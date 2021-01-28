@@ -1,10 +1,10 @@
 === Message Filter for Contact Form 7 ===
 Contributors: kofimokome
-Donate link: www.kofimokome.stream
+Donate link: https://www.paypal.com/donate?hosted_button_id=B3JAV39H95RFG
 Tags: spam, filter
 Requires at least: 5.4
 Tested up to: 5.6
-Stable tag: 1.2.5
+Stable tag: 1.2.5.1
 Requires PHP: 5.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -31,6 +31,7 @@ Note: This is just an extension. This plugin is not affiliated with or endorsed 
 == Changelog ==
 
 = 1.2.5 =
+* Add autoclear messages function
 * Move log file to uploads folder
 
 = 1.2.4 =

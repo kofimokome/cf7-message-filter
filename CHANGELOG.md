@@ -3,6 +3,7 @@
 1. Move log file to uploads folder
 
 ## v1.2.4 Changes
+1. Add auto clear message function
 1. Fix bug with some messages with links bypassing the checks
 
 ## v1.2.3 Changes
