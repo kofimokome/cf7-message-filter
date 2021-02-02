@@ -301,12 +301,11 @@ class CF7MessageFilter
                 'id' => 'kmcfmf_message_auto_delete_duration',
                 'label' => 'Number of days: ',
                 'options' => array(
-                    'Select a value' => '',
+                    '1 Month' => '30',
                     '1 Day' => '1',
                     '3 Days' => '3',
                     '1 Week' => '7',
                     '2 Weeks' => '14',
-                    '1 Month' => '30',
                 ),
                 // 'default_option' => ''
             )
@@ -317,8 +316,6 @@ class CF7MessageFilter
                 'id' => 'kmcfmf_message_auto_delete_amount',
                 'label' => 'Number of messages to delete: ',
                 'options' => array(
-                    'Select a value' => '',
-                    'All' => '0',
                     '10 Messages' => '10',
                     '20 Messages' => '20',
                     '40 Messages' => '40',
