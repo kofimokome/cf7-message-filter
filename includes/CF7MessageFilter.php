@@ -25,7 +25,7 @@ class CF7MessageFilter
         // our constructor
         $this->blocked = get_option("kmcfmf_messages_blocked_today");
         //  $this->error_notice("hi there");
-        $this->version = '1.2.5';
+        $this->version = '1.2.5.1';
     }
 
     /**
@@ -53,6 +53,7 @@ class CF7MessageFilter
         $this->add_main_menu();
         $this->add_settings();
         $this->transfer_old_data();
+        $this->clear_messages();
     }
 
 
@@ -113,12 +114,39 @@ class CF7MessageFilter
         $settings_page->add_tab('status', 'Plugin Status', array($this, 'status_tab_view'), array('tab' => 'status'));
         $settings_page->add_tab('words', 'Restricted Content', array($this, 'status_tab_view'), array('tab' => 'words'));
         $settings_page->add_tab('messages', 'Error Messages', array($this, 'status_tab_view'), array('tab' => 'messages'));
-        $settings_page->add_tab('advanced', 'Advanced Settings', array($this, 'status_tab_view'), array('tab' => 'advanced'));
+        $settings_page->add_tab('advanced', 'Advanced Settings (experimental)', array($this, 'status_tab_view'), array('tab' => 'advanced'));
         $settings_page->add_tab('plugins', 'More Plugins', array($this, 'status_tab_view'), array('tab' => 'plugins'));
         $menu_page->add_sub_menu_page($settings_page);
 
         $menu_page->run();
 
+    }
+
+    /**
+     * Clears saved blocked messages
+     * @since 1.2.5.1
+     */
+    private function clear_messages()
+    {
+        $clear_messages = get_option('kmcfmf_message_auto_delete_toggle') == 'on' ? true : false;
+        if ($clear_messages) {
+            $last_cleared_date = get_option('kmcfmf_last_cleared_date');
+            $frequency = get_option('kmcfmf_message_auto_delete_duration');
+            $to_delete = get_option('kmcfmf_message_auto_delete_amount');
+            if ($last_cleared_date != '0') {
+                $now = strtotime(Date("d F Y"));
+                $diff = $now - $last_cleared_date;
+                $diff = round($diff / (60 * 60 * 24));
+                if ($diff >= $frequency) {
+                    // clear messages
+                    $log_messages = (array)json_decode(file_get_contents($this->log_file));
+                    $log_messages = array_slice($log_messages, $to_delete);
+                    $log_messages = json_encode((object)$log_messages);
+                    file_put_contents($this->log_file, $log_messages);
+                    update_option('kmcfmf_last_cleared_date', $now);
+                }
+            }
+        }
     }
 
     /**
@@ -269,26 +297,32 @@ class CF7MessageFilter
         );
         $settings->add_field(
             array(
-                'type' => 'number',
-                'id' => 'kmcfmf_message_auto_delete_messages',
-                'label' => 'Number of messages to delete: ',
-                'tip' => 'Enter 0 to delete all messages',
-                'min' => 0,
-                'max' => '',
+                'type' => 'select',
+                'id' => 'kmcfmf_message_auto_delete_duration',
+                'label' => 'Number of days: ',
+                'options' => array(
+                    'Select a value' => '',
+                    '1 Day' => '1',
+                    '3 Days' => '3',
+                    '1 Week' => '7',
+                    '2 Weeks' => '14',
+                    '1 Month' => '30',
+                ),
+                // 'default_option' => ''
             )
         );
         $settings->add_field(
             array(
                 'type' => 'select',
-                'id' => 'kmcfmf_message_auto_delete_select',
+                'id' => 'kmcfmf_message_auto_delete_amount',
                 'label' => 'Number of messages to delete: ',
-                'tip' => 'Enter 0 to delete all messages',
-                'min' => 0,
-                'max' => '',
                 'options' => array(
                     'Select a value' => '',
-                    'name is a man' => 'value',
-                    'second' => 'value1',
+                    'All' => '0',
+                    '10 Messages' => '10',
+                    '20 Messages' => '20',
+                    '40 Messages' => '40',
+                    '80 Messages' => '80',
                 ),
                 // 'default_option' => ''
             )
@@ -316,6 +350,7 @@ class CF7MessageFilter
             'kmcfmf_messages', // todo: remove this as it is no longer used
             'kmcfmf_weekly_stats',
             'kmcfmf_weekend',
+            'kmcfmf_last_cleared_date',
         );
 
         foreach ($option_names as $option_name) {
@@ -337,6 +372,7 @@ class CF7MessageFilter
         }
         update_option('kmcfmf_message_filter_reset', 'off');
         update_option('kmcfmf_weekly_stats', get_option('kmcfmf_weekly_stats') == '0' ? '[0,0,0,0,0,0,0]' : get_option('kmcfmf_weekly_stats'));
+        update_option('kmcfmf_last_cleared_date', get_option('kmcfmf_last_cleared_date') == '0' ? strtotime(Date("d F Y")) : get_option('kmcfmf_last_cleared_date'));
 
         $date = get_option('kmcfmf_date_of_today');
         $now = strtotime(Date("d F Y"));
@@ -385,7 +421,7 @@ class CF7MessageFilter
      * Adds a custom message for messages flagged as spam
      * @since 1.2.2
      */
-    private function add_custom_messages($messages)
+    public function add_custom_messages($messages)
     {
         $spam_word_eror = get_option('kmcfmf_spam_word_error') ? get_option('kmcfmf_spam_word_error') : 'One or more fields have an error. Please check and try again.';
         $spam_email_error = get_option('kmcfmf_spam_email_error') ? get_option('kmcfmf_spam_email_error') : 'The e-mail address entered is invalid.';

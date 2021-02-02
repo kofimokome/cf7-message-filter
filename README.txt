@@ -31,8 +31,9 @@ Note: This is just an extension. This plugin is not affiliated with or endorsed 
 == Changelog ==
 
 = 1.2.5 =
-* Add autoclear messages function
+* Add auto-clear messages function
 * Move log file to uploads folder
+* Bug fixes
 
 = 1.2.4 =
 * Fix bug with some messages with links bypassing the checks

@@ -2,6 +2,7 @@
 ## v1.2.5 Changes
 1. Move log file to uploads folder
 2. Add auto clear message function
+3. Bug fixes
 
 ## v1.2.4 Changes
 1. Fix bug with some messages with links bypassing the checks
