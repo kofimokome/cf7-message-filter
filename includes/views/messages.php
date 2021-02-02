@@ -2,7 +2,7 @@
 
 namespace kmcf7_message_filter;
 
-$pagination = (int)$_GET['pagination'];
+$pagination = isset($_GET['pagination']) ? (int)$_GET['pagination'] : 0;
 
 if ($pagination <= 0) {
     $pagination = 1;
