@@ -25,7 +25,7 @@ class CF7MessageFilter
         // our constructor
         $this->blocked = get_option("kmcfmf_messages_blocked_today");
         //  $this->error_notice("hi there");
-        $this->version = '1.2.5.1';
+        $this->version = '1.2.5.2';
     }
 
     /**
@@ -111,9 +111,7 @@ class CF7MessageFilter
         $menu_page->add_sub_menu_page($messages_page);
 
         $settings_page = new SubMenuPage($menu_page->get_menu_slug(), 'Options', 'Options', 'manage_options', 'kmcf7-message-filter-options', array($this, 'settings_view'), true);
-        $settings_page->add_tab('status', 'Plugin Status', array($this, 'status_tab_view'), array('tab' => 'status'));
-        $settings_page->add_tab('words', 'Restricted Content', array($this, 'status_tab_view'), array('tab' => 'words'));
-        $settings_page->add_tab('messages', 'Error Messages', array($this, 'status_tab_view'), array('tab' => 'messages'));
+        $settings_page->add_tab('basic', 'Basic Settings', array($this, 'status_tab_view'), array('tab' => 'basic'));
         $settings_page->add_tab('advanced', 'Advanced Settings (experimental)', array($this, 'status_tab_view'), array('tab' => 'advanced'));
         $settings_page->add_tab('plugins', 'More Plugins', array($this, 'status_tab_view'), array('tab' => 'plugins'));
         $menu_page->add_sub_menu_page($settings_page);
@@ -156,11 +154,8 @@ class CF7MessageFilter
     public function status_tab_view($args)
     {
         switch ($args['tab']) {
-            case 'words':
-                include "views/settings/words.php";
-                break;
-            case 'messages':
-                include "views/settings/messages.php";
+            case 'basic':
+                include "views/settings/basic.php";
                 break;
             case 'plugins':
                 include "views/settings/plugins.php";
@@ -169,7 +164,7 @@ class CF7MessageFilter
                 include "views/settings/advanced.php";
                 break;
             default:
-                include "views/settings/status.php";
+                include "views/settings/basic.php";
                 break;
         }
     }
@@ -181,8 +176,8 @@ class CF7MessageFilter
     private function add_settings()
     {
 
-        $settings = new Setting('kmcf7-message-filter-options&tab=words');
-        $settings->add_section('kmcfmf_message_filter_words');
+        $settings = new Setting('kmcf7-message-filter-options&tab=basic');
+        $settings->add_section('kmcfmf_message_filter_basic');
         $settings->add_field(
             array(
                 'type' => 'textarea',
@@ -210,10 +205,7 @@ class CF7MessageFilter
                 'placeholder' => ''
             )
         );
-        $settings->save();
 
-        $settings = new Setting('kmcf7-message-filter-options&tab=messages');
-        $settings->add_section('kmcfmf_message_filter_messages');
         $settings->add_field(
             array(
                 'type' => 'textarea',
@@ -232,10 +224,7 @@ class CF7MessageFilter
                 'placeholder' => 'The e-mail address entered is invalid.',
             )
         );
-        $settings->save();
 
-        $settings = new Setting('kmcf7-message-filter-options&tab=status');
-        $settings->add_section('kmcfmf_message_filter_status');
         $settings->add_field(
             array(
                 'type' => 'checkbox',
@@ -526,7 +515,7 @@ class CF7MessageFilter
                         $like_end = (preg_match('/\*$/', $check_word));
 
                         # Remove leading and trailing asterisks from $check_word
-                        $regex_pattern = preg_quote(trim($check_word, '*'));
+                        $regex_pattern = preg_quote(trim($check_word, '*'), '/');
 
                         if ($like_start) {
                             $regex_pattern = '.*' . $regex_pattern;
