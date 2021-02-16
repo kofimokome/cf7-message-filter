@@ -9,6 +9,7 @@
 
 namespace kmcf7_message_filter;
 
+use WPCF7_Submission;
 
 class CF7MessageFilter
 {
@@ -17,7 +18,7 @@ class CF7MessageFilter
     private $temp_message;
     private $count_updated = false;
     private $blocked;
-    private $log_file;
+    private static $log_file;
     private $version;
 
     public function __construct()
@@ -38,10 +39,15 @@ class CF7MessageFilter
         if (!is_dir($logs_root)) {
             mkdir($logs_root, 0700);
         }
-        $this->log_file = $logs_root . 'messages.txt';
-        if (!is_file($this->log_file)) {
-            file_put_contents($this->log_file, '{}');
+        self::$log_file = $logs_root . 'messages.txt';
+        if (!is_file(self::$log_file)) {
+            file_put_contents(self::$log_file, '{}');
         }
+    }
+
+    public static function get_log_file_path()
+    {
+        return self::$log_file;
     }
 
     public function run()
@@ -62,6 +68,16 @@ class CF7MessageFilter
 
         // add actions here
         add_action('admin_enqueue_scripts', array($this, 'add_scripts'));
+        // add_action('wpcf7_submit', array($this, 'on_wpcf7_submit'),10, 2);
+
+
+    }
+
+    public function on_wpcf7_submit($contact_form, $result)
+    {
+        $logs_root = wp_upload_dir()['basedir'] . '/kmcf7mf_logs/';
+        $submission = WPCF7_Submission::get_instance();
+        file_put_contents($logs_root . 'test.txt', json_encode($submission->get_posted_data()));
 
     }
 
@@ -137,10 +153,10 @@ class CF7MessageFilter
                 $diff = round($diff / (60 * 60 * 24));
                 if ($diff >= $frequency) {
                     // clear messages
-                    $log_messages = (array)json_decode(file_get_contents($this->log_file));
+                    $log_messages = (array)json_decode(file_get_contents(self::$log_file));
                     $log_messages = array_slice($log_messages, $to_delete);
                     $log_messages = json_encode((object)$log_messages);
-                    file_put_contents($this->log_file, $log_messages);
+                    file_put_contents(self::$log_file, $log_messages);
                     update_option('kmcfmf_last_cleared_date', $now);
                 }
             }
@@ -352,9 +368,9 @@ class CF7MessageFilter
             }
 
         }
-        if ($reset_message_filter_counter || file_get_contents($this->log_file) == '') {
+        if ($reset_message_filter_counter || file_get_contents(self::$log_file) == '') {
             $content = "{}";
-            file_put_contents($this->log_file, $content);
+            file_put_contents(self::$log_file, $content);
         }
         update_option('kmcfmf_message_filter_reset', 'off');
         update_option('kmcfmf_weekly_stats', get_option('kmcfmf_weekly_stats') == '0' ? '[0,0,0,0,0,0,0]' : get_option('kmcfmf_weekly_stats'));
@@ -648,14 +664,17 @@ class CF7MessageFilter
      */
     private function update_log($email, $message)
     {
+        $submission = WPCF7_Submission::get_instance();
+        $contact_form = $submission->get_contact_form();
         update_option('kmcfmf_last_message_blocked', '<td>' . Date('d-m-y h:ia') . ' </td><td>' . $email . '</td><td>' . $message . ' </td>');
         //update_option("kmcfmf_messages", get_option("kmcfmf_messages") . "]kmcfmf_message[ kmcfmf_data=" . $message . " kmcfmf_data=" . $this->temp_email . " kmcfmf_data=" . Date('d-m-y  h:ia'));
-        $log_messages = (array)json_decode(file_get_contents($this->log_file));
+        $log_messages = (array)json_decode(file_get_contents(self::$log_file));
         $log_message = ['message' => $message, 'date' => Date('d-m-y  h:ia'), 'email' => $email];
+        $log_message = ['id' => $contact_form->id(), 'name' => $contact_form->name(), 'title' => $contact_form->title(), 'data' => $submission->get_posted_data(), 'date' => Date('d-m-y  h:ia')];
         array_push($log_messages, $log_message);
 
         $log_messages = json_encode((object)$log_messages);
-        file_put_contents($this->log_file, $log_messages);
+        file_put_contents(self::$log_file, $log_messages);
         update_option('kmcfmf_messages_blocked', get_option('kmcfmf_messages_blocked') + 1);
         update_option("kmcfmf_messages_blocked_today", get_option("kmcfmf_messages_blocked_today") + 1);
         $today = date('N');
@@ -664,6 +683,10 @@ class CF7MessageFilter
         update_option('kmcfmf_weekly_stats', json_encode($weekly_stats));
 
         $this->count_updated = true;
+
+        $logs_root = wp_upload_dir()['basedir'] . '/kmcf7mf_logs/';
+        $submission = WPCF7_Submission::get_instance();
+        file_put_contents($logs_root . 'test.txt', json_encode($submission->get_posted_data()));
     }
 
     /**
@@ -677,7 +700,7 @@ class CF7MessageFilter
             $old_logs_root = plugin_dir_path(dirname(__FILE__)) . 'logs/';
             $old_logs_file = $old_logs_root . 'messages.txt';
             if (is_file($old_logs_file)) {
-                rename($old_logs_file, $this->log_file);
+                rename($old_logs_file, self::$log_file);
             }
         } else {
             // for those migrating from v1.1.x to >=v1.2.0
@@ -692,7 +715,7 @@ class CF7MessageFilter
                 }
             }
             $log_messages = json_encode((object)$log_messages);
-            file_put_contents($this->log_file, $log_messages);
+            file_put_contents(self::$log_file, $log_messages);
 
             update_option('kmcfmf_messages', 0);
         }

@@ -2,6 +2,10 @@
 
 namespace kmcf7_message_filter;
 
+echo "<pre>";
+print_r(BlockedMessage::get_forms());
+// die();
+echo "</pre>";
 $pagination = isset($_GET['pagination']) ? (int)$_GET['pagination'] : 0;
 
 if ($pagination <= 0) {
@@ -13,7 +17,7 @@ $end = -1;
 $number_per_page = 10; // per page
 
 // $messages = explode("]kmcfmf_message[", get_option('kmcfmf_messages'));
-$messages = (array)json_decode(file_get_contents($this->log_file));
+$messages = (array)json_decode(file_get_contents(CF7MessageFilter::get_log_file_path()));
 function decodeUnicodeVars($message)
 {
     return mb_convert_encoding($message, 'UTF-8',
@@ -35,6 +39,13 @@ if (($pagination * $number_per_page) > $size && (($pagination * $number_per_page
 // echo "<br>we will search from " . $start . " to " . ( $end - 1 ) . "<br>";
 ?>
     <h3><?php echo get_option('kmcfmf_messages_blocked'); ?> messages have been blocked</h3>
+    here is a select :<select name="" id="" class="form-control">
+    <option value="">Select a form</option>
+    <?php foreach (BlockedMessage::get_forms() as $form): ?>
+        <option value="<?php echo $form[1] ?>"><?php echo $form[0] ?></option>
+    <?php endforeach; ?>
+</select>
+    <button class="btn btn-primary btn-inline">Show Blocked Messages</button>
     <table class="kmcfmf_table table table-striped">
         <tr>
             <td><b>S/N</b></td>

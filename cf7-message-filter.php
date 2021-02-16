@@ -45,6 +45,7 @@ function kmcf7_loader()
         'MenuPage.php', //
         'SubMenuPage.php', //
         'Setting.php', //
+        'BlockedMessage.php', //
         // 'admin_menu.php', //
 
     );
