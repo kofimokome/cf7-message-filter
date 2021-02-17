@@ -561,10 +561,8 @@ class CF7MessageFilter
         if ($found) {
             $result->invalidate($tag, wpcf7_get_message('spam_word_error'));
 
-            $this->temp_email = $_POST['your-email'];
-
-            if (!$this->count_updated && $this->temp_email != '') {
-                $this->update_log($this->temp_email, $message);
+            if (!$this->count_updated) {
+                $this->update_log();
             }
         } else {
 
@@ -625,11 +623,10 @@ class CF7MessageFilter
             } else {
                 foreach ($check_words as $check_word) {
                     if (strpos($value, $check_word) !== false) {
-                        $this->temp_message = $_POST['your-message'];
                         $result->invalidate($tag, wpcf7_get_message('spam_email_error'));
 
-                        if (!$this->count_updated && $this->temp_message != '') {
-                            $this->update_log($value, $this->temp_message);
+                        if (!$this->count_updated) {
+                            $this->update_log();
                         }
                     }
                 }
@@ -662,7 +659,7 @@ class CF7MessageFilter
      * Logs messages blocked to the log file
      * @since 1.2.0
      */
-    private function update_log($email, $message)
+    private function update_log()
     {
         $submission = WPCF7_Submission::get_instance();
         $contact_form = $submission->get_contact_form();
