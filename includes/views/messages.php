@@ -2,10 +2,6 @@
 
 namespace kmcf7_message_filter;
 
-echo "<pre>";
-// print_r(BlockedMessage::get_columns(13));
-// die();
-echo "</pre>";
 $pagination = isset($_GET['pagination']) ? (int)$_GET['pagination'] : 0;
 
 if ($pagination <= 0) {
