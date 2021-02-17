@@ -33,6 +33,7 @@ Note: This is just an extension. This plugin is not affiliated with or endorsed 
 = 1.2.5 =
 * Add auto-clear messages function
 * Move log file to uploads folder
+* Grouped blocked messages per form
 * Bug fixes
 
 = 1.2.4 =
