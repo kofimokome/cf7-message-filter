@@ -14,8 +14,6 @@ use WPCF7_Submission;
 class CF7MessageFilter
 {
 
-    private $temp_email;
-    private $temp_message;
     private $count_updated = false;
     private $blocked;
     private static $log_file;
@@ -26,7 +24,7 @@ class CF7MessageFilter
         // our constructor
         $this->blocked = get_option("kmcfmf_messages_blocked_today");
         //  $this->error_notice("hi there");
-        $this->version = '1.2.6';
+        $this->version = '1.2.5.2';
     }
 
     /**
@@ -45,6 +43,10 @@ class CF7MessageFilter
         }
     }
 
+    /**
+     * Returns the path to the log file
+     * @since 1.2.5.2
+     */
     public static function get_log_file_path()
     {
         return self::$log_file;
@@ -379,6 +381,7 @@ class CF7MessageFilter
         $date = get_option('kmcfmf_date_of_today');
         $now = strtotime(Date("d F Y"));
         $today = date("N", $now);
+        //todo: Check this graph again for it's not working as expected
         if ((int)get_option('kmcfmf_weekend') == 0 || (int)get_option('kmcfmf_weekend') < (int)$now) {
             $sunday = strtotime("+" . (7 - $today) . "day");
             update_option('kmcfmf_weekend', $sunday);
@@ -665,7 +668,7 @@ class CF7MessageFilter
         $contact_form = $submission->get_contact_form();
         // update_option('kmcfmf_last_message_blocked', '<td>' . Date('d-m-y h:ia') . ' </td><td>' . $email . '</td><td>' . $message . ' </td>');
         $log_messages = (array)json_decode(file_get_contents(self::$log_file));
-        $log_message = ['id' => $contact_form->id(), 'name' => $contact_form->name(), 'title' => $contact_form->title(), 'data' => $submission->get_posted_data(), 'date' => Date('d-m-y  h:ia')];
+        $log_message = ['id' => $contact_form->id(), 'name' => $contact_form->name(), 'title' => $contact_form->title(), 'data' => array_merge($submission->get_posted_data(), array('date' => Date('d-m-y  h:ia')))];
         array_push($log_messages, $log_message);
 
         $log_messages = json_encode((object)$log_messages);

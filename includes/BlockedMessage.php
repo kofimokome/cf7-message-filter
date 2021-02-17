@@ -10,11 +10,10 @@ namespace kmcf7_message_filter;
 
 class BlockedMessage
 {
-    private static $test;
 
     /**
      * Gets blocked messages from log file
-     * @since 1.2.6
+     * @since 1.2.5.2
      */
     private static function get_messages()
     {
@@ -25,7 +24,7 @@ class BlockedMessage
 
     /**
      * Gets all forms ids and titles
-     * @since 1.2.6
+     * @since 1.2.5.2
      */
     public static function get_forms()
     {
@@ -48,7 +47,7 @@ class BlockedMessage
 
     /**
      * Gets all rows for a particular form
-     * @since 1.2.6
+     * @since 1.2.5.2
      */
     public static function get_rows($form_id = 0)
     {
@@ -70,9 +69,9 @@ class BlockedMessage
 
     /**
      * Gets all columns for a particular form
-     * @since 1.2.6
+     * @since 1.2.5.2
      */
-    public static function get_columns($form_id)
+    public static function get_columns($form_id = 0)
     {
         $messages = self::get_messages();
         $columns = array();

@@ -48,9 +48,9 @@ function decodeUnicodeVars($message)
                     <b><?php echo $row ?></b>
                 </td>
             <?php endforeach; ?>
-            <td>
-                actions
-            </td>
+<!--            <td>-->
+<!--                actions-->
+<!--            </td>-->
         </tr>
         <?php
         $messages = BlockedMessage::get_columns($form_id);
@@ -75,7 +75,7 @@ function decodeUnicodeVars($message)
                     echo "<td> </td>";
                 }
             }
-            echo "<td><button class='btn btn-primary'>resubmit</button></td>";
+//            echo "<td><button class='btn btn-primary'>resubmit</button></td>";
             echo "</tr>";
 
         }
