@@ -26,7 +26,7 @@ class CF7MessageFilter
         // our constructor
         $this->blocked = get_option("kmcfmf_messages_blocked_today");
         //  $this->error_notice("hi there");
-        $this->version = '1.2.5.2';
+        $this->version = '1.2.6';
     }
 
     /**
@@ -666,10 +666,8 @@ class CF7MessageFilter
     {
         $submission = WPCF7_Submission::get_instance();
         $contact_form = $submission->get_contact_form();
-        update_option('kmcfmf_last_message_blocked', '<td>' . Date('d-m-y h:ia') . ' </td><td>' . $email . '</td><td>' . $message . ' </td>');
-        //update_option("kmcfmf_messages", get_option("kmcfmf_messages") . "]kmcfmf_message[ kmcfmf_data=" . $message . " kmcfmf_data=" . $this->temp_email . " kmcfmf_data=" . Date('d-m-y  h:ia'));
+        // update_option('kmcfmf_last_message_blocked', '<td>' . Date('d-m-y h:ia') . ' </td><td>' . $email . '</td><td>' . $message . ' </td>');
         $log_messages = (array)json_decode(file_get_contents(self::$log_file));
-        $log_message = ['message' => $message, 'date' => Date('d-m-y  h:ia'), 'email' => $email];
         $log_message = ['id' => $contact_form->id(), 'name' => $contact_form->name(), 'title' => $contact_form->title(), 'data' => $submission->get_posted_data(), 'date' => Date('d-m-y  h:ia')];
         array_push($log_messages, $log_message);
 
@@ -684,9 +682,10 @@ class CF7MessageFilter
 
         $this->count_updated = true;
 
-        $logs_root = wp_upload_dir()['basedir'] . '/kmcf7mf_logs/';
-        $submission = WPCF7_Submission::get_instance();
-        file_put_contents($logs_root . 'test.txt', json_encode($submission->get_posted_data()));
+        // debug purpose
+        //$logs_root = wp_upload_dir()['basedir'] . '/kmcf7mf_logs/';
+        //$submission = WPCF7_Submission::get_instance();
+        //file_put_contents($logs_root . 'test.txt', json_encode($submission->get_posted_data()));
     }
 
     /**

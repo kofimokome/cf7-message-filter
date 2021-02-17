@@ -75,38 +75,6 @@ namespace kmcf7_message_filter;
 
                 </div>
                 <!-- row -->
-
-                <!-- products -->
-                <div class="row">
-
-                    <div class="col-xl-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title mt-0 mb-0 header-title">Last Message Blocked</h5>
-
-                                <div class="table-responsive mt-4">
-                                    <table class="table table-hover table-nowrap mb-0">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col">Time</th>
-                                            <th scope="col">Email</th>
-                                            <th scope="col">Message</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <?php echo get_option('kmcfmf_last_message_blocked'); ?>
-
-                                        </tr>
-
-                                        </tbody>
-                                    </table>
-                                </div> <!-- end table-responsive-->
-                            </div> <!-- end card-body-->
-                        </div> <!-- end card-->
-                    </div> <!-- end col-->
-                </div>
-                <!-- end row -->
             </div>
         </div> <!-- content -->
 

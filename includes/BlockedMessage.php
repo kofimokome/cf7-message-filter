@@ -12,6 +12,10 @@ class BlockedMessage
 {
     private static $test;
 
+    /**
+     * Gets blocked messages from log file
+     * @since 1.2.6
+     */
     private static function get_messages()
     {
         $log_file = CF7MessageFilter::get_log_file_path();
@@ -19,6 +23,10 @@ class BlockedMessage
         return $messages;
     }
 
+    /**
+     * Gets all forms ids and titles
+     * @since 1.2.6
+     */
     public static function get_forms()
     {
         $messages = self::get_messages();
@@ -38,25 +46,32 @@ class BlockedMessage
 
     }
 
-    public static function get_rows($form_id)
+    /**
+     * Gets all rows for a particular form
+     * @since 1.2.6
+     */
+    public static function get_rows($form_id = 0)
     {
         $messages = self::get_messages();
         $rows = array();
+
         $messages = array_filter($messages, function ($val) use ($form_id) {
             if (property_exists($val, 'id')) {
                 return $val->id == $form_id;
             }
             return $form_id == 0;
         });
-        // return $messages;
         foreach ($messages as $message) {
-
-            $rows = array_merge($rows, array_keys(get_object_vars($message->data)));
-
+            $rows = array_merge($rows, array_keys(get_object_vars($form_id == 0 ? $message : $message->data)));
         }
+
         return array_unique($rows, SORT_REGULAR);
     }
 
+    /**
+     * Gets all columns for a particular form
+     * @since 1.2.6
+     */
     public static function get_columns($form_id)
     {
         $messages = self::get_messages();
@@ -67,9 +82,8 @@ class BlockedMessage
             }
             return $form_id == 0;
         });
-        // return $messages;
         foreach ($messages as $message) {
-            array_push($columns, $message->data);
+            array_push($columns, $form_id == 0 ? $message : $message->data);
         }
         return $columns;
     }
