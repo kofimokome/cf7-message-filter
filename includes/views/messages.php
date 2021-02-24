@@ -16,12 +16,18 @@ $form_id = $form_id == '' ? -1 : intval($form_id);
 
 function decodeUnicodeVars($message)
 {
+    $message = is_array($message) ? implode(" ", $message) : $message;
     return mb_convert_encoding($message, 'UTF-8',
         mb_detect_encoding($message, 'UTF-8, ISO-8859-1', true));
 }
 
 // echo "<br>we will search from " . $start . " to " . ( $end - 1 ) . "<br>";
 ?>
+    <style>
+        #wpbody-content {
+            overflow-x: scroll;
+        }
+    </style>
     <h3><?php echo get_option('kmcfmf_messages_blocked'); ?> messages have been blocked</h3>
     <form action="" class="form-inline">
         <input type="hidden" name="page" value="kmcf7-filtered-messages">
@@ -44,9 +50,9 @@ function decodeUnicodeVars($message)
                     <b><?php echo $row ?></b>
                 </td>
             <?php endforeach; ?>
-<!--            <td>-->
-<!--                actions-->
-<!--            </td>-->
+            <!--            <td>-->
+            <!--                actions-->
+            <!--            </td>-->
         </tr>
         <?php
         $messages = BlockedMessage::get_columns($form_id);
