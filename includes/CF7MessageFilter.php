@@ -24,7 +24,7 @@ class CF7MessageFilter
         // our constructor
         $this->blocked = get_option("kmcfmf_messages_blocked_today");
         //  $this->error_notice("hi there");
-        $this->version = '1.2.5.2';
+        $this->version = '1.2.5.3';
     }
 
     /**
