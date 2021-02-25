@@ -61,7 +61,7 @@ class CF7MessageFilter
         $this->add_main_menu();
         $this->add_settings();
         $this->transfer_old_data();
-        $this->clear_messages();
+        // $this->clear_messages();
     }
 
 
@@ -130,7 +130,7 @@ class CF7MessageFilter
 
         $settings_page = new SubMenuPage($menu_page->get_menu_slug(), 'Options', 'Options', 'manage_options', 'kmcf7-message-filter-options', array($this, 'settings_view'), true);
         $settings_page->add_tab('basic', 'Basic Settings', array($this, 'status_tab_view'), array('tab' => 'basic'));
-        $settings_page->add_tab('advanced', 'Advanced Settings (experimental)', array($this, 'status_tab_view'), array('tab' => 'advanced'));
+        // $settings_page->add_tab('advanced', 'Advanced Settings (experimental)', array($this, 'status_tab_view'), array('tab' => 'advanced'));
         $settings_page->add_tab('plugins', 'More Plugins', array($this, 'status_tab_view'), array('tab' => 'plugins'));
         $menu_page->add_sub_menu_page($settings_page);
 
@@ -354,6 +354,7 @@ class CF7MessageFilter
             'kmcfmf_messages', // todo: remove this as it is no longer used
             'kmcfmf_weekly_stats',
             'kmcfmf_weekend',
+            'kmcfmf_word_stats',
             'kmcfmf_last_cleared_date',
         );
 
@@ -376,6 +377,7 @@ class CF7MessageFilter
         }
         update_option('kmcfmf_message_filter_reset', 'off');
         update_option('kmcfmf_weekly_stats', get_option('kmcfmf_weekly_stats') == '0' ? '[0,0,0,0,0,0,0]' : get_option('kmcfmf_weekly_stats'));
+        update_option('kmcfmf_word_stats', get_option('kmcfmf_word_stats') == '0' ? '[]' : get_option('kmcfmf_word_stats'));
         update_option('kmcfmf_last_cleared_date', get_option('kmcfmf_last_cleared_date') == '0' ? strtotime(Date("d F Y")) : get_option('kmcfmf_last_cleared_date'));
 
         $date = get_option('kmcfmf_date_of_today');
@@ -493,6 +495,7 @@ class CF7MessageFilter
         $name = $tag->name;
 
         $found = false;
+        $spam_word = '';
 
         // UnderWordPressue: Change explode(" ", $values) to preg_split reason: whole whitespace range AND comma are valid separators
         $check_words = preg_split('/[\s,]+/', get_option('kmcfmf_restricted_words'));
@@ -549,6 +552,7 @@ class CF7MessageFilter
                 }
 
                 if ($found) {
+                    $spam_word = $check_word;
                     break 2; // stops the first foreach loop since we have already identified a spam word
                 }
             }
@@ -565,7 +569,7 @@ class CF7MessageFilter
             $result->invalidate($tag, wpcf7_get_message('spam_word_error'));
 
             if (!$this->count_updated) {
-                $this->update_log();
+                $this->update_log($spam_word);
             }
         } else {
 
@@ -629,7 +633,7 @@ class CF7MessageFilter
                         $result->invalidate($tag, wpcf7_get_message('spam_email_error'));
 
                         if (!$this->count_updated) {
-                            $this->update_log();
+                            $this->update_log('');
                         }
                     }
                 }
@@ -662,7 +666,7 @@ class CF7MessageFilter
      * Logs messages blocked to the log file
      * @since 1.2.0
      */
-    private function update_log()
+    private function update_log($spam)
     {
         $submission = WPCF7_Submission::get_instance();
         $contact_form = $submission->get_contact_form();
@@ -679,6 +683,13 @@ class CF7MessageFilter
         $weekly_stats = json_decode(get_option('kmcfmf_weekly_stats'));
         $weekly_stats[$today - 1] = get_option("kmcfmf_messages_blocked_today");
         update_option('kmcfmf_weekly_stats', json_encode($weekly_stats));
+
+        if (trim($spam) !== '') {
+            $word_stats = json_decode(get_option('kmcfmf_word_stats'),true);
+            $word_stats[$spam] = isset($word_stats[$spam]) ? ((int)$word_stats[$spam]) + 1 : 1;
+            update_option('kmcfmf_word_stats', json_encode($word_stats));
+        }
+
 
         $this->count_updated = true;
 
