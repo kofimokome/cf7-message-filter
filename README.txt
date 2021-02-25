@@ -2,7 +2,7 @@
 Contributors: kofimokome
 Donate link: https://www.paypal.com/donate?hosted_button_id=B3JAV39H95RFG
 Tags: spam, filter
-Requires at least: 5.4
+Requires at least: 5.5
 Tested up to: 5.6
 Stable tag: 1.2.5.3
 Requires PHP: 5.4
