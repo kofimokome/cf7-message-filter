@@ -100,8 +100,7 @@ namespace kmcf7_message_filter;
 
 
 </div>
-<?php $word_options = json_encode(array_keys(json_decode(get_option('kmcfmf_word_stats'), true))); ?>
-<?php
+<?php $word_options = json_encode(array_keys(json_decode(get_option('kmcfmf_word_stats'), true)));
 $words = "[";
 foreach (json_decode(get_option('kmcfmf_word_stats'), true) as $word) {
     $words .= $word . ",";

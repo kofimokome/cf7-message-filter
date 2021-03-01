@@ -128,7 +128,7 @@ class CF7MessageFilter
         $messages_page = new SubMenuPage($menu_page->get_menu_slug(), 'Blocked Messages', 'Blocked Messages', 'manage_options', 'kmcf7-filtered-messages', array($this, 'messages_view'));
         $menu_page->add_sub_menu_page($messages_page);
 
-        $settings_page = new SubMenuPage($menu_page->get_menu_slug(), 'Options', 'Options', 'manage_options', 'kmcf7-message-filter-options', array($this, 'settings_view'), true);
+        $settings_page = new SubMenuPage($menu_page->get_menu_slug(), 'Settings', 'Settings', 'manage_options', 'kmcf7-message-filter-options', array($this, 'settings_view'), true);
         $settings_page->add_tab('basic', 'Basic Settings', array($this, 'status_tab_view'), array('tab' => 'basic'));
         // $settings_page->add_tab('advanced', 'Advanced Settings (experimental)', array($this, 'status_tab_view'), array('tab' => 'advanced'));
         $settings_page->add_tab('plugins', 'More Plugins', array($this, 'status_tab_view'), array('tab' => 'plugins'));
