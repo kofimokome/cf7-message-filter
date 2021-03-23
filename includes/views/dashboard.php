@@ -93,6 +93,32 @@ namespace kmcf7_message_filter;
         </div> <!-- content -->
 
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Thank you for using Contact Form 7 Filter</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h5> Here are a few changes in this version:</h5>
+                    <ol>
+                        <li>Restricted words in settings are now separated using a comma (,). If you used spaces ( ) to
+                            separate the words, please update the list in the settings page
+                        </li>
+                        <li>Added support for WordPress 5.7</li>
+                    </ol>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- ============================================================== -->
     <!-- End Page content -->
@@ -189,5 +215,10 @@ $words .= "]";
 
     var word_chart = new ApexCharts(document.querySelector("#words-chart"), word_options);
     word_chart.render();
+    <?php if(get_option('kmcfmf_version', '0') !== CF7MessageFilter::get_version()):?>
+    jQuery(document).ready(function ($) {
+        $('#myModal').modal(options)
+    });
+    <?php update_option('kmcfmf_version', CF7MessageFilter::get_version());endif;?>
 </script>
 <!-- END wrapper -->

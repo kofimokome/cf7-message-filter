@@ -3,8 +3,8 @@ Contributors: kofimokome
 Donate link: https://www.paypal.com/donate?hosted_button_id=B3JAV39H95RFG
 Tags: spam, filter
 Requires at least: 5.5
-Tested up to: 5.6
-Stable tag: 1.2.5.3
+Tested up to: 5.7
+Stable tag: 1.3.0
 Requires PHP: 5.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -29,6 +29,9 @@ Note: This is just an extension. This plugin is not affiliated with or endorsed 
 6. Save and wait for someone to submit
 
 == Changelog ==
+
+= 1.3.0 =
+* Fix bug when filter sees words separated with space as two words
 
 = 1.2.5 =
 * Add auto-clear messages function

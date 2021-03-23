@@ -17,14 +17,23 @@ class CF7MessageFilter
     private $count_updated = false;
     private $blocked;
     private static $log_file;
-    private $version;
+    private static $version;
 
     public function __construct()
     {
         // our constructor
         $this->blocked = get_option("kmcfmf_messages_blocked_today");
         //  $this->error_notice("hi there");
-        $this->version = '1.2.5.3';
+        self::$version = '1.3.0';
+    }
+
+    /**
+     * Returns the version of this plugin
+     * @since 1.3.0
+     */
+    public static function get_version()
+    {
+        return self::$version;
     }
 
     /**
@@ -61,7 +70,7 @@ class CF7MessageFilter
         $this->add_main_menu();
         $this->add_settings();
         $this->transfer_old_data();
-        // $this->clear_messages();
+        $this->clear_messages();
     }
 
 
@@ -101,6 +110,9 @@ class CF7MessageFilter
         $url = substr($url, 0, 29);
         // echo "<script> alert('$url');</script>";
         //wp_enqueue_style( 'style-name', get_stylesheet_uri() );
+        wp_enqueue_script('select2', plugins_url('assets/js/selectize.min.js', dirname(__FILE__)), array('jquery'), '4.0.13', true);
+        wp_enqueue_style('select2', plugins_url('/assets/css/selectize.default.css', dirname(__FILE__)), '', '4.0.13');
+
         if ($hook == 'toplevel_page_kmcf7-message-filter' || $url == '?page=kmcf7-filtered-messages') {
 
             wp_enqueue_script('vendor', plugins_url('assets/js/vendor.min.js', dirname(__FILE__)), array('jquery'), '1.0.0', true);
@@ -109,6 +121,7 @@ class CF7MessageFilter
             wp_enqueue_script('flat', plugins_url('assets/libs/flatpickr/flatpickr.min.js', dirname(__FILE__)), array('jquery'), '1.0.0', true);
             wp_enqueue_script('dash', plugins_url('assets/js/pages/dashboard.init.js', dirname(__FILE__)), array('jquery'), '1.0.0', true);
             wp_enqueue_script('app', plugins_url('assets/js/app.min.js', dirname(__FILE__)), array('jquery'), '1.0.0', true);
+            wp_enqueue_script('bootstrap', plugins_url('assets/js/bootstrap.min.js', dirname(__FILE__)), array('jquery'), '4.3.1', false);
 
 
             wp_enqueue_style('bootstrap', plugins_url('/assets/css/bootstrap.min.css', dirname(__FILE__)), '', '4.3.1');
@@ -130,7 +143,7 @@ class CF7MessageFilter
 
         $settings_page = new SubMenuPage($menu_page->get_menu_slug(), 'Settings', 'Settings', 'manage_options', 'kmcf7-message-filter-options', array($this, 'settings_view'), true);
         $settings_page->add_tab('basic', 'Basic Settings', array($this, 'status_tab_view'), array('tab' => 'basic'));
-        // $settings_page->add_tab('advanced', 'Advanced Settings (experimental)', array($this, 'status_tab_view'), array('tab' => 'advanced'));
+        $settings_page->add_tab('advanced', 'Advanced Settings (experimental)', array($this, 'status_tab_view'), array('tab' => 'advanced'));
         $settings_page->add_tab('plugins', 'More Plugins', array($this, 'status_tab_view'), array('tab' => 'plugins'));
         $menu_page->add_sub_menu_page($settings_page);
 
@@ -200,6 +213,7 @@ class CF7MessageFilter
             array(
                 'type' => 'textarea',
                 'id' => 'kmcfmf_restricted_words',
+                'input_class' => 'select2',
                 'label' => 'Restricted Words: ',
                 'tip' => 'type <code>[link]</code> to filter messages containing links, type <code>[russian]</code> to filter messages contains russian characters',
                 'placeholder' => 'eg john, doe, baby, man, [link], [russian]'
@@ -210,6 +224,7 @@ class CF7MessageFilter
                 'type' => 'textarea',
                 'id' => 'kmcfmf_restricted_emails',
                 'label' => 'Restricted Emails: ',
+                'input_class' => 'select2',
                 'tip' => 'Note: If you write john, we will check for ( john@gmail.com, john@yahoo.com, john@hotmail.com, etc... )',
                 'placeholder' => 'eg john, john@doe.com, mary@doman.tk, man, earth'
             )
@@ -218,6 +233,7 @@ class CF7MessageFilter
             array(
                 'type' => 'textarea',
                 'id' => 'kmcfmf_tags_by_name',
+                'input_class' => 'select2',
                 'label' => 'Analyze single line Text Fields with these names for restricted word, also: ',
                 'tip' => 'Note: your-subject, your-address, your-lastname, etc.',
                 'placeholder' => ''
@@ -497,66 +513,81 @@ class CF7MessageFilter
         $found = false;
         $spam_word = '';
 
-        // UnderWordPressue: Change explode(" ", $values) to preg_split reason: whole whitespace range AND comma are valid separators
-        $check_words = preg_split('/[\s,]+/', get_option('kmcfmf_restricted_words'));
+        $check_words = explode(',', get_option('kmcfmf_restricted_words'));
+
+        // we separate words with spaces and single words and treat them different.
+        $check_words_with_spaces = array_filter($check_words, function ($word) {
+            return preg_match("/\s+/", $word);
+        });
+        $check_words = array_values(array_diff($check_words, $check_words_with_spaces));
 
         $message = isset($_POST[$name]) ? trim((string)$_POST[$name]) : '';
 
         // UnderWordPressue: make all lowercase - safe is safe
-        $values = strtolower($message);
+        $message = strtolower($message);
         //$value = '';
 
-        // UnderWordPressue: Change explode(" ", $values) to preg_split([white-space]) -  reason: whole whitespace range are valid separators
-        //                   and rewrite the foreach loops
-        $values = preg_split('/\s+/', $values);
-        foreach ($values as $value) {
-            $value = trim($value);
+        foreach ($check_words_with_spaces as $check_word) {
+            if (preg_match("/\b" . $check_word . "\b/", $message)) {
+                $found = true;
+                $spam_word = $check_word;
+                break;
+            }
+        }
+        // still not found a spam?, we continue with the check for single words
+        if (!$found) {
+            // UnderWordPressue: Change explode(" ", $values) to preg_split([white-space]) -  reason: whole whitespace range are valid separators
+            //                   and rewrite the foreach loops
+            $values = preg_split('/\s+/', $message);
+            foreach ($values as $value) {
+                $value = trim($value);
+                foreach ($check_words as $check_word) {
 
-            foreach ($check_words as $check_word) {
+                    /*if (preg_match("/^\.\w+/miu", $value) > 0) {
+                        $found = true;
+                    }else if (preg_match("/\b" . $check_word . "\b/miu", $value) > 0) {
+                        $found = true;
+                    }*/
 
-                /*if (preg_match("/^\.\w+/miu", $value) > 0) {
-                    $found = true;
-                }else if (preg_match("/\b" . $check_word . "\b/miu", $value) > 0) {
-                    $found = true;
-                }*/
+                    $check_word = strtolower(trim($check_word));
 
-                $check_word = strtolower(trim($check_word));
-                switch ($check_word) {
-                    case '':
-                        break;
-                    case '[russian]':
-                        $found = preg_match('/[а-яА-Я]/miu', $value);
-                        break;
-                    case '[link]':
-                        $pattern = '/((ftp|http|https):\/\/\w+)|(www\.\w+\.\w+)/ium'; // filters http://google.com and http://www.google.com and www.google.com
-                        $found = preg_match($pattern, $value);
-                        break;
-                    default:
+                    switch ($check_word) {
+                        case '':
+                            break;
+                        case '[russian]':
+                            $found = preg_match('/[а-яА-Я]/miu', $value);
+                            break;
+                        case '[link]':
+                            $pattern = '/((ftp|http|https):\/\/\w+)|(www\.\w+\.\w+)/ium'; // filters http://google.com and http://www.google.com and www.google.com
+                            $found = preg_match($pattern, $value);
+                            break;
+                        default:
 
-                        $like_start = (preg_match('/^\*/', $check_word));
-                        $like_end = (preg_match('/\*$/', $check_word));
+                            $like_start = (preg_match('/^\*/', $check_word));
+                            $like_end = (preg_match('/\*$/', $check_word));
 
-                        # Remove leading and trailing asterisks from $check_word
-                        $regex_pattern = preg_quote(trim($check_word, '*'), '/');
+                            # Remove leading and trailing asterisks from $check_word
+                            $regex_pattern = preg_quote(trim($check_word, '*'), '/');
 
-                        if ($like_start) {
-                            $regex_pattern = '.*' . $regex_pattern;
-                        }
-                        if ($like_end) {
-                            $regex_pattern = $regex_pattern . '+.*';
-                        }
+                            if ($like_start) {
+                                $regex_pattern = '.*' . $regex_pattern;
+                            }
+                            if ($like_end) {
+                                $regex_pattern = $regex_pattern . '+.*';
+                            }
 
-                        $found = preg_match('/^' . $regex_pattern . '$/miu', $value);
+                            $found = preg_match('/^' . $regex_pattern . '$/miu', $value);
 
-                        break;
-                }
+                            break;
+                    }
 
-                if ($found) {
-                    $spam_word = $check_word;
-                    break 2; // stops the first foreach loop since we have already identified a spam word
+
+                    if ($found) {
+                        $spam_word = $check_word;
+                        break 2; // stops the first foreach loop since we have already identified a spam word
+                    }
                 }
             }
-
         } // end of foreach($values...)
 
 
@@ -685,7 +716,7 @@ class CF7MessageFilter
         update_option('kmcfmf_weekly_stats', json_encode($weekly_stats));
 
         if (trim($spam) !== '') {
-            $word_stats = json_decode(get_option('kmcfmf_word_stats'),true);
+            $word_stats = json_decode(get_option('kmcfmf_word_stats'), true);
             $word_stats[$spam] = isset($word_stats[$spam]) ? ((int)$word_stats[$spam]) + 1 : 1;
             update_option('kmcfmf_word_stats', json_encode($word_stats));
         }
