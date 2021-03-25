@@ -762,6 +762,18 @@ class CF7MessageFilter
             if (is_file($old_logs_file)) {
                 rename($old_logs_file, self::$log_file);
             }
+            // from v1.2.5 to >= v1.3.0
+            if (get_option('kmcfmf_updated_to_1_3_0', 'no') == 'no') {
+                $options_to_update = ['kmcfmf_restricted_words', 'kmcfmf_restricted_emails', 'kmcfmf_tags_by_name'];
+                foreach ($options_to_update as $option) {
+                    $words = get_option($option);
+                    $words = trim($words);
+                    $words = preg_replace("/\s+/", ",", $words);
+                    $words = preg_replace("/,+/", ",", $words);
+                    update_option($option, $words);
+                }
+                update_option('kmcfmf_updated_to_1_3_0', 'yes');
+            }
         } else {
             // for those migrating from v1.1.x to >=v1.2.0
             $messages = explode("]kmcfmf_message[", get_option('kmcfmf_messages'));
