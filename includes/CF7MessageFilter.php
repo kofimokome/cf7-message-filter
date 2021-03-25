@@ -143,7 +143,7 @@ class CF7MessageFilter
 
         $settings_page = new SubMenuPage($menu_page->get_menu_slug(), 'Settings', 'Settings', 'manage_options', 'kmcf7-message-filter-options', array($this, 'settings_view'), true);
         $settings_page->add_tab('basic', 'Basic Settings', array($this, 'status_tab_view'), array('tab' => 'basic'));
-        $settings_page->add_tab('advanced', 'Advanced Settings (experimental)', array($this, 'status_tab_view'), array('tab' => 'advanced'));
+        $settings_page->add_tab('advanced', 'Advanced Settings', array($this, 'status_tab_view'), array('tab' => 'advanced'));
         $settings_page->add_tab('plugins', 'More Plugins', array($this, 'status_tab_view'), array('tab' => 'plugins'));
         $menu_page->add_sub_menu_page($settings_page);
 
