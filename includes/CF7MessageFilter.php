@@ -575,9 +575,11 @@ class CF7MessageFilter
                             if ($like_end) {
                                 $regex_pattern = $regex_pattern . '+.*';
                             }
-
-                            $found = preg_match('/^' . $regex_pattern . '$/miu', $value);
-
+                            if ($like_end || $like_start) {
+                                $found = preg_match('/^' . $regex_pattern . '$/miu', $value);
+                            } else {
+                                $found = preg_match('/\b' . $regex_pattern . '\b/miu', $value);
+                            }
                             break;
                     }
 
@@ -641,7 +643,7 @@ class CF7MessageFilter
     function text_validation_filter($result, $tag)
     {
         $name = $tag->name;
-        $check_words = explode(" ", get_option('kmcfmf_restricted_emails'));
+        $check_words = explode(",", get_option('kmcfmf_restricted_emails'));
 
         $value = isset($_POST[$name])
             ? trim(wp_unslash(strtr((string)$_POST[$name], "\n", " ")))
@@ -660,7 +662,8 @@ class CF7MessageFilter
                 $result->invalidate($tag, wpcf7_get_message('invalid_email'));
             } else {
                 foreach ($check_words as $check_word) {
-                    if (strpos($value, $check_word) !== false) {
+                    if (preg_match("/\b" . $check_word . "\b/", $value)) {
+//                    if (strpos($value, $check_word) !== false) {
                         $result->invalidate($tag, wpcf7_get_message('spam_email_error'));
 
                         if (!$this->count_updated) {
@@ -668,6 +671,22 @@ class CF7MessageFilter
                         }
                     }
                 }
+            }
+        }
+
+        if ('url' == $tag->basetype) {
+            if ($tag->is_required() and '' === $value) {
+                $result->invalidate($tag, wpcf7_get_message('invalid_required'));
+            } elseif ('' !== $value and !wpcf7_is_url($value)) {
+                $result->invalidate($tag, wpcf7_get_message('invalid_url'));
+            }
+        }
+
+        if ('tel' == $tag->basetype) {
+            if ($tag->is_required() and '' === $value) {
+                $result->invalidate($tag, wpcf7_get_message('invalid_required'));
+            } elseif ('' !== $value and !wpcf7_is_tel($value)) {
+                $result->invalidate($tag, wpcf7_get_message('invalid_tel'));
             }
         }
 

@@ -14,6 +14,10 @@ Bear in mind that the codes in the `develop` branch may be unstable. If you are 
 1. **[Cameroon Boyo](https://cameroonboyo.com)**
 2. **[Luca Ortis](http://lucaortis.com/)**
 
+## v1.3.0 Changes
+1. Fix bug when filter sees words separated with space as two words
+2. Fix filter not working for words like ".online"
+
 ## v1.2.5 Changes
 1. Move log file to uploads folder
 2. Add auto clear message function

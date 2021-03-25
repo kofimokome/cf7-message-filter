@@ -30,7 +30,8 @@ namespace kmcf7_message_filter;
             <div class="container-fluid">
                 <div class="row page-title align-items-center">
                     <div class="col-sm-4 col-xl-6">
-                        <h4 class="mb-1 mt-0">Dashboard</h4>
+                        <h4 class="mb-1 mt-0">Message Filter for Contact Form 7
+                            v.<?php echo CF7MessageFilter::get_version() ?></h4>
                     </div>
 
                 </div>
@@ -105,12 +106,20 @@ namespace kmcf7_message_filter;
                     </button>
                 </div>
                 <div class="modal-body">
+                    <div class="alert border-success">
+                        It will be great if you can take just 5 minutes of your
+                        time to leave a review, if this plugin has been useful to you<br>
+                        <a href="https://wordpress.org/support/plugin/cf7-message-filter/reviews/#new-post"
+                           class="btn btn-success" target="_blank" rel="noopener noreferrer">Submit Review</a>
+
+                    </div>
                     <h5> Here are a few changes in this version:</h5>
                     <ol>
-                        <li>Restricted words in settings are now separated using a comma (,). If you used spaces ( ) to
-                            separate the words, please update the list in the settings page
+                        <li>Restricted words & emails are now separated using a comma (,). If you used spaces ( ),
+                            please update the list in the settings page
                         </li>
                         <li>Added support for WordPress 5.7</li>
+                        <li>Other bug fixes</li>
                     </ol>
                 </div>
                 <div class="modal-footer">

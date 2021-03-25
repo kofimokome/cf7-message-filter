@@ -32,6 +32,7 @@ Note: This is just an extension. This plugin is not affiliated with or endorsed 
 
 = 1.3.0 =
 * Fix bug when filter sees words separated with space as two words
+* Fix filter not working for words like ".online"
 
 = 1.2.5 =
 * Add auto-clear messages function

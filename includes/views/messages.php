@@ -40,6 +40,7 @@ function decodeUnicodeVars($message)
         <button class="btn btn-primary btn-inline ml-1">Show Blocked Messages</button>
 
     </form>
+    <!--<button class="btn btn-primary">Export to CSV</button>-->
     <?php if ($form_id >= 0) {
     $rows = BlockedMessage::get_rows($form_id) ?>
     <table class="kmcfmf_table table table-striped">
