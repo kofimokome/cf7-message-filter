@@ -225,8 +225,8 @@ class CF7MessageFilter
                 'id' => 'kmcfmf_restricted_emails',
                 'label' => 'Restricted Emails: ',
                 'input_class' => 'select2',
-                'tip' => 'Note: If you write john, we will check for ( john@gmail.com, john@yahoo.com, john@hotmail.com, etc... )',
-                'placeholder' => 'eg john, john@doe.com, mary@doman.tk, man, earth'
+                'tip' => 'Eg. ( john@gmail.com, john@yahoo.com, john@hotmail.com, etc... )',
+                'placeholder' => 'eg john@doe.com, mary@doman.tk,'
             )
         );
         $settings->add_field(
