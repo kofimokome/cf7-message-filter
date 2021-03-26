@@ -229,7 +229,7 @@ $words .= "]";
     word_chart.render();
     <?php if(get_option('kmcfmf_version', '0') !== CF7MessageFilter::get_version()):?>
     jQuery(document).ready(function ($) {
-        $('#myModal').modal(options)
+        $('#myModal').modal()
     });
     <?php update_option('kmcfmf_version', CF7MessageFilter::get_version());endif;?>
 </script>
