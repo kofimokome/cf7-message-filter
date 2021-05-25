@@ -185,9 +185,6 @@ class CF7MessageFilter
     public function status_tab_view($args)
     {
         switch ($args['tab']) {
-            case 'basic':
-                include "views/settings/basic.php";
-                break;
             case 'plugins':
                 include "views/settings/plugins.php";
                 break;
@@ -643,7 +640,7 @@ class CF7MessageFilter
     function text_validation_filter($result, $tag)
     {
         $name = $tag->name;
-        $check_words = explode(",", get_option('kmcfmf_restricted_emails'));
+        $check_words = strlen(trim(get_option('kmcfmf_restricted_emails'))) > 0 ? explode(",", get_option('kmcfmf_restricted_emails')) : [];
 
         $value = isset($_POST[$name])
             ? trim(wp_unslash(strtr((string)$_POST[$name], "\n", " ")))
@@ -790,6 +787,9 @@ class CF7MessageFilter
             file_put_contents(self::$log_file, $log_messages);
 
             update_option('kmcfmf_messages', 0);
+
+            // now update to the latest version
+            $this->transfer_old_data();
         }
     }
 }

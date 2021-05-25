@@ -72,17 +72,17 @@ class Setting
     {
         switch ($data['type']) {
             case 'text':
-                echo "<p><input type='text' name='{$data['id']}' value='" . get_option($data['id']) . "' class='{$data['input_class']}'></p>";
+                echo "<p><input type='text' name='{$data['id']}' value='" . get_option($data['id']) . "' class='{$data['input_class']}' placeholder='{$data['placeholder']}'></p>";
                 echo "<strong>{$data['tip']} </strong>";
                 break;
             case 'number':
-                echo "<p><input type='number' name='{$data['id']}' value='" . get_option($data['id']) . "' min='" . $data['min'] . "' max='" . $data['max'] . "' class='{$data['input_class']}'></p>";
+                echo "<p><input type='number' name='{$data['id']}' value='" . get_option($data['id']) . "' min='" . $data['min'] . "' max='" . $data['max'] . "' class='{$data['input_class']}'  placeholder='{$data['placeholder']}'></p>";
                 echo "<strong>{$data['tip']} </strong>";
                 break;
             case 'textarea':
                 echo "<p><textarea name='{$data['id']}' id='{$data['id']}' cols='80'
                   rows='8'
-                  placeholder='{$data['placeholder']}' class='{$data['input_class']}'>" . get_option($data['id']) . "</textarea></p>";
+                  placeholder='{$data['placeholder']}' class='{$data['input_class']}' autocomplete='{$data['autocomplete']}'>" . get_option($data['id']) . "</textarea></p>";
                 echo "<strong>{$data['tip']} </strong>";
                 break;
             case 'checkbox':
@@ -118,7 +118,9 @@ class Setting
             'input_class' => '', // class for input element
             'class' => '', // class for parent element
             'options' => array('Select a value' => ''),
-            'default_option' => ''
+            'default_option' => '',
+            'autocomplete' => 'on',
+            'placeholder' => ''
         );
         $data = array_merge($default_data, $data);
         // todo: compare two arrays
