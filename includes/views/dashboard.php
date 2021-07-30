@@ -115,13 +115,7 @@ namespace kmcf7_message_filter;
                     </div>
                     <h5> Here are a few changes in this version:</h5>
                     <ol>
-                        <li><strong>IMPORTANT!!!: Restricted words & emails are now separated using a comma
-                                (,). Please click the button below to update the list in the settings page.</strong>
-                            <br>
-                            <a href="<?php menu_page_url('kmcf7-message-filter-options', true); ?>"
-                               class="btn btn-outline-primary">Update Settings </a>
-                        </li>
-                        <li>Added support for WordPress 5.7</li>
+                        <li>Added support for WordPress 5.8</li>
                         <li>Other bug fixes</li>
                     </ol>
                 </div>

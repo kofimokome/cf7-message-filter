@@ -1,4 +1,8 @@
 # Change Log
+
+## v1.3.1 Changes
+1. Add support for WordPress 5.8
+
 ## v1.2.5 Changes
 1. Move log file to uploads folder
 2. Add auto clear message function

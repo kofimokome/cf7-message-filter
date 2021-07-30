@@ -14,6 +14,9 @@ Bear in mind that the codes in the `develop` branch may be unstable. If you are 
 1. **[Cameroon Boyo](https://cameroonboyo.com)**
 2. **[Luca Ortis](http://lucaortis.com/)**
 
+## v1.3.1 Changes
+1. Add support for WordPress 5.8
+
 ## v1.3.0 Changes
 1. Fix bug when filter sees words separated with space as two words
 2. Fix filter not working for words like ".online"
@@ -23,11 +26,3 @@ Bear in mind that the codes in the `develop` branch may be unstable. If you are 
 2. Add auto clear message function
 3. Grouped blocked messages per form
 4. Bug fixes
-
-## v1.2.4 Changes
-1. Fix bug with some messages with links bypassing the checks
-
-## v1.2.3 Changes
-1. Add option to filter other text fields
-2. Update [link] filter to filter urls without protocols
-3. Other Bug Fixes
