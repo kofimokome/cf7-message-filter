@@ -1,6 +1,6 @@
 === Message Filter for Contact Form 7 ===
 Contributors: kofimokome
-Donate link: https://www.paypal.com/donate?hosted_button_id=B3JAV39H95RFG
+Donate link: https://ko-fi.com/kofimokome
 Tags: spam, filter
 Requires at least: 5.5
 Tested up to: 5.8

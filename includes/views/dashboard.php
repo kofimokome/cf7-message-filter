@@ -115,8 +115,9 @@ namespace kmcf7_message_filter;
                     </div>
                     <h5> Here are a few changes in this version:</h5>
                     <ol>
-                        <li>Added support for WordPress 5.8</li>
+                        <li>Some web hosts do not store messages in a file. A new option has been added to the settings page (advanced tab) to disable storing messages in a file. If you are unable to view blocked messages, please enable this new option to activate the alternative storage method of blocked messages.</li>
                         <li>Other bug fixes</li>
+                        <li>I will be happy if you can buy me a cup of coffee</li>
                     </ol>
                 </div>
                 <div class="modal-footer">

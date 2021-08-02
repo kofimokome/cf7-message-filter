@@ -17,7 +17,7 @@ namespace kmcf7_message_filter;
     <p style="margin-top: 100px;">
     <h2>I will be grateful if you can buy me a cup of coffee </h2>
 
-    <form action="https://www.paypal.com/donate" method="post" target="_blank">
+    <form action="https://ko-fi.com/kofimokome" method="post" target="_blank">
         <input type="hidden" name="hosted_button_id" value="B3JAV39H95RFG"/>
         <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit"
                title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button"/>

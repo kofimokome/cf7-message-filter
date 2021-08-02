@@ -300,8 +300,16 @@ class CF7MessageFilter
         $settings->add_field(
             array(
                 'type' => 'checkbox',
+                'id' => 'kmcfmf_message_storage_toggle',
+                'label' => 'Disable file storage: ',
+                'tip' => "Blocked messages are currently stored in a file. <br/>If you are unable to view blocked messages, disable this option. <br/> <b>Note: </b> Auto delete will be activated if it's currently not enabled"
+            )
+        );
+        $settings->add_field(
+            array(
+                'type' => 'checkbox',
                 'id' => 'kmcfmf_message_auto_delete_toggle',
-                'label' => 'Auto delete messages?: ',
+                'label' => 'Auto delete messages: ',
                 'tip' => ''
             )
         );
@@ -364,7 +372,8 @@ class CF7MessageFilter
             'kmcfmf_message_filter_reset',
             'kmcfmf_date_of_today',
             'kmcfmf_messages_blocked_today',
-            'kmcfmf_messages', // todo: remove this as it is no longer used
+            'kmcfmf_messages', // todo: used to upgrade from v1.1 to v1.3. Now using kmcfmf_blocked_messages variable
+            'kmcfmf_blocked_messages',
             'kmcfmf_weekly_stats',
             'kmcfmf_weekend',
             'kmcfmf_word_stats',
@@ -388,6 +397,12 @@ class CF7MessageFilter
             $content = "{}";
             file_put_contents(self::$log_file, $content);
         }
+
+        if ($reset_message_filter_counter || get_option('kmcfmf_blocked_messages') == '' || get_option('kmcfmf_blocked_messages') == '0') {
+            $content = "{}";
+            update_option('kmcfmf_blocked_messages', $content);
+        }
+
         update_option('kmcfmf_message_filter_reset', 'off');
         update_option('kmcfmf_weekly_stats', get_option('kmcfmf_weekly_stats') == '0' ? '[0,0,0,0,0,0,0]' : get_option('kmcfmf_weekly_stats'));
         update_option('kmcfmf_word_stats', get_option('kmcfmf_word_stats') == '0' ? '[]' : get_option('kmcfmf_word_stats'));
@@ -409,6 +424,11 @@ class CF7MessageFilter
             update_option("kmcfmf_date_of_today", $now);
             update_option("kmcfmf_messages_blocked_today", 0);
             update_option("kmcfmf_emails_blocked_today", 0);
+        }
+
+        if (get_option('kmcfmf_message_storage_toggle') === 'on') {
+            // die('we die here');
+            update_option('kmcfmf_message_auto_delete_toggle', 'on');
         }
     }
 
@@ -718,12 +738,21 @@ class CF7MessageFilter
         $submission = WPCF7_Submission::get_instance();
         $contact_form = $submission->get_contact_form();
         // update_option('kmcfmf_last_message_blocked', '<td>' . Date('d-m-y h:ia') . ' </td><td>' . $email . '</td><td>' . $message . ' </td>');
-        $log_messages = (array)json_decode(file_get_contents(self::$log_file));
-        $log_message = ['id' => $contact_form->id(), 'name' => $contact_form->name(), 'title' => $contact_form->title(), 'data' => array_merge($submission->get_posted_data(), array('date' => Date('d-m-y  h:ia')))];
-        array_push($log_messages, $log_message);
+        if (get_option('kmcfmf_message_storage_toggle') == 'on') {
+            $log_messages = (array)json_decode(get_option('kmcfmf_blocked_messages', '{}'));
+            $log_message = ['id' => $contact_form->id(), 'name' => $contact_form->name(), 'title' => $contact_form->title(), 'data' => array_merge($submission->get_posted_data(), array('date' => Date('d-m-y  h:ia')))];
+            array_push($log_messages, $log_message);
 
-        $log_messages = json_encode((object)$log_messages);
-        file_put_contents(self::$log_file, $log_messages);
+            $log_messages = json_encode((object)$log_messages);
+            update_option('kmcfmf_blocked_messages', $log_messages);
+        } else {
+            $log_messages = (array)json_decode(file_get_contents(self::$log_file));
+            $log_message = ['id' => $contact_form->id(), 'name' => $contact_form->name(), 'title' => $contact_form->title(), 'data' => array_merge($submission->get_posted_data(), array('date' => Date('d-m-y  h:ia')))];
+            array_push($log_messages, $log_message);
+
+            $log_messages = json_encode((object)$log_messages);
+            file_put_contents(self::$log_file, $log_messages);
+        }
         update_option('kmcfmf_messages_blocked', get_option('kmcfmf_messages_blocked') + 1);
         update_option("kmcfmf_messages_blocked_today", get_option("kmcfmf_messages_blocked_today") + 1);
         $today = date('N');

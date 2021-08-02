@@ -18,7 +18,10 @@ class BlockedMessage
     private static function get_messages()
     {
         $log_file = CF7MessageFilter::get_log_file_path();
-        $messages = (array)json_decode(file_get_contents($log_file));
+        if (get_option('kmcfmf_message_storage_toggle') == 'on')
+            $messages = (array)json_decode(get_option('kmcfmf_blocked_messages', '{}'));
+        else
+            $messages = (array)json_decode(file_get_contents($log_file));
         return $messages;
     }
 
