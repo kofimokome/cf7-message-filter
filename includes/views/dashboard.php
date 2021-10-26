@@ -15,11 +15,11 @@ namespace kmcf7_message_filter;
 
     <div class="content-page" style="margin-top:0; margin-left:0;">
         <div class="content">
-            <?php if (!is_plugin_active('contact-form-7/wp-contact-form-7.php')): ?>
+			<?php if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ): ?>
                 <div class="alert alert-danger alert-dismissible">
-                    <p><?php _e('Please Install / Enable Contact Form 7 Plugin First!', 'cf7-message-filter'); ?></p>
+                    <p><?php _e( 'Please Install / Enable Contact Form 7 Plugin First!', 'cf7-message-filter' ); ?></p>
                 </div>
-            <?php endif; ?>
+			<?php endif; ?>
             <!--<div class="alert alert-info alert-dismissible">
                 <p>Hello There!. Thank for using this plugin. It will be great if you can take just 5 minutes of your
                     time to leave a review<br>
@@ -46,7 +46,7 @@ namespace kmcf7_message_filter;
                                 <div class="row"><!-- stat 1 -->
                                     <div class="col-6 media px-3 py-4 border-bottom border-right">
                                         <div class="media-body">
-                                            <h4 class="mt-0 mb-1 font-size-22 font-weight-normal"><?php echo get_option('kmcfmf_messages_blocked'); ?></h4>
+                                            <h4 class="mt-0 mb-1 font-size-22 font-weight-normal"><?php echo get_option( 'kmcfmf_messages_blocked' ); ?></h4>
                                             <span class="text-muted">Messages Blocked</span>
                                         </div>
                                         <!--                                    <i data-feather="users" class="align-self-center icon-dual icon-lg"></i>-->
@@ -55,7 +55,7 @@ namespace kmcf7_message_filter;
                                     <!-- stat 2 -->
                                     <div class="col-6 media px-3 py-4 border-bottom">
                                         <div class="media-body">
-                                            <h4 class="mt-0 mb-1 font-size-22 font-weight-normal"><?php echo get_option('kmcfmf_messages_blocked_today'); ?></h4>
+                                            <h4 class="mt-0 mb-1 font-size-22 font-weight-normal"><?php echo get_option( 'kmcfmf_messages_blocked_today' ); ?></h4>
                                             <span class="text-muted"> Blocked Today</span>
                                         </div>
                                         <!--                                    <i data-feather="image" class="align-self-center icon-dual icon-lg"></i>-->
@@ -107,18 +107,27 @@ namespace kmcf7_message_filter;
                 </div>
                 <div class="modal-body">
                     <div class="alert border-success">
+                        <h5>Word of appreciation</h5>
+                        I want to thank all those who have contributed to the success of this plugin. I was not
+                        expecting this positive feedback. It has motivated me to do more. <br/> <br/>
                         It will be great if you can take just 5 minutes of your
                         time to leave a review, if this plugin has been useful to you<br>
                         <a href="https://wordpress.org/support/plugin/cf7-message-filter/reviews/#new-post"
                            class="btn btn-success" target="_blank" rel="noopener noreferrer">Submit Review</a>
+                        <a href="https://ko-fi.com/kofimokome"
+                           class="btn btn-primary" target="_blank" rel="noopener noreferrer">Buy me Coffee</a>
 
                     </div>
                     <h5> Here are a few changes in this version:</h5>
                     <ol>
-                        <li>Some web hosts do not store messages in a file. A new option has been added to the settings page (advanced tab) to disable storing messages in a file. If you are unable to view blocked messages, please enable this new option to activate the alternative storage method of blocked messages.</li>
-                        <li>Other bug fixes</li>
+                        <li>Fixed a security vulnerability found in the plugin
+                        </li>
                         <li>I will be happy if you can buy me a cup of coffee</li>
                     </ol>
+
+                    If you find an issue, please <a href="https://wordpress.org/support/plugin/cf7-message-filter/"
+                                                    target="_blank">create a support ticket here</a> and I will do my
+                    best to fix as soon as possible
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -133,10 +142,10 @@ namespace kmcf7_message_filter;
 
 
 </div>
-<?php $word_options = json_encode(array_keys(json_decode(get_option('kmcfmf_word_stats'), true)));
-$words = "[";
-foreach (json_decode(get_option('kmcfmf_word_stats'), true) as $word) {
-    $words .= $word . ",";
+<?php $word_options = json_encode( array_keys( json_decode( get_option( 'kmcfmf_word_stats' ), true ) ) );
+$words              = "[";
+foreach ( json_decode( get_option( 'kmcfmf_word_stats' ), true ) as $word ) {
+	$words .= $word . ",";
 }
 $words .= "]";
 ?>
@@ -145,7 +154,7 @@ $words .= "]";
     var options = {
         series: [{
             name: 'Messages blocked',
-            data: <?php echo get_option('kmcfmf_weekly_stats')?>,
+            data: <?php echo get_option( 'kmcfmf_weekly_stats' )?>,
         }],
         chart: {
             height: 350,
@@ -222,10 +231,10 @@ $words .= "]";
 
     var word_chart = new ApexCharts(document.querySelector("#words-chart"), word_options);
     word_chart.render();
-    <?php if(get_option('kmcfmf_version', '0') !== CF7MessageFilter::get_version()):?>
+	<?php if(get_option( 'kmcfmf_version', '0' ) !== CF7MessageFilter::get_version()):?>
     jQuery(document).ready(function ($) {
         $('#myModal').modal()
     });
-    <?php update_option('kmcfmf_version', CF7MessageFilter::get_version());endif;?>
+	<?php update_option( 'kmcfmf_version', CF7MessageFilter::get_version() );endif;?>
 </script>
 <!-- END wrapper -->

@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/kofimokome
 Tags: spam, filter
 Requires at least: 5.5
 Tested up to: 5.8
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 Requires PHP: 5.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -29,8 +29,12 @@ Note: This is just an extension. This plugin is not affiliated with or endorsed 
 6. Save and wait for someone to submit
 
 == Changelog ==
+
+= 1.3.2 =
+* Escape HTML tags in message content
+
 = 1.3.1 =
-* Add compatibility with Wordpress 5.8
+* Add compatibility with WordPress 5.8
 
 = 1.3.0 =
 * Fix bug when filter sees words separated with space as two words
