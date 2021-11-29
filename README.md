@@ -19,6 +19,10 @@ codes, you should checkout from the `master` branch
 1. **[Cameroon Boyo](https://cameroonboyo.com)**
 2. **[Luca Ortis](http://lucaortis.com/)**
 
+## v1.3.3 Changes
+
+1. Update min php version to 5.6
+
 ## v1.3.2 Changes
 
 1. Escape HTML tags in message content

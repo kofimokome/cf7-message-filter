@@ -4,6 +4,8 @@
  * User: kofi
  * Date: 6/5/19
  * Time: 11:59 AM
+ * @version 1.0.1
+ * @author kofi mokome
  */
 
 namespace kmcf7_message_filter;
@@ -18,22 +20,43 @@ class MenuPage {
 	private $function;
 	private $sub_menu_pages;
 
-	public function __construct( $page_title, $menu_title, $capability, $menu_slug, $icon_url = '', $position = null, $function = '' ) {
-		$this->page_title = $page_title;
-		$this->menu_title = $menu_title;
-		$this->capability = $capability;
-		$this->menu_slug  = $menu_slug;
-		$this->icon_url   = $icon_url;
-		$this->position   = $position;
-		$this->function   = $function == '' ? array( $this, 'default_function' ) : $function;
+	/**
+	 * @param array $data
+	 *
+	 * @since 1.0.0
+	 */
+	public function __construct( $data ) {
+		$default_data     = array(
+			'page_title' => '',
+			'menu_title' => '',
+			'capability' => '',
+			'menu_slug'  => '',
+			'icon_url'   => '',
+			'position'   => null,
+			'function'   => ''
+		);
+		$data             = array_merge( $default_data, $data );
+		$this->page_title = $data['page_title'];
+		$this->menu_title = $data['menu_title'];
+		$this->capability = $data['capability'];
+		$this->menu_slug  = $data['menu_slug'];
+		$this->icon_url   = $data['icon_url'];
+		$this->position   = $data['position'];
+		$this->function   = $data['function'] == '' ? array( $this, 'default_function' ) : $data['function'];
 
 		$this->sub_menu_pages = array();
 	}
 
+	/**
+	 * @since 1.0.0
+	 */
 	public function run() {
 		add_action( 'admin_menu', array( $this, 'create_menu_page' ) );
 	}
 
+	/**
+	 * @since 1.0.0
+	 */
 	public function create_menu_page() {
 		add_menu_page(
 			$this->page_title,
@@ -51,16 +74,28 @@ class MenuPage {
 		}
 	}
 
+	/**
+	 * @since 1.0.0
+	 */
 	public function default_function() {
 		echo "";
 	}
 
+	/**
+	 * @since 1.0.0
+	 */
 	public function get_menu_slug() {
 		return $this->menu_slug;
 	}
 
+	/**
+	 * @param SubMenuPage $sub_menu_page
+	 *
+	 * @since 1.0.0
+	 */
 	public function add_sub_menu_page( $sub_menu_page ) {
 		array_push( $this->sub_menu_pages, $sub_menu_page );
 	}
 
 }
+

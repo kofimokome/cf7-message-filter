@@ -4,10 +4,11 @@
  * User: kofi
  * Date: 6/5/19
  * Time: 12:41 PM
+ * @author kofi mokome
+ * @version  1.0.1
  */
 
 namespace kmcf7_message_filter;
-
 
 class SubMenuPage {
 	private $page_title;
@@ -18,19 +19,38 @@ class SubMenuPage {
 	private $function;
 	private $tabs;
 
-	public function __construct( $parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function = null, $use_tabs = false ) {
-		$this->page_title  = $page_title;
-		$this->menu_title  = $menu_title;
-		$this->capability  = $capability;
-		$this->menu_slug   = $menu_slug;
-		$this->parent_slug = $parent_slug;
-		$this->function    = $function;
-		if ( $use_tabs ) {
+	/**
+	 * @param array $data
+	 *
+	 * @since 1.0.0
+	 */
+	public function __construct( $data ) {
+		$default_data = array(
+			'parent_slug' => '',
+			'page_title'  => '',
+			'menu_title'  => '',
+			'capability'  => '',
+			'menu_slug'   => '',
+			'function'    => null,
+			'use_tabs'    => false
+		);
+		$data         = array_merge( $default_data, $data );
+
+		$this->page_title  = $data['page_title'];
+		$this->menu_title  = $data['menu_title'];
+		$this->capability  = $data['capability'];
+		$this->menu_slug   = $data['menu_slug'];
+		$this->parent_slug = $data['parent_slug'];
+		$this->function    = $data['function'];
+		if ( $data['use_tabs'] ) {
 			$this->function = array( &$this, 'show_tabs' );
 		}
 		$this->tabs = array();
 	}
 
+	/**
+	 * @since 1.0.0
+	 */
 	public function show_tabs() {
 		$current_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : null;
 		?>
@@ -68,6 +88,8 @@ class SubMenuPage {
 	 * @param string $title Title of the tab
 	 * @param callable|string $contents Content to display in the tab
 	 * @param array $args Arguments to pass to callback function
+	 *
+	 * @since 1.0.0
 	 */
 	public function add_tab( $id, $title, $contents, array $args = [] ) {
 		$id                = trim( $id );
@@ -75,11 +97,17 @@ class SubMenuPage {
 		// array_push($this->tabs, array($id, $title));
 	}
 
+	/**
+	 * @since 1.0.0
+	 */
 	public function run() {
 		$this->create_sub_menu_page();
 	}
 
 
+	/**
+	 * @since 1.0.0
+	 */
 	public function create_sub_menu_page() {
 		add_submenu_page(
 			$this->parent_slug,
@@ -91,3 +119,7 @@ class SubMenuPage {
 		);
 	}
 }
+
+
+
+

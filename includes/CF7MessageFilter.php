@@ -22,7 +22,7 @@ class CF7MessageFilter {
 		// our constructor
 		$this->blocked = get_option( "kmcfmf_messages_blocked_today" );
 		//  $this->error_notice("hi there");
-		self::$version = '1.3.2';
+		self::$version = '1.3.3';
 	}
 
 	/**
@@ -126,20 +126,48 @@ class CF7MessageFilter {
 		if ( $this->blocked > 0 ) {
 			$menu_title .= " <span class='update-plugins count-1'><span class='update-count'>$this->blocked </span></span>";
 		}
-		$menu_page     = new MenuPage( 'CF7 Form Filter', $menu_title, 'read', 'kmcf7-message-filter', 'dashicons-filter', null, array(
-			$this,
-			'dashboard_view'
-		) );
-		$messages_page = new SubMenuPage( $menu_page->get_menu_slug(), 'Blocked Messages', 'Blocked Messages', 'manage_options', 'kmcf7-filtered-messages', array(
-			$this,
-			'messages_view'
-		) );
+		$menu_page = new MenuPage(
+			array(
+				'page_title' => 'CF7 Form Filter',
+				'menu_title' => $menu_title,
+				'capability' => 'read',
+				'menu_slug'  => 'kmcf7-message-filter',
+				'icon_url'   => 'dashicons-filter',
+				'position'   => null,
+				'function'   => array(
+					$this,
+					'dashboard_view'
+				)
+			) );
+
+
+		$messages_page = new SubMenuPage(
+			array(
+				'parent_slug' => $menu_page->get_menu_slug(),
+				'page_title'  => 'Blocked Messages',
+				'menu_title'  => 'Blocked Messages',
+				'capability'  => 'manage_options',
+				'menu_slug'   => 'kmcf7-filtered-messages',
+				'function'    => array(
+					$this,
+					'messages_view'
+				)
+			) );
 		$menu_page->add_sub_menu_page( $messages_page );
 
-		$settings_page = new SubMenuPage( $menu_page->get_menu_slug(), 'Settings', 'Settings', 'manage_options', 'kmcf7-message-filter-options', array(
-			$this,
-			'settings_view'
-		), true );
+		$settings_page = new SubMenuPage(
+			array(
+				'parent_slug' => $menu_page->get_menu_slug(),
+				'page_title'  => 'Settings',
+				'menu_title'  => 'Settings',
+				'capability'  => 'manage_options',
+				'menu_slug'   => 'kmcf7-message-filter-options',
+				'function'    => array(
+					$this,
+					'settings_view'
+				),
+				'use_tabs'    => true
+			) );
 		$settings_page->add_tab( 'basic', 'Basic Settings', array(
 			$this,
 			'status_tab_view'

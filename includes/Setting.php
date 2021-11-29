@@ -4,9 +4,12 @@
  * User: kofi
  * Date: 6/5/19
  * Time: 12:41 PM
+ * @version 1.0.0
+ * @author kofi mokome
  */
 
 namespace kmcf7_message_filter;
+
 
 class Setting {
 	private $menu_slug;
@@ -14,12 +17,20 @@ class Setting {
 	private $section_id;
 	private $sections;
 
+	/**
+	 * @param string $menu_slug The menu slug of the menu or sub menu page
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct( $menu_slug ) {
 		$this->menu_slug = $menu_slug;
 		$this->fields    = array();
 		$this->sections  = array();
 	}
 
+	/**
+	 * @since 1.0.0
+	 */
 	public function show_form() {
 		settings_errors(); ?>
         <form method="post" action="options.php">
@@ -36,10 +47,16 @@ class Setting {
 		//echo $this->default_content;
 	}
 
+	/**
+	 * @since 1.0.0
+	 */
 	public function save() {
 		add_action( 'admin_init', array( $this, 'add_settings' ) );
 	}
 
+	/**
+	 * @since 1.0.0
+	 */
 	public function add_settings() {
 
 		foreach ( $this->sections as $section ) {
@@ -63,6 +80,9 @@ class Setting {
 		}
 	}
 
+	/**
+	 * @since 1.0.0
+	 */
 	public function default_field_callback( $data ) {
 		switch ( $data['type'] ) {
 			case 'text':
@@ -100,6 +120,11 @@ class Setting {
 		}
 	}
 
+	/**
+	 * @param array $data Contains parameters of the field
+	 *
+	 * @since 1.0.0
+	 */
 	public function add_field( $data ) {
 		$default_data = array(
 			'type'           => '',
@@ -122,12 +147,19 @@ class Setting {
 
 	}
 
+	/**
+	 * @since 1.0.0
+	 */
 	public function add_section( $id, $title = '' ) {
 		array_push( $this->sections, array( $id, $title ) );
 		$this->section_id = $id;
 	}
 
+	/**
+	 * @since 1.0.0
+	 */
 	public function default_section_callback() {
 
 	}
 }
+

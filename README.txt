@@ -4,12 +4,12 @@ Donate link: https://ko-fi.com/kofimokome
 Tags: spam, filter
 Requires at least: 5.5
 Tested up to: 5.8
-Stable tag: 1.3.2
-Requires PHP: 5.4
+Stable tag: 1.3.3
+Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Filters messages submitted through contact form 7 based on words and/or emails listed as restricted.
+Filter messages submitted through contact form 7 based on words and/or emails listed as restricted.
 
 == Description ==
 
@@ -29,6 +29,9 @@ Note: This is just an extension. This plugin is not affiliated with or endorsed 
 6. Save and wait for someone to submit
 
 == Changelog ==
+
+= 1.3.3 =
+* Update min php version to 5.6
 
 = 1.3.2 =
 * Escape HTML tags in message content
