@@ -8,7 +8,7 @@
  * Plugin Name: Message Filter for Contact Form 7
  * Plugin URI: https://github.com/kofimokome/cf7-message-filter
  * Description: Filters messages submitted from contact form seven if it has words or email marked as spam by the user
- * Version: 1.3.3
+ * Version: 1.3.4
  * Author: Kofi Mokome
  * Author URI: www.kofimokome.stream
  * License: GPL-2.0+
@@ -20,8 +20,6 @@
 namespace kmcf7_message_filter;
 
 defined( 'ABSPATH' ) or die( 'Giving To Cesar What Belongs To Caesar' );
-
-$error = false;
 
 function kmcf7_error_notice( $message = '' ) {
 	if ( trim( $message ) != '' ):
@@ -37,7 +35,7 @@ add_action( 'admin_notices', 'kmcf7_message_filter\\kmcf7_error_notice', 10, 1 )
 
 // loads classes / files
 function kmcf7_loader() {
-	global $error;
+	$error   = false;
 	$classes = array(
 		'CF7MessageFilter.php', //
 		'MenuPage.php', //
@@ -56,6 +54,8 @@ function kmcf7_loader() {
 			include_once plugin_dir_path( __FILE__ ) . "includes/" . $file;
 		}
 	}
+
+	return $error;
 }
 
 function kmcf7_start() {
@@ -64,8 +64,7 @@ function kmcf7_start() {
 }
 
 
-kmcf7_loader();
-if ( ! $error ) {
+if ( ! kmcf7_loader() ) {
 	kmcf7_start();
 }
 

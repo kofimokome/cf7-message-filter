@@ -30,6 +30,9 @@ Note: This is just an extension. This plugin is not affiliated with or endorsed 
 
 == Changelog ==
 
+= 1.3.4 =
+* Add tests
+
 = 1.3.3 =
 * Update min php version to 5.6
 

@@ -22,7 +22,7 @@ class CF7MessageFilter {
 		// our constructor
 		$this->blocked = get_option( "kmcfmf_messages_blocked_today" );
 		//  $this->error_notice("hi there");
-		self::$version = '1.3.3';
+		self::$version = '1.3.4';
 	}
 
 	/**
