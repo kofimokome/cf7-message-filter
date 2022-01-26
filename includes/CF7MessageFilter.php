@@ -22,7 +22,7 @@ class CF7MessageFilter {
 		// our constructor
 		$this->blocked = get_option( "kmcfmf_messages_blocked_today" );
 		//  $this->error_notice("hi there");
-		self::$version = '1.3.4';
+		self::$version = '1.3.3';
 	}
 
 	/**
@@ -100,8 +100,8 @@ class CF7MessageFilter {
 		$url = substr( $url, 0, 29 );
 		// echo "<script> alert('$url');</script>";
 		//wp_enqueue_style( 'style-name', get_stylesheet_uri() );
-		wp_enqueue_script( 'select2', plugins_url( 'assets/js/selectize.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '4.0.13', true );
-		wp_enqueue_style( 'select2', plugins_url( '/assets/css/selectize.default.css', dirname( __FILE__ ) ), '', '4.0.13' );
+		wp_enqueue_script( 'selectize', plugins_url( 'assets/js/selectize.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '0.12.4', true );
+		wp_enqueue_style( 'selectize', plugins_url( '/assets/css/selectize.default.css', dirname( __FILE__ ) ), '', '0.12.4' );
 
 		if ( $hook == 'toplevel_page_kmcf7-message-filter' || $url == '?page=kmcf7-filtered-messages' ) {
 

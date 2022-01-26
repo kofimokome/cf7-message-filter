@@ -2,8 +2,8 @@
 Contributors: kofimokome
 Donate link: https://ko-fi.com/kofimokome
 Tags: spam, filter
-Requires at least: 5.5
-Tested up to: 5.8
+Requires at least: 5.7
+Tested up to: 5.9
 Stable tag: 1.3.3
 Requires PHP: 5.6
 License: GPLv2 or later
@@ -30,10 +30,9 @@ Note: This is just an extension. This plugin is not affiliated with or endorsed 
 
 == Changelog ==
 
-= 1.3.4 =
-* Add tests
-
 = 1.3.3 =
+* Add tests
+* Compatibility with WordPress 5.9
 * Update min php version to 5.6
 
 = 1.3.2 =

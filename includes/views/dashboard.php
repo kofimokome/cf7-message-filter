@@ -107,9 +107,6 @@ namespace kmcf7_message_filter;
                 </div>
                 <div class="modal-body">
                     <div class="alert border-success">
-                        <h5>Word of appreciation</h5>
-                        I want to thank all those who have contributed to the success of this plugin. I was not
-                        expecting this positive feedback. It has motivated me to do more. <br/> <br/>
                         It will be great if you can take just 5 minutes of your
                         time to leave a review, if this plugin has been useful to you<br>
                         <a href="https://wordpress.org/support/plugin/cf7-message-filter/reviews/#new-post"
@@ -120,9 +117,8 @@ namespace kmcf7_message_filter;
                     </div>
                     <h5> Here are a few changes in this version:</h5>
                     <ol>
-                        <li>Fixed a security vulnerability found in the plugin
+                        <li>Add support for WordPress 5.9
                         </li>
-                        <li>I will be happy if you can buy me a cup of coffee</li>
                     </ol>
 
                     If you find an issue, please <a href="https://wordpress.org/support/plugin/cf7-message-filter/"

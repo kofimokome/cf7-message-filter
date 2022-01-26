@@ -8,7 +8,7 @@
  * Plugin Name: Message Filter for Contact Form 7
  * Plugin URI: https://github.com/kofimokome/cf7-message-filter
  * Description: Filters messages submitted from contact form seven if it has words or email marked as spam by the user
- * Version: 1.3.4
+ * Version: 1.3.3
  * Author: Kofi Mokome
  * Author URI: www.kofimokome.stream
  * License: GPL-2.0+
@@ -71,7 +71,7 @@ if ( ! kmcf7_loader() ) {
 
 // remove options upon deactivation
 
-register_deactivation_hook( __FILE__, 'kmcf7_deactivation' );
+register_deactivation_hook( __FILE__, 'kmcf7_message_filter\\kmcf7_deactivation' );
 
 function kmcf7_deactivation() {
 	// set options to remove here
