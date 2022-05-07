@@ -8,7 +8,7 @@
  * Plugin Name: Message Filter for Contact Form 7
  * Plugin URI: https://github.com/kofimokome/cf7-message-filter
  * Description: Filters messages submitted from contact form seven if it has words or email marked as spam by the user
- * Version: 1.3.3
+ * Version: 1.3.4
  * Author: Kofi Mokome
  * Author URI: www.kofimokome.stream
  * License: GPL-2.0+
@@ -21,7 +21,20 @@ namespace kmcf7_message_filter;
 
 defined( 'ABSPATH' ) or die( 'Giving To Cesar What Belongs To Caesar' );
 
-function kmcf7_error_notice( $message = '' ) {
+require 'constants.php';
+require KMCF7MS_CORE_DIR . '/CF7MessageFilter.php';
+require KMCF7MS_CORE_DIR . '/Module.php';
+
+/**
+ * Scan directories for files to include
+ */
+foreach ( scandir( __DIR__ ) as $dir ) {
+	if ( strpos( $dir, '.' ) === false && is_dir( __DIR__ . '/' . $dir ) && is_file( __DIR__ . '/' . $dir . '/includes.php' ) ) {
+		require __DIR__ . '/' . $dir . '/includes.php';
+	}
+}
+
+function KMCF7ErrorNotice( $message = '' ) {
 	if ( trim( $message ) != '' ):
 		?>
         <div class="error notice is-dismissible">
@@ -31,27 +44,20 @@ function kmcf7_error_notice( $message = '' ) {
 	endif;
 }
 
-add_action( 'admin_notices', 'kmcf7_message_filter\\kmcf7_error_notice', 10, 1 );
+add_action( 'admin_notices', 'kmcf7_message_filter\\KMCF7ErrorNotice', 10, 1 );
 
 // loads classes / files
-function kmcf7_loader() {
-	$error   = false;
-	$classes = array(
-		'CF7MessageFilter.php', //
-		'MenuPage.php', //
-		'SubMenuPage.php', //
-		'Setting.php', //
-		'BlockedMessage.php', //
-		// 'admin_menu.php', //
+function KMCF7Loader() {
+	$error = false;
 
-	);
+	$includes = apply_filters( 'kmcf7_includes_filter', [] );
 
-	foreach ( $classes as $file ) {
-		if ( ! $filepath = file_exists( plugin_dir_path( __FILE__ ) . "includes/" . $file ) ) {
-			kmcf7_error_notice( sprintf( __( 'Error locating <b>%s</b> for inclusion', 'kmgt' ), $file ) );
+	foreach ( $includes as $file ) {
+		if ( ! $filepath = file_exists( $file ) ) {
+			KMCF7ErrorNotice( sprintf( __( 'Error locating <b>%s</b> for inclusion', 'cf7-message-filter' ), $file ) );
 			$error = true;
 		} else {
-			include_once plugin_dir_path( __FILE__ ) . "includes/" . $file;
+			include_once $file;
 		}
 	}
 
@@ -64,7 +70,7 @@ function kmcf7_start() {
 }
 
 
-if ( ! kmcf7_loader() ) {
+if ( ! KMCF7Loader() ) {
 	kmcf7_start();
 }
 

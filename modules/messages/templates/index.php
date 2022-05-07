@@ -33,7 +33,7 @@ function decodeUnicodeVars( $message ) {
         <input type="hidden" name="page" value="kmcf7-filtered-messages">
         <select name="form" id="" class="form-control">
             <option value="">Select a form</option>
-			<?php foreach ( BlockedMessage::get_forms() as $form ): ?>
+			<?php foreach ( MessagesModule::getForms() as $form ): ?>
                 <option value="<?php echo $form[1] ?>" <?php echo $form_id == $form[1] ? 'selected' : '' ?>><?php echo $form[0] ?></option>
 			<?php endforeach; ?>
         </select>
@@ -42,7 +42,7 @@ function decodeUnicodeVars( $message ) {
     </form>
     <!--<button class="btn btn-primary">Export to CSV</button>-->
 	<?php if ( $form_id >= 0 ) {
-	$rows = BlockedMessage::get_rows( $form_id ) ?>
+	$rows = MessagesModule::getRows( $form_id ) ?>
     <table class="kmcfmf_table table table-striped">
         <tr>
             <td><b>S/N</b></td>
@@ -56,7 +56,7 @@ function decodeUnicodeVars( $message ) {
             <!--            </td>-->
         </tr>
 		<?php
-		$messages = BlockedMessage::get_columns( $form_id );
+		$messages = MessagesModule::getColumns( $form_id );
 		$messages = array_reverse( $messages, false );
 		$size     = sizeof( $messages );
 		if ( ( $pagination * $number_per_page ) > $size && ( ( $pagination * $number_per_page ) - $number_per_page ) < $size ) {

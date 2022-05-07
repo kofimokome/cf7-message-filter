@@ -8,18 +8,14 @@
  * @author kofi mokome
  */
 
-namespace kmcf7_message_filter;
-
-
-class Setting {
+class KMSetting {
 	private $menu_slug;
 	private $fields;
 	private $section_id;
 	private $sections;
 
 	/**
-	 * @param string $menu_slug The menu slug of the menu or sub menu page
-	 *
+     * @param string $menu_slug The menu slug of the menu or sub menu page
 	 * @since 1.0.0
 	 */
 	public function __construct( $menu_slug ) {
@@ -121,8 +117,7 @@ class Setting {
 	}
 
 	/**
-	 * @param array $data Contains parameters of the field
-	 *
+     * @param array $data Contains parameters of the field
 	 * @since 1.0.0
 	 */
 	public function add_field( $data ) {
@@ -162,4 +157,3 @@ class Setting {
 
 	}
 }
-

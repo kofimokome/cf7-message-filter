@@ -5,18 +5,17 @@
  * Date: 6/5/19
  * Time: 12:41 PM
  * @author kofi mokome
- * @version  1.0.1
+ * @version  1.0.2
  */
 
-namespace kmcf7_message_filter;
-
-class SubMenuPage {
+class KMSubMenuPage {
 	private $page_title;
 	private $menu_title;
 	private $capability;
 	private $menu_slug;
 	private $parent_slug;
 	private $function;
+	private $position;
 	private $tabs;
 
 	/**
@@ -31,6 +30,7 @@ class SubMenuPage {
 			'menu_title'  => '',
 			'capability'  => '',
 			'menu_slug'   => '',
+			'position'    => null,
 			'function'    => null,
 			'use_tabs'    => false
 		);
@@ -40,6 +40,7 @@ class SubMenuPage {
 		$this->menu_title  = $data['menu_title'];
 		$this->capability  = $data['capability'];
 		$this->menu_slug   = $data['menu_slug'];
+		$this->position    = $data['position'];
 		$this->parent_slug = $data['parent_slug'];
 		$this->function    = $data['function'];
 		if ( $data['use_tabs'] ) {
@@ -115,8 +116,16 @@ class SubMenuPage {
 			$this->menu_title,
 			$this->capability,
 			$this->menu_slug,
-			$this->function
+			$this->function,
+			$this->position
 		);
+	}
+
+	/**
+	 * @since 1.0.1
+	 */
+	public function set_parent_slug( $slug ) {
+		$this->parent_slug = $slug;
 	}
 }
 
