@@ -38,18 +38,27 @@ class SettingsModule extends Module {
 				),
 				'use_tabs'   => true
 			) );
+
 		$settings_page->add_tab( 'basic', 'Basic Settings', array(
 			$this,
 			'statusTabView'
 		), array( 'tab' => 'basic' ) );
+
 		$settings_page->add_tab( 'advanced', 'Advanced Settings', array(
 			$this,
 			'statusTabView'
 		), array( 'tab' => 'advanced' ) );
+
+		$settings_page->add_tab( 'filters', 'Filters', array(
+			$this,
+			'statusTabView'
+		), array( 'tab' => 'filters' ) );
+
 		$settings_page->add_tab( 'plugins', 'More Plugins', array(
 			$this,
 			'statusTabView'
 		), array( 'tab' => 'plugins' ) );
+
 
 		array_push( $sub_menu_pages, $settings_page );
 
@@ -76,6 +85,9 @@ class SettingsModule extends Module {
 			case 'advanced':
 				$this->renderContent( 'advanced' );
 				break;
+			case 'filters':
+				$this->renderContent( 'filters' );
+				break;
 			default:
 				$this->renderContent( 'basic' );
 				break;
@@ -89,7 +101,8 @@ class SettingsModule extends Module {
 
 		// Check documentation here https://github.com/kofimokome/WordPress-Tools
 
-		$settings = new KMSetting( 'kmcf7-message-filter-options&tab=basic' );
+		$link_to_filters = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-options&tab=filters';
+		$settings        = new KMSetting( 'kmcf7-message-filter-options&tab=basic' );
 		$settings->add_section( 'kmcfmf_message_filter_basic' );
 		$settings->add_field(
 			array(
@@ -97,7 +110,7 @@ class SettingsModule extends Module {
 				'id'          => 'kmcfmf_restricted_words',
 				'input_class' => 'select2',
 				'label'       => 'Restricted Words: ',
-				'tip'         => 'type <code>[link]</code> to filter messages containing links, type <code>[russian]</code> to filter messages contains russian characters',
+				'tip'         => "<a href='$link_to_filters'>Click here to view list of filters</a>",
 				'placeholder' => 'eg john, doe, baby, man, [link], [russian]'
 			)
 		);

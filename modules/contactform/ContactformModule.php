@@ -11,6 +11,49 @@ class ContactformModule extends Module {
 		parent::__construct();
 	}
 
+	private function checkJapanese( $value, $character_sets = array() ) {
+		$found = false;
+
+		foreach ( $character_sets as $character_set ) {
+
+			switch ( $character_set ) {
+				case 'hiragana':
+					$found = preg_match( '/[\x{3041}-\x{3096}]/ium', $value );
+					break;
+
+				case 'katakana':
+					$found = preg_match( '/[\x{30A0}-\x{30FF}]/ium', $value );
+					break;
+
+				case 'kanji':
+					$found = preg_match( '/[\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{F900}-\x{FA6A}]/ium', $value );
+					break;
+
+				case 'kanji_radicals':
+					$found = preg_match( '/[\x{2E80}-\x{2FD5}]/ium', $value );
+					break;
+
+				case 'katakana_punctuation':
+					$found = preg_match( '/[\x{FF5F}-\x{FF9F}]/ium', $value );
+					break;
+
+				case 'symbols_punctuations':
+					$found = preg_match( '/[\x{3000}-\x{303F}]/ium', $value );
+					break;
+
+				case 'others':
+					$found = preg_match( '/[\x{31F0}-\x{31FF}\x{3220}-\x{3243}\x{3280}-\x{337F}]/ium', $value );
+					break;
+			}
+
+			if ( $found ) {
+				break 1;
+			}
+		}
+
+		return $found;
+	}
+
 	protected function addFilters() {
 		parent::addFilters();
 
@@ -144,6 +187,19 @@ class ContactformModule extends Module {
 							break;
 						case '[russian]':
 							$found = preg_match( '/[а-яА-Я]/miu', $value );
+							break;
+						case '[japanese]':
+							// this blog post http://www.localizingjapan.com/blog/2012/01/20/regular-expressions-for-japanese-text/
+							$character_sets = array(
+								'hiragana',
+								'katakana',
+								'kanji',
+								'kanji_radicals',
+								'katakana_punctuation',
+								'symbols_punctuations',
+								'others'
+							);
+							$found          = $this->checkJapanese( $value, $character_sets );
 							break;
 						case '[link]':
 							$pattern = '/((ftp|http|https):\/\/\w+)|(www\.\w+\.\w+)/ium'; // filters http://google.com and http://www.google.com and www.google.com
