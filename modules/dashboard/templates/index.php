@@ -231,7 +231,7 @@ $words .= "]";
 
     var word_chart = new ApexCharts(document.querySelector("#words-chart"), word_options);
     word_chart.render();
-	<?php if(get_option( 'kmcfmf_version', '0' ) == CF7MessageFilter::getVersion()):?>
+	<?php if(get_option( 'kmcfmf_version', '0' ) != CF7MessageFilter::getVersion()):?>
     jQuery(document).ready(function ($) {
         $('#myModal').modal()
     });

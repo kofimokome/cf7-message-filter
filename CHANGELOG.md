@@ -1,5 +1,16 @@
 # Change Log
 
+## v1.3.4 Changes
+
+1. Add `[japanesse]` `[hiragana]` `[katakana]` and `[kanji]` filters
+2. Compatibility with WordPress 6.0
+
+## v1.3.3 Changes
+
+1. Add tests
+2. Compatibility with WordPress 5.9
+3. Update min php version to 5.6
+
 ## v1.3.2 Changes
 
 1. Escape HTML tags in message content

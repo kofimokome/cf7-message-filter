@@ -188,8 +188,29 @@ class ContactformModule extends Module {
 						case '[russian]':
 							$found = preg_match( '/[а-яА-Я]/miu', $value );
 							break;
+						case '[hiragana]':
+							$character_sets = array(
+								'hiragana'
+							);
+							$found          = $this->checkJapanese( $value, $character_sets );
+							break;
+						case '[katakana]':
+							$character_sets = array(
+								'katakana',
+								'katakana_punctuation',
+							);
+							$found          = $this->checkJapanese( $value, $character_sets );
+							break;
+						case '[kanji]':
+							$character_sets = array(
+								'kanji',
+								'kanji_radicals',
+							);
+							$found          = $this->checkJapanese( $value, $character_sets );
+							break;
 						case '[japanese]':
 							// this blog post http://www.localizingjapan.com/blog/2012/01/20/regular-expressions-for-japanese-text/
+							// todo: add option to store messages in the database
 							$character_sets = array(
 								'hiragana',
 								'katakana',

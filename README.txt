@@ -3,7 +3,7 @@ Contributors: kofimokome
 Donate link: https://ko-fi.com/kofimokome
 Tags: spam, filter
 Requires at least: 5.7
-Tested up to: 5.9
+Tested up to: 6.0
 Stable tag: 1.3.4
 Requires PHP: 5.6
 License: GPLv2 or later
@@ -29,6 +29,10 @@ Note: This is just an extension. This plugin is not affiliated with or endorsed 
 6. Save and wait for someone to submit
 
 == Changelog ==
+
+= 1.3.4 =
+* Add [japanesse] [hiragana] [katakana] and [kanji] filters
+* Compatibility with WordPress 6.0
 
 = 1.3.3 =
 * Add tests

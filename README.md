@@ -19,6 +19,12 @@ codes, you should checkout from the `master` branch
 1. **[Cameroon Boyo](https://cameroonboyo.com)**
 2. **[Luca Ortis](http://lucaortis.com/)**
 
+## v1.3.4 Changes
+
+1. Add `[japanesse]` `[hiragana]` `[katakana]` and `[kanji]` filters
+2. Compatibility with WordPress 6.0
+
+
 ## v1.3.3 Changes
 
 1. Add tests
@@ -32,8 +38,3 @@ codes, you should checkout from the `master` branch
 ## v1.3.1 Changes
 
 1. Add support for WordPress 5.8
-
-## v1.3.0 Changes
-
-1. Fix bug when filter sees words separated with space as two words
-2. Fix filter not working for words like ".online"
