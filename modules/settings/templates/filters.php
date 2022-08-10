@@ -11,7 +11,7 @@ namespace kmcf7_message_filter;
         </tr>
         <tr>
             <td>1</td>
-            <td><code>[links]</code></td>
+            <td><code>[link]</code></td>
             <td>Filters messages having links</td>
         </tr>
         <tr>
