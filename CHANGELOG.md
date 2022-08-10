@@ -1,4 +1,8 @@
 # Change Log
+## v1.3.5 Changes
+
+1. Fix wrong filter name on the filters page
+
 
 ## v1.3.4 Changes
 

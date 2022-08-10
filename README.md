@@ -19,6 +19,11 @@ codes, you should checkout from the `master` branch
 1. **[Cameroon Boyo](https://cameroonboyo.com)**
 2. **[Luca Ortis](http://lucaortis.com/)**
 
+## v1.3.5 Changes
+
+1. Fix wrong filter name on the filters page
+
+
 ## v1.3.4 Changes
 
 1. Add `[japanesse]` `[hiragana]` `[katakana]` and `[kanji]` filters
@@ -34,7 +39,3 @@ codes, you should checkout from the `master` branch
 ## v1.3.2 Changes
 
 1. Escape HTML tags in message content
-
-## v1.3.1 Changes
-
-1. Add support for WordPress 5.8
