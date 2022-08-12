@@ -1,5 +1,7 @@
 # Message Filter for Contact Form 7
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b5eb7be7bfb1487eabc99fcc9f625d5d)](https://app.codacy.com/gh/kofimokome/cf7-message-filter?utm_source=github.com&utm_medium=referral&utm_content=kofimokome/cf7-message-filter&utm_campaign=Badge_Grade_Settings)
+
 This is a WordPress plugin that helps prevent a contact form from submitting if it contains words or email marked as
 unwanted
 
