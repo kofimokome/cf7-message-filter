@@ -40,6 +40,11 @@ namespace kmcf7_message_filter;
             <td>Filters messages having japanese characters. Calls the following filters: <code>[hiragana]</code>,<code>[katakana]</code>
                 and <code>[kanji]</code></td>
         </tr>
+        <tr>
+            <td>7</td>
+            <td><code>[emoji]</code></td>
+            <td>Filters messages having emojis 😀😜</td>
+        </tr>
     </table>
 
 <?php

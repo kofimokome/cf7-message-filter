@@ -11,6 +11,21 @@ class ContactformModule extends Module {
 		parent::__construct();
 	}
 
+	/**
+	 * Checks if text has an emoji
+	 * @since v1.3.6
+	 */
+	private function hasEmoji( $emoji ) {
+		$unicodeRegexp = '([*#0-9](?>\\xEF\\xB8\\x8F)?\\xE2\\x83\\xA3|\\xC2[\\xA9\\xAE]|\\xE2..(\\xF0\\x9F\\x8F[\\xBB-\\xBF])?(?>\\xEF\\xB8\\x8F)?|\\xE3(?>\\x80[\\xB0\\xBD]|\\x8A[\\x97\\x99])(?>\\xEF\\xB8\\x8F)?|\\xF0\\x9F(?>[\\x80-\\x86].(?>\\xEF\\xB8\\x8F)?|\\x87.\\xF0\\x9F\\x87.|..(\\xF0\\x9F\\x8F[\\xBB-\\xBF])?|(((?<zwj>\\xE2\\x80\\x8D)\\xE2\\x9D\\xA4\\xEF\\xB8\\x8F\k<zwj>\\xF0\\x9F..(\k<zwj>\\xF0\\x9F\\x91.)?|(\\xE2\\x80\\x8D\\xF0\\x9F\\x91.){2,3}))?))';
+		if ( preg_match( $unicodeRegexp, $emoji ) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 */
 	private function checkJapanese( $value, $character_sets = array() ) {
 		$found = false;
 
@@ -226,6 +241,9 @@ class ContactformModule extends Module {
 							$pattern = '/((ftp|http|https):\/\/\w+)|(www\.\w+\.\w+)/ium'; // filters http://google.com and http://www.google.com and www.google.com
 							$found   = preg_match( $pattern, $value );
 							break;
+						case '[emoji]':
+							$found = $this->hasEmoji( $message );
+							break;
 						default:
 
 							$like_start = ( preg_match( '/^\*/', $check_word ) );
@@ -243,7 +261,11 @@ class ContactformModule extends Module {
 							if ( $like_end || $like_start ) {
 								$found = preg_match( '/^' . $regex_pattern . '$/miu', $value );
 							} else {
-								$found = preg_match( '/\b' . $regex_pattern . '\b/miu', $value );
+								if ( $this->hasEmoji( $check_word ) ) {
+									$found = strpos( $message, $check_word ) !== false;
+								} else {
+									$found = preg_match( '/\b' . $regex_pattern . '\b/miu', $value );
+								}
 							}
 							break;
 					}

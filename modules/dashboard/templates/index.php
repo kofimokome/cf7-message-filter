@@ -118,9 +118,8 @@ $link_to_filters = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-option
                     </div>
                     <h5> Here are a few changes in this version:</h5>
                     <ol>
-                        <li>Add support for WordPress 6.0
-                        </li>
-                        <li>Add more filters.
+                        <li>Fix emoji in filter not working</li>
+                        <li>Add [emoji] filter to filter messages having emoji. <br/>
                             <a href="<?php echo $link_to_filters ?>"> View filters </a>
                         </li>
                     </ol>
@@ -231,7 +230,7 @@ $words .= "]";
 
     var word_chart = new ApexCharts(document.querySelector("#words-chart"), word_options);
     word_chart.render();
-	<?php if(get_option( 'kmcfmf_version', '0' ) != CF7MessageFilter::getVersion()):?>
+	<?php if(get_option( 'kmcfmf_version', '0' ) == CF7MessageFilter::getVersion()):?>
     jQuery(document).ready(function ($) {
         $('#myModal').modal()
     });

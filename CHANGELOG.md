@@ -1,8 +1,13 @@
 # Change Log
+
+## v1.3.6 Changes
+
+1. Fix emoji in filter not working
+2. Add [emoji] filter
+
 ## v1.3.5 Changes
 
 1. Fix wrong filter name on the filters page
-
 
 ## v1.3.4 Changes
 
