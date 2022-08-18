@@ -184,7 +184,7 @@ class SettingsModule extends Module {
 				'type'  => 'checkbox',
 				'id'    => 'kmcfmf_hide_error_message',
 				'label' => __( 'Hide error messages: ', KMCF7MS_TEXT_DOMAIN ),
-				'tip'   => __( "<span class='text-danger' style='color:red;'>Note: This is an experimental feature.</span><br/>Show a success message instead of an error message if a message is marked as spam", KMCF7MS_TEXT_DOMAIN )
+				'tip'   => __( "<span class='text-danger' style='color:red;'>Note: This is an experimental feature. Your feedback will be appreciated</span><br/>Show a success message instead of an error message if a spam is found", KMCF7MS_TEXT_DOMAIN )
 			)
 		);
 		$settings->add_field(
