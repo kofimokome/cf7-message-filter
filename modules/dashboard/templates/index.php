@@ -103,7 +103,7 @@ $link_to_messages = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-optio
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"
-                        id="exampleModalLabel"><?php _e( "Thank you for choosing Contact Form 7 Filter" . KMCF7MS_TEXT_DOMAIN ) ?></h5>
+                        id="exampleModalLabel"><?php _e( "Thank you for choosing Contact Form 7 Filter", KMCF7MS_TEXT_DOMAIN ) ?></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -124,7 +124,7 @@ $link_to_messages = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-optio
                     <ol>
                         <li>Fix emoji in filter not working</li>
                         <li>Fix single line text filters not working</li>
-                        <li>Add [emoji] filter to filter messages having emoji. <br/>
+                        <li>Add [emoji] shortcut to filter messages having emoji. <br/>
                             <a href="<?php echo $link_to_filters ?>"> View filters </a>
                         </li>
                         <li>Add option to show a success message if a spam is found. <br/>
