@@ -1,8 +1,9 @@
 <?php
 
+namespace kmcf7_message_filter;
 ?>
-    <h2>Advanced Settings </h2>
-<?php settings_errors(); ?>
+    <h2><?php _e( "Advanced Settings", KMCF7MS_TEXT_DOMAIN ) ?> </h2>
+	<?php settings_errors(); ?>
     <form method="post" action="options.php">
 		<?php
 

@@ -4,11 +4,14 @@ namespace kmcf7_message_filter;
 
 use WPCF7_Submission;
 
-class ContactformModule extends Module {
+class ContactFormModule extends Module {
 	private $count_updated = false;
+	private $skip_mail = false;
+	private $hide_error_message;
 
 	public function __construct() {
 		parent::__construct();
+		$this->hide_error_message = get_option( 'kmcfmf_hide_error_message' ) == 'on' ? true : false;
 	}
 
 	/**
@@ -22,6 +25,16 @@ class ContactformModule extends Module {
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Removes contact form 7 submit actions
+	 * @since v1.3.6
+	 */
+	private function removeActions() {
+		$this->skip_mail = true;
+		remove_all_actions( 'wpcf7_mail_sent' );
+		remove_all_actions( 'wpcf7_before_send_mail' );
 	}
 
 	/**
@@ -79,19 +92,21 @@ class ContactformModule extends Module {
 		$enable_tags_by_names_filter = get_option( 'kmcfmf_tags_by_name_filter_toggle' ) == 'on' ? true : false;
 
 		if ( $enable_email_filter ) {
-			add_filter( 'wpcf7_validate_email', array( $this, 'textValidationFilter' ), 12, 2 );
-			add_filter( 'wpcf7_validate_email*', array( $this, 'textValidationFilter' ), 12, 2 );
+			add_filter( 'wpcf7_validate_email', array( $this, 'textValidationFilter' ), 999, 2 );
+			add_filter( 'wpcf7_validate_email*', array( $this, 'textValidationFilter' ), 999, 2 );
 		}
 
 		if ( $enable_message_filter ) {
-			add_filter( 'wpcf7_validate_textarea', array( $this, 'textareaValidationFilter' ), 12, 2 );
-			add_filter( 'wpcf7_validate_textarea*', array( $this, 'textareaValidationFilter' ), 12, 2 );
+			add_filter( 'wpcf7_validate_textarea', array( $this, 'textareaValidationFilter' ), 999, 2 );
+			add_filter( 'wpcf7_validate_textarea*', array( $this, 'textareaValidationFilter' ), 999, 2 );
 		}
 
 		if ( $enable_tags_by_names_filter ) {
-			add_filter( 'wpcf7_validate_text', array( $this, 'textTagsByNameValidationFilter' ), 12, 2 );
-			add_filter( 'wpcf7_validate_text*', array( $this, 'textTagsByNameValidationFilter' ), 12, 2 );
+			add_filter( 'wpcf7_validate_text', array( $this, 'textTagsByNameValidationFilter' ), 999, 2 );
+			add_filter( 'wpcf7_validate_text*', array( $this, 'textTagsByNameValidationFilter' ), 999, 2 );
 		}
+
+		add_filter( 'wpcf7_skip_mail', array( $this, 'skipMail' ), 999, 2 );
 	}
 
 	protected function addActions() {
@@ -140,7 +155,8 @@ class ContactformModule extends Module {
 	function textTagsByNameValidationFilter( $result, $tag ) {
 
 		$name  = $tag->name;
-		$names = preg_split( '/[\s,]+/', get_option( 'kmcfmf_tags_by_name' ) );
+		$names = explode( ',', get_option( 'kmcfmf_tags_by_name' ) );
+
 		if ( in_array( $name, $names ) ) {
 			$result = $this->textareaValidationFilter( $result, $tag );
 		}
@@ -286,38 +302,14 @@ class ContactformModule extends Module {
 
 		// Spam word is recognized
 		if ( $found ) {
-			$result->invalidate( $tag, wpcf7_get_message( 'spam_word_error' ) );
-
+			if ( $this->hide_error_message ) {
+				$this->removeActions();
+			} else {
+				$result->invalidate( $tag, wpcf7_get_message( 'spam_word_error' ) );
+			}
 			if ( ! $this->count_updated ) {
 				MessagesModule::updateLog( $spam_word );
 				$this->count_updated = true;
-			}
-		} else {
-
-			// Check additional conditions on $message
-			if ( empty( $message ) ) {
-				// No content ($message) in a required Tag
-				if ( $tag->is_required() ) {
-					$result->invalidate( $tag, wpcf7_get_message( 'invalid_required' ) );
-				}
-			} else {
-
-				$maxlength = $tag->get_maxlength_option();
-				$minlength = $tag->get_minlength_option();
-
-				if ( $maxlength && $minlength && $maxlength < $minlength ) {
-					$maxlength = $minlength = null;
-				}
-
-				$code_units = wpcf7_count_code_units( stripslashes( $message ) );
-
-				if ( $code_units ) {
-					if ( $maxlength && $maxlength < $code_units ) {
-						$result->invalidate( $tag, wpcf7_get_message( 'invalid_too_long' ) );
-					} elseif ( $minlength && $code_units < $minlength ) {
-						$result->invalidate( $tag, wpcf7_get_message( 'invalid_too_short' ) );
-					}
-				}
 			}
 		}
 
@@ -336,67 +328,37 @@ class ContactformModule extends Module {
 			? trim( wp_unslash( strtr( (string) $_POST[ $name ], "\n", " " ) ) )
 			: '';
 
-		if ( 'text' == $tag->basetype ) {
-			if ( $tag->is_required() && '' == $value ) {
-				$result->invalidate( $tag, wpcf7_get_message( 'invalid_required' ) );
-			}
-		}
 
-		if ( 'email' == $tag->basetype ) {
-			if ( $tag->is_required() && '' == $value ) {
-				$result->invalidate( $tag, wpcf7_get_message( 'invalid_required' ) );
-			} elseif ( '' != $value && ! wpcf7_is_email( $value ) ) {
-				$result->invalidate( $tag, wpcf7_get_message( 'invalid_email' ) );
-			} else {
-				foreach ( $check_words as $check_word ) {
-					if ( preg_match( "/\b" . $check_word . "\b/", $value ) ) {
-//                    if (strpos($value, $check_word) !== false) {
-						$result->invalidate( $tag, wpcf7_get_message( 'spam_email_error' ) );
+		foreach ( $check_words as $check_word ) {
+			if ( preg_match( "/\b" . $check_word . "\b/", $value ) ) {
+				if ( $this->hide_error_message ) {
+					$this->removeActions();
+				} else {
+					$result->invalidate( $tag, wpcf7_get_message( 'spam_email_error' ) );
+				}
 
-						if ( ! $this->count_updated ) {
-							MessagesModule::updateLog( '' );
-							$this->count_updated = true;
-						}
-					}
+				if ( ! $this->count_updated ) {
+					MessagesModule::updateLog( '' );
+					$this->count_updated = true;
 				}
 			}
-		}
 
-		if ( 'url' == $tag->basetype ) {
-			if ( $tag->is_required() and '' === $value ) {
-				$result->invalidate( $tag, wpcf7_get_message( 'invalid_required' ) );
-			} elseif ( '' !== $value and ! wpcf7_is_url( $value ) ) {
-				$result->invalidate( $tag, wpcf7_get_message( 'invalid_url' ) );
-			}
-		}
-
-		if ( 'tel' == $tag->basetype ) {
-			if ( $tag->is_required() and '' === $value ) {
-				$result->invalidate( $tag, wpcf7_get_message( 'invalid_required' ) );
-			} elseif ( '' !== $value and ! wpcf7_is_tel( $value ) ) {
-				$result->invalidate( $tag, wpcf7_get_message( 'invalid_tel' ) );
-			}
-		}
-
-		if ( '' !== $value ) {
-			$maxlength = $tag->get_maxlength_option();
-			$minlength = $tag->get_minlength_option();
-
-			if ( $maxlength && $minlength && $maxlength < $minlength ) {
-				$maxlength = $minlength = null;
-			}
-
-			$code_units = wpcf7_count_code_units( stripslashes( $value ) );
-
-			if ( false !== $code_units ) {
-				if ( $maxlength && $maxlength < $code_units ) {
-					$result->invalidate( $tag, wpcf7_get_message( 'invalid_too_long' ) );
-				} elseif ( $minlength && $code_units < $minlength ) {
-					$result->invalidate( $tag, wpcf7_get_message( 'invalid_too_short' ) );
-				}
-			}
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Skips sending of contact form mail
+	 * @since v1.3.6
+	 */
+	function skipMail( $skip_mail, $contact_form ) {
+
+		if ( $this->skip_mail ) {
+
+			return true;
+		}
+
+		return $skip_mail;
 	}
 }

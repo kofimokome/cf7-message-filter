@@ -13,8 +13,8 @@ Contact Form 7 must be installed and activated before you can use this plugin
 ## Contribution
 
 The latest codes are found in the `develop` branch. If you would like to contribute, you should use the `develop`
-branch. Bear in mind that the codes in the `develop` branch may be unstable. If you are looking for the lastest stable
-codes, you should checkout from the `master` branch
+branch. Bear in mind that the codes in the `develop` branch may be unstable. If you are looking for the latest stable
+codes, checkout  the `master` branch
 
 ## This plugin is used by
 

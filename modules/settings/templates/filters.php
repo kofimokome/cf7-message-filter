@@ -2,7 +2,7 @@
 
 namespace kmcf7_message_filter;
 ?>
-    <h1>List of filters</h1>
+    <h1><?php _e( "List of filters", KMCF7MS_TEXT_DOMAIN ) ?></h1>
     <table class="wp-list-table widefat fixed striped table-view-list posts">
         <tr>
             <th>S/N</th>

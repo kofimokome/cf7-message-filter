@@ -54,7 +54,7 @@ function KMCF7Loader() {
 
 	foreach ( $includes as $file ) {
 		if ( ! $filepath = file_exists( $file ) ) {
-			KMCF7ErrorNotice( sprintf( __( 'Error locating <b>%s</b> for inclusion', 'cf7-message-filter' ), $file ) );
+			KMCF7ErrorNotice( sprintf( __( 'Error locating <b>%s</b> for inclusion', KMCF7MS_TEXT_DOMAIN ), $file ) );
 			$error = true;
 		} else {
 			include_once $file;
@@ -84,4 +84,4 @@ function kmcf7_deactivation() {
 }
 
 // todo: for future use
-load_plugin_textdomain( 'cf7-message-filter', false, basename( dirname( __FILE__ ) ) . '/languages' );
+load_plugin_textdomain( KMCF7MS_TEXT_DOMAIN, false, basename( dirname( __FILE__ ) ) . '/languages' );
