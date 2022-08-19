@@ -173,7 +173,7 @@ class MessagesModule extends Module {
 			$log_message  = [
 				'id'    => $contact_form->id(),
 				'name'  => $contact_form->name(),
-				'title' => $contact_form->title(),
+				'title' => $contact_form->f,
 				'data'  => array_merge( $submission->get_posted_data(), array( 'date' => Date( 'd-m-y  h:ia' ) ) )
 			];
 			array_push( $log_messages, $log_message );

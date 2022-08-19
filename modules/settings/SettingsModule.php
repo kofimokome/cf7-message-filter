@@ -229,6 +229,14 @@ class SettingsModule extends Module {
 		$settings->add_field(
 			array(
 				'type'  => 'checkbox',
+				'id'    => 'kmcfmf_message_db_storage_toggle',
+				'label' => __( 'Enable database storage: ', KMCF7MS_TEXT_DOMAIN ),
+				'tip'   => __( "<span class='text-danger' style='color:red;'>Note: This is an experimental feature.</span><br/>Blocked messages are currently stored in a file. <br/>If you are unable to view blocked messages, enable this option. <br/> <b>Note: </b>", KMCF7MS_TEXT_DOMAIN )
+			)
+		);
+		$settings->add_field(
+			array(
+				'type'  => 'checkbox',
 				'id'    => 'kmcfmf_message_auto_delete_toggle',
 				'label' => __( 'Auto delete messages: ', KMCF7MS_TEXT_DOMAIN ),
 				'tip'   => ''

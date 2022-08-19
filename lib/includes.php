@@ -10,9 +10,8 @@ add_filter( 'kmcf7_includes_filter', function ( $includes ) {
 		KMCF7MS_LIB_DIR . '/wordpress_tools/KMMenuPage.php', //
 		KMCF7MS_LIB_DIR . '/wordpress_tools/KMSubMenuPage.php', //
 		KMCF7MS_LIB_DIR . '/wordpress_tools/KMSetting.php', //
+		KMCF7MS_LIB_DIR . '/plural/Plural.php', //
 	];
 
-	$includes = array_merge( $includes, $files );
-
-	return $includes;
+	return array_merge( $includes, $files );
 } );

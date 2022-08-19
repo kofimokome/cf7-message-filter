@@ -24,6 +24,8 @@ defined( 'ABSPATH' ) or die( 'Giving To Cesar What Belongs To Caesar' );
 require 'constants.php';
 require KMCF7MS_CORE_DIR . '/CF7MessageFilter.php';
 require KMCF7MS_CORE_DIR . '/Module.php';
+require KMCF7MS_CORE_DIR . '/Migration.php';
+require KMCF7MS_CORE_DIR . '/Model.php';
 
 /**
  * Scan directories for files to include
@@ -64,23 +66,45 @@ function KMCF7Loader() {
 	return $error;
 }
 
-function kmcf7_start() {
+function KMCF7Start() {
+	Migration::runUpdateMigrations();
 	$message_filter = new CF7MessageFilter();
 	$message_filter->run();
 }
 
 
 if ( ! KMCF7Loader() ) {
-	kmcf7_start();
+	KMCF7Start();
 }
 
 
 // remove options upon deactivation
 
-register_deactivation_hook( __FILE__, 'kmcf7_message_filter\\kmcf7_deactivation' );
+register_deactivation_hook( __FILE__, 'kmcf7_message_filter\\KMCF7Deactivation' );
 
-function kmcf7_deactivation() {
+function KMCF7Deactivation() {
 	// set options to remove here
+}
+
+
+register_uninstall_hook( __FILE__, 'kmcf7_message_filter\\KMCF7Uninstall' );
+
+/**
+ * Set of actions to be performed on uninstallation
+ * @since v1.3.6
+ */
+function KMCF7Uninstall() {
+	Migration::dropAll();
+}
+
+register_activation_hook( __FILE__, 'kmcf7_message_filter\\KMCF7Activation' );
+
+/**
+ * Set of actions to be performed on activation
+ * @since v1.3.6
+ */
+function KMCF7Activation() {
+	Migration::runMigrations();
 }
 
 // todo: for future use

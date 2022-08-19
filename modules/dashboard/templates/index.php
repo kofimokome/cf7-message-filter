@@ -1,7 +1,7 @@
 <?php
 namespace kmcf7_message_filter;
 $link_to_filters  = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-options&tab=filters';
-$link_to_messages = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-options&tab=messages';
+$link_to_extensions = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-options&tab=extensions';
 ?>
 
 <style>
@@ -128,7 +128,7 @@ $link_to_messages = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-optio
                             <a href="<?php echo $link_to_filters ?>"> View filters </a>
                         </li>
                         <li>Add option to show a success message if a spam is found. <br/>
-                            <a href="<?php echo $link_to_messages ?>"> View settings </a>
+                            <a href="<?php echo $link_to_extensions ?>"> View settings </a>
                         </li>
                     </ol>
 					<?php _e( "Please help translate this plugin to your language", KMCF7MS_TEXT_DOMAIN ) ?> <a
