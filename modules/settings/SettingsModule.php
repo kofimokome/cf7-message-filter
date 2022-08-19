@@ -54,6 +54,11 @@ class SettingsModule extends Module {
 			'statusTabView'
 		), array( 'tab' => 'advanced' ) );
 
+		$settings_page->add_tab( 'extensions', __( 'Extensions', KMCF7MS_TEXT_DOMAIN ), array(
+			$this,
+			'statusTabView'
+		), array( 'tab' => 'extensions' ) );
+
 		$settings_page->add_tab( 'filters', __( 'Filters', KMCF7MS_TEXT_DOMAIN ), array(
 			$this,
 			'statusTabView'
@@ -63,6 +68,8 @@ class SettingsModule extends Module {
 			$this,
 			'statusTabView'
 		), array( 'tab' => 'plugins' ) );
+
+		$settings_page = apply_filters( 'kmcf7_settings_tab', $settings_page );
 
 
 		array_push( $sub_menu_pages, $settings_page );
@@ -95,6 +102,9 @@ class SettingsModule extends Module {
 				break;
 			case 'messages':
 				$this->renderContent( 'messages' );
+				break;
+			case 'extensions':
+				$this->renderContent( 'extensions' );
 				break;
 			default:
 				$this->renderContent( 'basic' );
@@ -174,19 +184,14 @@ class SettingsModule extends Module {
 				'tip'   => ''
 			)
 		);
+
+		$settings = apply_filters( 'kmcf7_basic_settings', $settings );
+
 		$settings->save();
 
 		// Error messages settings
 		$settings = new KMSetting( 'kmcf7-message-filter-options&tab=messages' );
 		$settings->add_section( 'kmcfmf_message_filter_messages' );
-		$settings->add_field(
-			array(
-				'type'  => 'checkbox',
-				'id'    => 'kmcfmf_hide_error_message',
-				'label' => __( 'Hide error messages: ', KMCF7MS_TEXT_DOMAIN ),
-				'tip'   => __( "<span class='text-danger' style='color:red;'>Note: This is an experimental feature. Your feedback will be appreciated</span><br/>Show a success message instead of an error message if a spam is found", KMCF7MS_TEXT_DOMAIN )
-			)
-		);
 		$settings->add_field(
 			array(
 				'type'        => 'textarea',
@@ -205,6 +210,9 @@ class SettingsModule extends Module {
 				'placeholder' => __( 'The e-mail address entered is invalid.', 'contact-form-7' ),
 			)
 		);
+
+		$settings = apply_filters( 'kmcf7_message_settings', $settings );
+
 		$settings->save();
 
 		// Advanced settings
@@ -265,6 +273,9 @@ class SettingsModule extends Module {
 				// 'default_option' => ''
 			)
 		);
+
+		$settings = apply_filters( 'kmcf7_advanced_settings', $settings );
+
 		$settings->save();
 	}
 }
