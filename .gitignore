@@ -2,3 +2,4 @@ logs/messages.txt
 sonar-project.properties
 .scannerwork/
 modules/extensions/
+node_modules/

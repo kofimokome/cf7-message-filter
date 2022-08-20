@@ -67,7 +67,12 @@ function KMCF7Loader() {
 }
 
 function KMCF7Start() {
-	Migration::runUpdateMigrations();
+//	if ( get_option( 'is_initial_db_migration_run', false ) ) {
+//		Migration::runMigrations();
+//		update_option( 'is_initial_db_migration_run', 1 );
+//	} else {
+//		Migration::runUpdateMigrations();
+//	}
 	$message_filter = new CF7MessageFilter();
 	$message_filter->run();
 }
@@ -105,6 +110,7 @@ register_activation_hook( __FILE__, 'kmcf7_message_filter\\KMCF7Activation' );
  */
 function KMCF7Activation() {
 	Migration::runMigrations();
+	update_option( 'is_initial_db_migration_run', 1 );
 }
 
 // todo: for future use

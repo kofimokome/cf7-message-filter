@@ -214,6 +214,35 @@ class MessagesModule extends Module {
 
 
 	/**
+	 * Logs messages blocked to the database
+	 * @since 1.4.0
+	 */
+	public static function updateDatabase( $spam ) {
+
+		$submission            = WPCF7_Submission::get_instance();
+		$contact_form          = $submission->get_contact_form();
+		$message               = new Message();
+		$message->contact_form = 'contact_form_7';
+		$message->form_id      = $contact_form->id();
+		$message->message      = json_encode( $submission->get_posted_data() );
+		$message->save();
+
+		update_option( 'kmcfmf_messages_blocked', get_option( 'kmcfmf_messages_blocked' ) + 1 );
+		update_option( "kmcfmf_messages_blocked_today", get_option( "kmcfmf_messages_blocked_today" ) + 1 );
+		$today                      = date( 'N' );
+		$weekly_stats               = json_decode( get_option( 'kmcfmf_weekly_stats' ) );
+		$weekly_stats[ $today - 1 ] = get_option( "kmcfmf_messages_blocked_today" );
+		update_option( 'kmcfmf_weekly_stats', json_encode( $weekly_stats ) );
+
+		if ( trim( $spam ) !== '' ) {
+			$word_stats          = json_decode( get_option( 'kmcfmf_word_stats' ), true );
+			$word_stats[ $spam ] = isset( $word_stats[ $spam ] ) ? ( (int) $word_stats[ $spam ] ) + 1 : 1;
+			update_option( 'kmcfmf_word_stats', json_encode( $word_stats ) );
+		}
+	}
+
+
+	/**
 	 * Returns the location to the log file
 	 * @since v1.3.4
 	 */

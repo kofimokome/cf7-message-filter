@@ -90,13 +90,13 @@ class ContactFormModule extends Module {
 		$enable_tags_by_names_filter = get_option( 'kmcfmf_tags_by_name_filter_toggle' ) == 'on' ? true : false;
 
 		if ( $enable_email_filter ) {
-			add_filter( 'wpcf7_validate_email', array( $this, 'emailValidationFilter' ), 999, 2 );
-			add_filter( 'wpcf7_validate_email*', array( $this, 'emailValidationFilter' ), 999, 2 );
+			add_filter( 'wpcf7_validate_email', array( $this, 'emailValidationFilter' ), 10, 2 );
+			add_filter( 'wpcf7_validate_email*', array( $this, 'emailValidationFilter' ), 10, 2 );
 		}
 
 		if ( $enable_message_filter ) {
-			add_filter( 'wpcf7_validate_textarea', array( $this, 'textareaValidationFilter' ), 999, 2 );
-			add_filter( 'wpcf7_validate_textarea*', array( $this, 'textareaValidationFilter' ), 999, 2 );
+			add_filter( 'wpcf7_validate_textarea', array( $this, 'textareaValidationFilter' ), 10, 2 );
+			add_filter( 'wpcf7_validate_textarea*', array( $this, 'textareaValidationFilter' ), 10, 2 );
 		}
 
 		if ( $enable_tags_by_names_filter ) {
@@ -167,6 +167,7 @@ class ContactFormModule extends Module {
 	 * @since 1.0.0
 	 */
 	function textareaValidationFilter( $result, $tag ) {
+
 		$name = $tag->name;
 
 		$found     = false;
@@ -300,12 +301,12 @@ class ContactFormModule extends Module {
 		// Spam word is recognized
 		if ( $found ) {
 			$invalidate_field = true;
-			$invalidate_field = apply_filters( 'kmcf7_invalidate_text_field', $invalidate_field );
+//			$invalidate_field = apply_filters( 'kmcf7_invalidate_text_field', $invalidate_field );
 			if ( $invalidate_field ) {
 				$result->invalidate( $tag, wpcf7_get_message( 'spam_word_error' ) );
 			}
 			if ( ! $this->count_updated ) {
-				MessagesModule::updateLog( $spam_word );
+				MessagesModule::updateDatabase( $spam_word );
 				$this->count_updated = true;
 			}
 			do_action( 'kmcf7_after_invalidate_text_field' );
@@ -336,7 +337,7 @@ class ContactFormModule extends Module {
 				}
 
 				if ( ! $this->count_updated ) {
-					MessagesModule::updateLog( '' );
+					MessagesModule::updateDatabase( '' );
 					$this->count_updated = true;
 				}
 				do_action( 'kmcf7_after_invalidate_email_field' );
