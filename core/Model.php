@@ -319,7 +319,7 @@ class Model {
 
 		if ( self::$per_page > 0 || self::$per_page == - 1 ) { // check if the query requires pagination
 			$total_query = "SELECT COUNT(*) as total FROM " . $db_name . $additions;
-			$total       = val( $wpdb->get_var( $total_query ) );
+			$total       = intval( $wpdb->get_var( $total_query ) );
 			$query       .= $additions;
 
 			// prevent calculating offset for negative one
@@ -331,7 +331,7 @@ class Model {
 			$query          .= " LIMIT " . $offset . ' , ' . self::$per_page;
 
 			$data        = self::getResults( $query );
-			$total_pages = $total / self::$per_page;
+			$total_pages = self::$per_page == 0 ? 0 : $total / self::$per_page;
 			$total_pages = $total_pages > round( $total_pages ) ? round( $total_pages ) + 1 : round( $total_pages );
 			$data        = array(
 				'data'       => $data,

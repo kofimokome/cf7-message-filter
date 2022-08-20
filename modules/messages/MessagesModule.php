@@ -157,7 +157,12 @@ class MessagesModule extends Module {
 	 * Displays content on dashboard sub menu page
 	 */
 	function messagesPageContent() {
-		$this->renderContent( 'index' );
+		if ( isset( $_GET['old'] ) ) {
+			$this->renderContent( 'index' );
+		} else {
+			$this->renderContent( 'new' );
+
+		}
 	}
 
 	/**

@@ -9,9 +9,6 @@ $pagination = isset( $_GET['pagination'] ) ? (int) $_GET['pagination'] : 0;
 if ( $pagination <= 0 ) {
 	$pagination = 1;
 }
-
-$start           = 0;
-$end             = - 1;
 $number_per_page = 10; // per page
 $form_id         = isset( $_GET['form'] ) ? $_GET['form'] : 0;
 $form_id         = $form_id == '' ? - 1 : intval( $form_id );
@@ -23,14 +20,13 @@ function decodeUnicodeVars( $message ) {
 		mb_detect_encoding( $message, 'UTF-8, ISO-8859-1', true ) );
 }
 
-// echo "<br>we will search from " . $start . " to " . ( $end - 1 ) . "<br>";
 ?>
     <style>
         #wpbody-content {
             overflow-x: scroll;
         }
     </style>
-    <h3><?php echo get_option( 'kmcfmf_messages_blocked' ); ?> messages have been blocked</h3>
+    <h3><?php echo get_option( 'kmcfmf_messages_blocked' ); ?> messages have been blocked New add link to old</h3>
     <form action="" class="form-inline">
         <input type="hidden" name="page" value="kmcf7-filtered-messages">
         <select name="form" id="" class="form-control">
@@ -44,7 +40,6 @@ function decodeUnicodeVars( $message ) {
     </form>
     <!--<button class="btn btn-primary">Export to CSV</button>-->
 	<?php if ( $form_id >= 0 ) {
-	$rows         = MessagesModule::getRows( $form_id );
 	$contact_form = WPCF7_ContactForm::get_instance( $form_id );
 	$rows         = $contact_form->scan_form_tags();
 	?>
@@ -61,21 +56,14 @@ function decodeUnicodeVars( $message ) {
             <!--            </td>-->
         </tr>
 		<?php
-		$messages = MessagesModule::getColumns( $form_id );
-		$messages = array_reverse( $messages, false );
-		$size     = sizeof( $messages );
-		if ( ( $pagination * $number_per_page ) > $size && ( ( $pagination * $number_per_page ) - $number_per_page ) < $size ) {
-			$start = ( ( $pagination * $number_per_page ) - ( $number_per_page ) );
-			$end   = ( $size );
+		$results  = Message::where( 'contact_form', '=', 'contact_form_7' )->where( 'form_id', '=', $form_id )->orderBy( 'id', 'desc' )->paginate( $number_per_page, $pagination )->get();
+		$messages = $results['data'];
+		$size     = $results['totalPages'];
 
-		} elseif ( ( $pagination * $number_per_page ) <= $size ) {
-			$start = ( ( $pagination * $number_per_page ) - ( $number_per_page ) );
-			$end   = ( $pagination * $number_per_page );
-		}
-		for ( $i = $start; $i < $end; $i ++ ) {
-			$data = $messages[ $i ];
+		foreach ( $messages as $message ) {
+			$data = json_decode( $message->message );
 			echo "<tr>";
-			echo "<td>" . ( $i + 1 ) . "</td>";
+			echo "<td>" . ( $message->id ) . "</td>";
 			foreach ( $rows as $row ) {
 				$row = $row->name;
 				if ( property_exists( $data, $row ) ) {
@@ -84,7 +72,6 @@ function decodeUnicodeVars( $message ) {
 					echo "<td> </td>";
 				}
 			}
-//            echo "<td><button class='btn btn-primary'>resubmit</button></td>";
 			echo "</tr>";
 
 		}
@@ -95,7 +82,7 @@ function decodeUnicodeVars( $message ) {
 	if ( $pagination > 1 ) {
 		echo "<a href='?page=kmcf7-filtered-messages&form=" . $form_id . "&pagination=" . ( $pagination - 1 ) . "' class='button button-primary'> < Prev page</a>";
 	}
-	if ( ( ( ( $pagination + 1 ) * $number_per_page ) - $number_per_page ) < $size ) {
+	if ( ( $pagination + 1 ) <= $size ) {
 		echo " <a href='?page=kmcf7-filtered-messages&form=" . $form_id . "&pagination=" . ( $pagination + 1 ) . "' class='button button-primary'> Next page > </a>";
 	}
 } else { ?>

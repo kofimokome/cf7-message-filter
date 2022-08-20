@@ -301,7 +301,7 @@ class ContactFormModule extends Module {
 		// Spam word is recognized
 		if ( $found ) {
 			$invalidate_field = true;
-//			$invalidate_field = apply_filters( 'kmcf7_invalidate_text_field', $invalidate_field );
+			$invalidate_field = apply_filters( 'kmcf7_invalidate_text_field', $invalidate_field );
 			if ( $invalidate_field ) {
 				$result->invalidate( $tag, wpcf7_get_message( 'spam_word_error' ) );
 			}
