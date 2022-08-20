@@ -31,13 +31,15 @@ function decodeUnicodeVars( $message ) {
     <h3><?php echo get_option( 'kmcfmf_messages_blocked' ); ?> messages have been blocked</h3>
     <form action="" class="form-inline">
         <input type="hidden" name="page" value="kmcf7-filtered-messages">
-        <select name="form" id="" class="form-control">
+        <select name="form" id="" class="form-control form-control-sm">
             <option value="">Select a form</option>
 			<?php foreach ( MessagesModule::getForms() as $form ): ?>
                 <option value="<?php echo $form[1] ?>" <?php echo $form_id == $form[1] ? 'selected' : '' ?>><?php echo $form[0] ?></option>
 			<?php endforeach; ?>
         </select>
-        <button class="btn btn-primary btn-inline ml-1">Show Blocked Messages</button>
+        <input type="hidden" name="old" value="">
+
+        <button class="btn btn-primary btn-inline ml-1 btn-sm">Show Blocked Messages</button>
 
     </form>
     <!--<button class="btn btn-primary">Export to CSV</button>-->
@@ -87,10 +89,10 @@ function decodeUnicodeVars( $message ) {
     <br>
 	<?php
 	if ( $pagination > 1 ) {
-		echo "<a href='?page=kmcf7-filtered-messages&form=" . $form_id . "&pagination=" . ( $pagination - 1 ) . "' class='button button-primary'> < Prev page</a>";
+		echo "<a href='?page=kmcf7-filtered-messages&form=" . $form_id . "&pagination=" . ( $pagination - 1 ) . "&old' class='button button-primary'> < Prev page</a>";
 	}
 	if ( ( ( ( $pagination + 1 ) * $number_per_page ) - $number_per_page ) < $size ) {
-		echo " <a href='?page=kmcf7-filtered-messages&form=" . $form_id . "&pagination=" . ( $pagination + 1 ) . "' class='button button-primary'> Next page > </a>";
+		echo " <a href='?page=kmcf7-filtered-messages&form=" . $form_id . "&pagination=" . ( $pagination + 1 ) . "&old' class='button button-primary'> Next page > </a>";
 	}
 } else { ?>
     <div class="jumbotron">

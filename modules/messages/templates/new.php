@@ -4,7 +4,8 @@ namespace kmcf7_message_filter;
 
 use WPCF7_ContactForm;
 
-$pagination = isset( $_GET['pagination'] ) ? (int) $_GET['pagination'] : 0;
+$pagination           = isset( $_GET['pagination'] ) ? (int) $_GET['pagination'] : 0;
+$link_to_old_messages = admin_url( 'admin.php' ) . '?page=kmcf7-filtered-messages&old';
 
 if ( $pagination <= 0 ) {
 	$pagination = 1;
@@ -26,16 +27,17 @@ function decodeUnicodeVars( $message ) {
             overflow-x: scroll;
         }
     </style>
-    <h3><?php echo get_option( 'kmcfmf_messages_blocked' ); ?> messages have been blocked New add link to old</h3>
+    <h3><?php echo get_option( 'kmcfmf_messages_blocked' ); ?> messages have been blocked</h3>
+
     <form action="" class="form-inline">
         <input type="hidden" name="page" value="kmcf7-filtered-messages">
-        <select name="form" id="" class="form-control">
+        <select name="form" id="" class="form-control form-control-sm">
             <option value="">Select a form</option>
 			<?php foreach ( MessagesModule::getForms() as $form ): ?>
                 <option value="<?php echo $form[1] ?>" <?php echo $form_id == $form[1] ? 'selected' : '' ?>><?php echo $form[0] ?></option>
 			<?php endforeach; ?>
         </select>
-        <button class="btn btn-primary btn-inline ml-1">Show Blocked Messages</button>
+        <button class="btn btn-primary btn-inline ml-1 btn-sm">Show Blocked Messages</button>
 
     </form>
     <!--<button class="btn btn-primary">Export to CSV</button>-->
@@ -87,11 +89,21 @@ function decodeUnicodeVars( $message ) {
 	}
 } else { ?>
     <div class="jumbotron">
+		<?php if ( is_file( MessagesModule::getLogFile() ) ): ?>
+            <div class="mb-2 border-info">
+                <h5>Note: Message storage location has changed.
+                    <a href="<?php echo $link_to_old_messages ?>" class="btn btn-primary btn-sm">
+                        Click here to view your old messages
+                    </a>
+                </h5>
+            </div>
+		<?php endif; ?>
         <h2 class="display-5d">Blocked Messages Area</h2>
         <p class="lead">Messages are now grouped per form. Select a form above to view all messages blocked for that
             form.</p>
         <p class="lead">If you upgraded from a previous version, all old messages blocked are stored under
             uncategorized.</p>
+
         <hr class="my-4">
     </div>
 	<?php
