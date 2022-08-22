@@ -135,7 +135,7 @@ $link_to_messages = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-optio
                             href="https://translate.wordpress.org/projects/wp-plugins/cf7-message-filter/"
                             target="_blank"
                             class="btn btn-sm btn-primary"><?php esc_html_e( "Translate Now", KMCF7MS_TEXT_DOMAIN ) ?></a> <br>
-					<?php esc_html_e( 'If you find an issue, please <a href="https://wordpress.org/support/plugin/cf7-message-filter/"
+					<?php _e( 'If you find an issue, please <a href="https://wordpress.org/support/plugin/cf7-message-filter/"
                                                     target="_blank">create a support ticket here</a> and I will do my
                     best to fix as soon as possible', KMCF7MS_TEXT_DOMAIN ) ?>
                 </div>
