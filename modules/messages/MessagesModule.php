@@ -3,6 +3,7 @@
 namespace kmcf7_message_filter;
 
 use KMSubMenuPage;
+use WPCF7_ContactForm;
 use WPCF7_Submission;
 
 class MessagesModule extends Module {
@@ -269,21 +270,13 @@ class MessagesModule extends Module {
 	 * @since 1.2.5.2
 	 */
 	public static function getForms() {
-		$messages = self::getMessages();
-		$forms    = array();
-		foreach ( $messages as $message ) {
-			if ( property_exists( $message, 'id' ) ) {
-				if ( sizeof( $form = \WPCF7_ContactForm::find( array( 'p' => $message->id ) ) ) > 0 ) {
-					array_push( $forms, [ $form[0]->title(), $message->id ] );
-				} else {
-					array_push( $forms, [ $message->title, $message->id ] );
-				}
-			} else {
-				array_push( $forms, [ 'uncategorized', 0 ] );
-			}
+		$forms  = WPCF7_ContactForm::find();
+		$result = array();
+		foreach ( $forms as $form ) {
+			array_push( $result, array( $form->title(), $form->id() ) );
 		}
 
-		return array_unique( $forms, SORT_REGULAR );
+		return $result;
 
 	}
 
