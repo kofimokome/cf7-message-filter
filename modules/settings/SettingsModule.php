@@ -124,12 +124,28 @@ class SettingsModule extends Module {
 		$settings->add_section( 'kmcfmf_message_filter_basic' );
 		$settings->add_field(
 			array(
+				'type'  => 'checkbox',
+				'id'    => 'kmcfmf_message_filter_toggle',
+				'label' => __( 'Enable Message Filter?: ', KMCF7MS_TEXT_DOMAIN ),
+				'tip'   => ''
+			)
+		);
+		$settings->add_field(
+			array(
 				'type'        => 'textarea',
 				'id'          => 'kmcfmf_restricted_words',
 				'input_class' => 'select2',
 				'label'       => __( 'Restricted Words: ', KMCF7MS_TEXT_DOMAIN ),
 				'tip'         => "<a href='$link_to_filters'>" . __( "Click here to view list of filters", KMCF7MS_TEXT_DOMAIN ) . "</a>",
 				'placeholder' => 'eg john, doe, baby, man, [link], [russian]'
+			)
+		);
+		$settings->add_field(
+			array(
+				'type'  => 'checkbox',
+				'id'    => 'kmcfmf_email_filter_toggle',
+				'label' => __( 'Enable Email Filter?: ', KMCF7MS_TEXT_DOMAIN ),
+				'tip'   => ''
 			)
 		);
 		$settings->add_field(
@@ -144,6 +160,14 @@ class SettingsModule extends Module {
 		);
 		$settings->add_field(
 			array(
+				'type'  => 'checkbox',
+				'id'    => 'kmcfmf_tags_by_name_filter_toggle',
+				'label' => __( 'Enable Filter on single line Text Fields by Name?: ', KMCF7MS_TEXT_DOMAIN ),
+				'tip'   => ''
+			)
+		);
+		$settings->add_field(
+			array(
 				'type'        => 'textarea',
 				'id'          => 'kmcfmf_tags_by_name',
 				'input_class' => 'select2',
@@ -152,30 +176,7 @@ class SettingsModule extends Module {
 				'placeholder' => ''
 			)
 		);
-		$settings->add_field(
-			array(
-				'type'  => 'checkbox',
-				'id'    => 'kmcfmf_message_filter_toggle',
-				'label' => __( 'Enable Message Filter?: ', KMCF7MS_TEXT_DOMAIN ),
-				'tip'   => ''
-			)
-		);
-		$settings->add_field(
-			array(
-				'type'  => 'checkbox',
-				'id'    => 'kmcfmf_email_filter_toggle',
-				'label' => __( 'Enable Email Filter?: ', KMCF7MS_TEXT_DOMAIN ),
-				'tip'   => ''
-			)
-		);
-		$settings->add_field(
-			array(
-				'type'  => 'checkbox',
-				'id'    => 'kmcfmf_tags_by_name_filter_toggle',
-				'label' => __( 'Enable Filter on single line Text Fields by Name?: ', KMCF7MS_TEXT_DOMAIN ),
-				'tip'   => ''
-			)
-		);
+
 		$settings->add_field(
 			array(
 				'type'  => 'checkbox',
