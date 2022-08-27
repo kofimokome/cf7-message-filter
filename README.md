@@ -14,7 +14,7 @@ Contact Form 7 must be installed and activated before you can use this plugin
 
 The latest codes are found in the `develop` branch. If you would like to contribute, you should use the `develop`
 branch. Bear in mind that the codes in the `develop` branch may be unstable. If you are looking for the latest stable
-codes, checkout  the `master` branch
+codes, checkout the `master` branch
 
 ## This plugin is used by
 
@@ -24,7 +24,9 @@ codes, checkout  the `master` branch
 ## v1.3.6 Changes
 
 1. Fix emoji in filter not working
-2. Add [emoji] filter
+2. Add `[emoji]` filter to filter messages with emoji
+3. Add option to show a success message if a spam is found.
+4. Fix single line text filters not working
 
 ## v1.3.5 Changes
 

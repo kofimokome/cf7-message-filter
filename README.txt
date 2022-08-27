@@ -1,7 +1,7 @@
 === Message Filter for Contact Form 7 ===
 Contributors: kofimokome
 Donate link: https://ko-fi.com/kofimokome
-Tags: spam, filter
+Tags: spam, filter, spam-filter
 Requires at least: 5.9
 Tested up to: 6.0
 Stable tag: 1.4.0
@@ -33,6 +33,8 @@ Note: This is just an extension. This plugin is not affiliated with or endorsed 
 = 1.3.6 =
 * Fix emoji in filter not working
 * Add [emoji] filter
+* Add option to show a success message if a spam is found.
+* Fix single line text filters not working
 
 = 1.3.5 =
 * Fix wrong filter name on the filters page

@@ -6,10 +6,13 @@ use WPCF7_Submission;
 
 class ContactFormModule extends Module {
 	private $count_updated = false;
-	private $skip_mail = false;
+	private $spam_word_error;
+	private $spam_email_error;
 
 	public function __construct() {
 		parent::__construct();
+		$this->spam_word_error  = get_option( 'kmcfmf_spam_word_error', false ) ? get_option( 'kmcfmf_spam_word_error' ) : __( "One or more fields have an error. Please check and try again.", 'contact-form-7' );
+		$this->spam_email_error = get_option( 'kmcfmf_spam_email_error', false ) ? get_option( 'kmcfmf_spam_email_error' ) : __( 'The e-mail address entered is invalid.', KMCF7MS_TEXT_DOMAIN );
 	}
 
 	/**
@@ -83,8 +86,6 @@ class ContactFormModule extends Module {
 	protected function addFilters() {
 		parent::addFilters();
 
-		add_filter( 'wpcf7_messages', array( $this, 'addCustomMessages' ), 10, 1 );
-
 		$enable_message_filter       = get_option( 'kmcfmf_message_filter_toggle' ) == 'on' ? true : false;
 		$enable_email_filter         = get_option( 'kmcfmf_email_filter_toggle' ) == 'on' ? true : false;
 		$enable_tags_by_names_filter = get_option( 'kmcfmf_tags_by_name_filter_toggle' ) == 'on' ? true : false;
@@ -116,32 +117,6 @@ class ContactFormModule extends Module {
 		$submission = WPCF7_Submission::get_instance();
 		file_put_contents( $logs_root . 'test.txt', json_encode( $submission->get_posted_data() ) );
 
-	}
-
-
-	/**
-	 * Adds a custom message for messages flagged as spam
-	 * @since 1.2.2
-	 */
-	public function addCustomMessages( $messages ) {
-		$spam_word_eror   = get_option( 'kmcfmf_spam_word_error' ) ? get_option( 'kmcfmf_spam_word_error' ) : 'One or more fields have an error. Please check and try again.';
-		$spam_email_error = get_option( 'kmcfmf_spam_email_error' ) ? get_option( 'kmcfmf_spam_email_error' ) : 'The e-mail address entered is invalid.';
-		$messages         = array_merge( $messages, array(
-			'spam_word_error'  => array(
-				'description' =>
-					__( "Message contains a word marked as spam", 'contact-form-7' ),
-				'default'     =>
-					__( $spam_word_eror, 'contact-form-7' ),
-			),
-			'spam_email_error' => array(
-				'description' =>
-					__( "Email is an email marked as spam", 'contact-form-7' ),
-				'default'     =>
-					__( $spam_email_error, 'contact-form-7' ),
-			),
-		) );
-
-		return $messages;
 	}
 
 	/**
@@ -303,7 +278,7 @@ class ContactFormModule extends Module {
 			$invalidate_field = true;
 			$invalidate_field = apply_filters( 'kmcf7_invalidate_text_field', $invalidate_field );
 			if ( $invalidate_field ) {
-				$result->invalidate( $tag, wpcf7_get_message( 'spam_word_error' ) );
+				$result->invalidate( $tag, $this->spam_word_error );
 			}
 			if ( ! $this->count_updated ) {
 				MessagesModule::updateDatabase( $spam_word );
@@ -333,7 +308,7 @@ class ContactFormModule extends Module {
 				$invalidate_field = true;
 				$invalidate_field = apply_filters( 'kmcf7_invalidate_email_field', $invalidate_field );
 				if ( $invalidate_field ) {
-					$result->invalidate( $tag, wpcf7_get_message( 'spam_email_error' ) );
+					$result->invalidate( $tag, $this->spam_email_error );
 				}
 
 				if ( ! $this->count_updated ) {

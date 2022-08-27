@@ -2,7 +2,7 @@
 
 namespace kmcf7_message_filter;
 ?>
-    <h1><?php _e( "Here is a list of other plugins I am currently working on", KMCF7MS_TEXT_DOMAIN ) ?></h1>
+    <h1><?php esc_html_e( "Here is a list of other plugins I am currently working on", KMCF7MS_TEXT_DOMAIN ) ?></h1>
 
     <ol>
         <li>
@@ -15,7 +15,7 @@ namespace kmcf7_message_filter;
     </ol>
 
     <p style="margin-top: 100px;">
-    <h2><?php _e( "I will be grateful if you can buy me a cup of coffee", KMCF7MS_TEXT_DOMAIN ) ?> </h2>
+    <h2><?php esc_html_e( "I will be grateful if you can buy me a cup of coffee", KMCF7MS_TEXT_DOMAIN ) ?> </h2>
 
     <form action="https://ko-fi.com/kofimokome" method="post" target="_blank">
         <input type="hidden" name="hosted_button_id" value="B3JAV39H95RFG"/>
