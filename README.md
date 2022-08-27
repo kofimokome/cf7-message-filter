@@ -24,7 +24,9 @@ codes, checkout the `master` branch
 ## v1.3.6 Changes
 
 1. Fix emoji in filter not working
-2. Add [emoji] filter
+2. Add `[emoji]` filter to filter messages with emoji
+3. Add option to show a success message if a spam is found.
+4. Fix single line text filters not working
 
 ## v1.3.5 Changes
 
