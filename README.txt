@@ -1,7 +1,7 @@
 === Message Filter for Contact Form 7 ===
 Contributors: kofimokome
 Donate link: https://ko-fi.com/kofimokome
-Tags: spam, filter
+Tags: spam, filter, spam-filter
 Requires at least: 5.7
 Tested up to: 6.0
 Stable tag: 1.3.6
