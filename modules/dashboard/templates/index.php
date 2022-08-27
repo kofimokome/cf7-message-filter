@@ -1,6 +1,7 @@
 <?php
 namespace kmcf7_message_filter;
-$link_to_filters = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-options&tab=filters';
+$link_to_filters  = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-options&tab=filters';
+$link_to_extensions = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-options&tab=extensions';
 ?>
 
 <style>
@@ -18,7 +19,7 @@ $link_to_filters = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-option
         <div class="content">
 			<?php if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ): ?>
                 <div class="alert alert-danger alert-dismissible">
-                    <p><?php _e( 'Please Install / Enable Contact Form 7 Plugin First!', 'cf7-message-filter' ); ?></p>
+                    <p><?php esc_html_e( 'Please Install / Enable Contact Form 7 Plugin First!', KMCF7MS_TEXT_DOMAIN ); ?></p>
                 </div>
 			<?php endif; ?>
             <!--<div class="alert alert-info alert-dismissible">
@@ -42,13 +43,13 @@ $link_to_filters = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-option
                     <div class="col-xl-5">
                         <div class="card">
                             <div class="card-body p-0">
-                                <h5 class="card-title header-title border-bottom p-3 mb-0">Overview</h5>
+                                <h5 class="card-title header-title border-bottom p-3 mb-0"><?php esc_html_e( "Overview", KMCF7MS_TEXT_DOMAIN ) ?></h5>
 
                                 <div class="row"><!-- stat 1 -->
                                     <div class="col-6 media px-3 py-4 border-bottom border-right">
                                         <div class="media-body">
                                             <h4 class="mt-0 mb-1 font-size-22 font-weight-normal"><?php echo get_option( 'kmcfmf_messages_blocked' ); ?></h4>
-                                            <span class="text-muted">Messages Blocked</span>
+                                            <span class="text-muted"><?php esc_html_e( "Messages Blocked", KMCF7MS_TEXT_DOMAIN ) ?></span>
                                         </div>
                                         <!--                                    <i data-feather="users" class="align-self-center icon-dual icon-lg"></i>-->
                                     </div>
@@ -57,7 +58,7 @@ $link_to_filters = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-option
                                     <div class="col-6 media px-3 py-4 border-bottom">
                                         <div class="media-body">
                                             <h4 class="mt-0 mb-1 font-size-22 font-weight-normal"><?php echo get_option( 'kmcfmf_messages_blocked_today' ); ?></h4>
-                                            <span class="text-muted"> Blocked Today</span>
+                                            <span class="text-muted"> <?php esc_html_e( "Blocked Today", KMCF7MS_TEXT_DOMAIN ) ?></span>
                                         </div>
                                         <!--                                    <i data-feather="image" class="align-self-center icon-dual icon-lg"></i>-->
                                     </div>
@@ -73,7 +74,7 @@ $link_to_filters = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-option
                     <div class="col-xl-6">
                         <div class="card">
                             <div class="card-body pb-0">
-                                <h5 class="card-title mb-0 header-title">Weekly Statistics</h5>
+                                <h5 class="card-title mb-0 header-title"><?php esc_html_e( "Weekly Statistics", KMCF7MS_TEXT_DOMAIN ) ?></h5>
 
                                 <div id="stats-chart" class="apex-charts mt-3" dir="ltr"></div>
                             </div>
@@ -82,7 +83,7 @@ $link_to_filters = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-option
                     <div class="col-xl-6">
                         <div class="card">
                             <div class="card-body pb-0">
-                                <h5 class="card-title mb-0 header-title">Word Frequency</h5>
+                                <h5 class="card-title mb-0 header-title"><?php esc_html_e( "Word Frequency", KMCF7MS_TEXT_DOMAIN ) ?></h5>
 
                                 <div id="words-chart" class="apex-charts mt-3" dir="ltr"></div>
                             </div>
@@ -101,36 +102,46 @@ $link_to_filters = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-option
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Thank you for chosing Contact Form 7 Filter</h5>
+                    <h5 class="modal-title"
+                        id="exampleModalLabel"><?php esc_html_e( "Thank you for choosing Contact Form 7 Filter", KMCF7MS_TEXT_DOMAIN ) ?></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="alert border-success">
-                        It will be great if you can take just 5 minutes of your
-                        time to leave a review, if this plugin has been useful to you<br>
+						<?php esc_html_e( " It will be great if you can take just 5 minutes of your
+                        time to leave a review, if this plugin has been useful to you", KMCF7MS_TEXT_DOMAIN ) ?><br>
                         <a href="https://wordpress.org/support/plugin/cf7-message-filter/reviews/#new-post"
-                           class="btn btn-success" target="_blank" rel="noopener noreferrer">Submit Review</a>
+                           class="btn btn-success" target="_blank"
+                           rel="noopener noreferrer"><?php esc_html_e( "Submit Review", KMCF7MS_TEXT_DOMAIN ) ?></a>
                         <a href="https://ko-fi.com/kofimokome"
-                           class="btn btn-primary" target="_blank" rel="noopener noreferrer">Buy me Coffee</a>
+                           class="btn btn-primary" target="_blank"
+                           rel="noopener noreferrer"><?php esc_html_e( "Buy me Coffee", KMCF7MS_TEXT_DOMAIN ) ?></a>
 
                     </div>
                     <h5> Here are a few changes in this version:</h5>
                     <ol>
-                        <li>Add support for WordPress 6.0
-                        </li>
-                        <li>Add more filters.
+                        <li>Fix emoji in filter not working</li>
+                        <li>Fix single line text filters not working</li>
+                        <li>Add [emoji] shortcut to filter messages having emoji. <br/>
                             <a href="<?php echo $link_to_filters ?>"> View filters </a>
                         </li>
+                        <li>Add option to show a success message if a spam is found. <br/>
+                            <a href="<?php echo $link_to_extensions ?>"> View settings </a>
+                        </li>
                     </ol>
-
-                    If you find an issue, please <a href="https://wordpress.org/support/plugin/cf7-message-filter/"
+					<?php esc_html_e( "Please help translate this plugin to your language", KMCF7MS_TEXT_DOMAIN ) ?> <a
+                            href="https://translate.wordpress.org/projects/wp-plugins/cf7-message-filter/"
+                            target="_blank"
+                            class="btn btn-sm btn-primary"><?php esc_html_e( "Translate Now", KMCF7MS_TEXT_DOMAIN ) ?></a> <br>
+					<?php _e( 'If you find an issue, please <a href="https://wordpress.org/support/plugin/cf7-message-filter/"
                                                     target="_blank">create a support ticket here</a> and I will do my
-                    best to fix as soon as possible
+                    best to fix as soon as possible', KMCF7MS_TEXT_DOMAIN ) ?>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal"><?php esc_html_e( "Close", KMCF7MS_TEXT_DOMAIN ) ?></button>
                 </div>
             </div>
         </div>

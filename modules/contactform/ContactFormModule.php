@@ -4,13 +4,42 @@ namespace kmcf7_message_filter;
 
 use WPCF7_Submission;
 
-class ContactformModule extends Module {
+class ContactFormModule extends Module {
 	private $count_updated = false;
+	private $spam_word_error;
+	private $spam_email_error;
 
 	public function __construct() {
 		parent::__construct();
+		$this->spam_word_error  = get_option( 'kmcfmf_spam_word_error', false ) ? get_option( 'kmcfmf_spam_word_error' ) : __( "One or more fields have an error. Please check and try again.", 'contact-form-7' );
+		$this->spam_email_error = get_option( 'kmcfmf_spam_email_error', false ) ? get_option( 'kmcfmf_spam_email_error' ) : __( 'The e-mail address entered is invalid.', KMCF7MS_TEXT_DOMAIN );
 	}
 
+	/**
+	 * Checks if text has an emoji
+	 * @since v1.3.6
+	 */
+	private function hasEmoji( $emoji ) {
+		$unicodeRegexp = '([*#0-9](?>\\xEF\\xB8\\x8F)?\\xE2\\x83\\xA3|\\xC2[\\xA9\\xAE]|\\xE2..(\\xF0\\x9F\\x8F[\\xBB-\\xBF])?(?>\\xEF\\xB8\\x8F)?|\\xE3(?>\\x80[\\xB0\\xBD]|\\x8A[\\x97\\x99])(?>\\xEF\\xB8\\x8F)?|\\xF0\\x9F(?>[\\x80-\\x86].(?>\\xEF\\xB8\\x8F)?|\\x87.\\xF0\\x9F\\x87.|..(\\xF0\\x9F\\x8F[\\xBB-\\xBF])?|(((?<zwj>\\xE2\\x80\\x8D)\\xE2\\x9D\\xA4\\xEF\\xB8\\x8F\k<zwj>\\xF0\\x9F..(\k<zwj>\\xF0\\x9F\\x91.)?|(\\xE2\\x80\\x8D\\xF0\\x9F\\x91.){2,3}))?))';
+		if ( preg_match( $unicodeRegexp, $emoji ) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Removes contact form 7 submit actions
+	 * @since v1.3.6
+	 */
+	private function removeActions() {
+		$this->skip_mail = true;
+		remove_all_actions( 'wpcf7_mail_sent' );
+		remove_all_actions( 'wpcf7_before_send_mail' );
+	}
+
+	/**
+	 */
 	private function checkJapanese( $value, $character_sets = array() ) {
 		$found = false;
 
@@ -57,26 +86,25 @@ class ContactformModule extends Module {
 	protected function addFilters() {
 		parent::addFilters();
 
-		add_filter( 'wpcf7_messages', array( $this, 'addCustomMessages' ), 10, 1 );
-
 		$enable_message_filter       = get_option( 'kmcfmf_message_filter_toggle' ) == 'on' ? true : false;
 		$enable_email_filter         = get_option( 'kmcfmf_email_filter_toggle' ) == 'on' ? true : false;
 		$enable_tags_by_names_filter = get_option( 'kmcfmf_tags_by_name_filter_toggle' ) == 'on' ? true : false;
 
 		if ( $enable_email_filter ) {
-			add_filter( 'wpcf7_validate_email', array( $this, 'textValidationFilter' ), 12, 2 );
-			add_filter( 'wpcf7_validate_email*', array( $this, 'textValidationFilter' ), 12, 2 );
+			add_filter( 'wpcf7_validate_email', array( $this, 'emailValidationFilter' ), 999, 2 );
+			add_filter( 'wpcf7_validate_email*', array( $this, 'emailValidationFilter' ), 999, 2 );
 		}
 
 		if ( $enable_message_filter ) {
-			add_filter( 'wpcf7_validate_textarea', array( $this, 'textareaValidationFilter' ), 12, 2 );
-			add_filter( 'wpcf7_validate_textarea*', array( $this, 'textareaValidationFilter' ), 12, 2 );
+			add_filter( 'wpcf7_validate_textarea', array( $this, 'textareaValidationFilter' ), 999, 2 );
+			add_filter( 'wpcf7_validate_textarea*', array( $this, 'textareaValidationFilter' ), 999, 2 );
 		}
 
 		if ( $enable_tags_by_names_filter ) {
-			add_filter( 'wpcf7_validate_text', array( $this, 'textTagsByNameValidationFilter' ), 12, 2 );
-			add_filter( 'wpcf7_validate_text*', array( $this, 'textTagsByNameValidationFilter' ), 12, 2 );
+			add_filter( 'wpcf7_validate_text', array( $this, 'textTagsByNameValidationFilter' ), 999, 2 );
+			add_filter( 'wpcf7_validate_text*', array( $this, 'textTagsByNameValidationFilter' ), 999, 2 );
 		}
+
 	}
 
 	protected function addActions() {
@@ -91,32 +119,6 @@ class ContactformModule extends Module {
 
 	}
 
-
-	/**
-	 * Adds a custom message for messages flagged as spam
-	 * @since 1.2.2
-	 */
-	public function addCustomMessages( $messages ) {
-		$spam_word_eror   = get_option( 'kmcfmf_spam_word_error' ) ? get_option( 'kmcfmf_spam_word_error' ) : 'One or more fields have an error. Please check and try again.';
-		$spam_email_error = get_option( 'kmcfmf_spam_email_error' ) ? get_option( 'kmcfmf_spam_email_error' ) : 'The e-mail address entered is invalid.';
-		$messages         = array_merge( $messages, array(
-			'spam_word_error'  => array(
-				'description' =>
-					__( "Message contains a word marked as spam", 'contact-form-7' ),
-				'default'     =>
-					__( $spam_word_eror, 'contact-form-7' ),
-			),
-			'spam_email_error' => array(
-				'description' =>
-					__( "Email is an email marked as spam", 'contact-form-7' ),
-				'default'     =>
-					__( $spam_email_error, 'contact-form-7' ),
-			),
-		) );
-
-		return $messages;
-	}
-
 	/**
 	 * Filters text from form text elements from elems_names List
 	 * @author: UnderWordPressure
@@ -125,7 +127,8 @@ class ContactformModule extends Module {
 	function textTagsByNameValidationFilter( $result, $tag ) {
 
 		$name  = $tag->name;
-		$names = preg_split( '/[\s,]+/', get_option( 'kmcfmf_tags_by_name' ) );
+		$names = explode( ',', get_option( 'kmcfmf_tags_by_name' ) );
+
 		if ( in_array( $name, $names ) ) {
 			$result = $this->textareaValidationFilter( $result, $tag );
 		}
@@ -226,6 +229,9 @@ class ContactformModule extends Module {
 							$pattern = '/((ftp|http|https):\/\/\w+)|(www\.\w+\.\w+)/ium'; // filters http://google.com and http://www.google.com and www.google.com
 							$found   = preg_match( $pattern, $value );
 							break;
+						case '[emoji]':
+							$found = $this->hasEmoji( $message );
+							break;
 						default:
 
 							$like_start = ( preg_match( '/^\*/', $check_word ) );
@@ -243,7 +249,11 @@ class ContactformModule extends Module {
 							if ( $like_end || $like_start ) {
 								$found = preg_match( '/^' . $regex_pattern . '$/miu', $value );
 							} else {
-								$found = preg_match( '/\b' . $regex_pattern . '\b/miu', $value );
+								if ( $this->hasEmoji( $check_word ) ) {
+									$found = strpos( $message, $check_word ) !== false;
+								} else {
+									$found = preg_match( '/\b' . $regex_pattern . '\b/miu', $value );
+								}
 							}
 							break;
 					}
@@ -264,49 +274,26 @@ class ContactformModule extends Module {
 
 		// Spam word is recognized
 		if ( $found ) {
-			$result->invalidate( $tag, wpcf7_get_message( 'spam_word_error' ) );
-
+			$invalidate_field = true;
+			$invalidate_field = apply_filters( 'kmcf7_invalidate_text_field', $invalidate_field );
+			if ( $invalidate_field ) {
+				$result->invalidate( $tag, $this->spam_word_error );
+			}
 			if ( ! $this->count_updated ) {
 				MessagesModule::updateLog( $spam_word );
 				$this->count_updated = true;
 			}
-		} else {
-
-			// Check additional conditions on $message
-			if ( empty( $message ) ) {
-				// No content ($message) in a required Tag
-				if ( $tag->is_required() ) {
-					$result->invalidate( $tag, wpcf7_get_message( 'invalid_required' ) );
-				}
-			} else {
-
-				$maxlength = $tag->get_maxlength_option();
-				$minlength = $tag->get_minlength_option();
-
-				if ( $maxlength && $minlength && $maxlength < $minlength ) {
-					$maxlength = $minlength = null;
-				}
-
-				$code_units = wpcf7_count_code_units( stripslashes( $message ) );
-
-				if ( $code_units ) {
-					if ( $maxlength && $maxlength < $code_units ) {
-						$result->invalidate( $tag, wpcf7_get_message( 'invalid_too_long' ) );
-					} elseif ( $minlength && $code_units < $minlength ) {
-						$result->invalidate( $tag, wpcf7_get_message( 'invalid_too_short' ) );
-					}
-				}
-			}
+			do_action( 'kmcf7_after_invalidate_text_field' );
 		}
 
 		return $result;
 	}
 
 	/**
-	 * Filters text from text input fields
+	 * Filters text from email fields
 	 * @since 1.0.0
 	 */
-	function textValidationFilter( $result, $tag ) {
+	function emailValidationFilter( $result, $tag ) {
 		$name        = $tag->name;
 		$check_words = strlen( trim( get_option( 'kmcfmf_restricted_emails' ) ) ) > 0 ? explode( ",", get_option( 'kmcfmf_restricted_emails' ) ) : [];
 
@@ -314,65 +301,23 @@ class ContactformModule extends Module {
 			? trim( wp_unslash( strtr( (string) $_POST[ $name ], "\n", " " ) ) )
 			: '';
 
-		if ( 'text' == $tag->basetype ) {
-			if ( $tag->is_required() && '' == $value ) {
-				$result->invalidate( $tag, wpcf7_get_message( 'invalid_required' ) );
-			}
-		}
 
-		if ( 'email' == $tag->basetype ) {
-			if ( $tag->is_required() && '' == $value ) {
-				$result->invalidate( $tag, wpcf7_get_message( 'invalid_required' ) );
-			} elseif ( '' != $value && ! wpcf7_is_email( $value ) ) {
-				$result->invalidate( $tag, wpcf7_get_message( 'invalid_email' ) );
-			} else {
-				foreach ( $check_words as $check_word ) {
-					if ( preg_match( "/\b" . $check_word . "\b/", $value ) ) {
-//                    if (strpos($value, $check_word) !== false) {
-						$result->invalidate( $tag, wpcf7_get_message( 'spam_email_error' ) );
-
-						if ( ! $this->count_updated ) {
-							MessagesModule::updateLog( '' );
-							$this->count_updated = true;
-						}
-					}
+		foreach ( $check_words as $check_word ) {
+			if ( preg_match( "/\b" . $check_word . "\b/", $value ) ) {
+				$invalidate_field = true;
+				$invalidate_field = apply_filters( 'kmcf7_invalidate_email_field', $invalidate_field );
+				if ( $invalidate_field ) {
+					$result->invalidate( $tag, $this->spam_email_error );
 				}
-			}
-		}
 
-		if ( 'url' == $tag->basetype ) {
-			if ( $tag->is_required() and '' === $value ) {
-				$result->invalidate( $tag, wpcf7_get_message( 'invalid_required' ) );
-			} elseif ( '' !== $value and ! wpcf7_is_url( $value ) ) {
-				$result->invalidate( $tag, wpcf7_get_message( 'invalid_url' ) );
-			}
-		}
-
-		if ( 'tel' == $tag->basetype ) {
-			if ( $tag->is_required() and '' === $value ) {
-				$result->invalidate( $tag, wpcf7_get_message( 'invalid_required' ) );
-			} elseif ( '' !== $value and ! wpcf7_is_tel( $value ) ) {
-				$result->invalidate( $tag, wpcf7_get_message( 'invalid_tel' ) );
-			}
-		}
-
-		if ( '' !== $value ) {
-			$maxlength = $tag->get_maxlength_option();
-			$minlength = $tag->get_minlength_option();
-
-			if ( $maxlength && $minlength && $maxlength < $minlength ) {
-				$maxlength = $minlength = null;
-			}
-
-			$code_units = wpcf7_count_code_units( stripslashes( $value ) );
-
-			if ( false !== $code_units ) {
-				if ( $maxlength && $maxlength < $code_units ) {
-					$result->invalidate( $tag, wpcf7_get_message( 'invalid_too_long' ) );
-				} elseif ( $minlength && $code_units < $minlength ) {
-					$result->invalidate( $tag, wpcf7_get_message( 'invalid_too_short' ) );
+				if ( ! $this->count_updated ) {
+					MessagesModule::updateLog( '' );
+					$this->count_updated = true;
 				}
+				do_action( 'kmcf7_after_invalidate_email_field' );
+				break;
 			}
+
 		}
 
 		return $result;
