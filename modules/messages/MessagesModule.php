@@ -27,6 +27,11 @@ class MessagesModule extends Module {
 		// add actions here
 	}
 
+	protected function addActions() {
+		parent::addActions();
+		add_action( 'wp_ajax_kmcf7_messages', [ $this, 'serverMessages' ] );
+	}
+
 	/**
 	 * Creates a directory in wordpress upload folder if it does not exist
 	 * @since 1.2.5
@@ -321,5 +326,47 @@ class MessagesModule extends Module {
 		}
 
 		return $columns;
+	}
+
+	public function serverMessages() {
+		$form_id      = sanitize_text_field( $_REQUEST['form_id'] );
+		$draw         = intval( sanitize_text_field( $_REQUEST['draw'] ) );
+		$length       = sanitize_text_field( $_REQUEST['length'] );
+		$start        = sanitize_text_field( $_REQUEST['start'] );
+		$search       = $_REQUEST['search'];
+		$search_value = sanitize_text_field( $search['value'] );
+		$search_value = trim( $search_value );
+		$current_page = ( $start / $length ) + 1;
+		$results      = Message::where( 'contact_form', '=', 'contact_form_7' )->andWhere( 'message', 'LIKE', "%{$search_value}%" )->andWhere( 'form_id', '=', $form_id )->orderBy( 'id', 'desc' )->paginate( $length, $current_page )->get();;
+		$size         = $results['totalItems'];
+		$results      = $results['data'];
+		$messages     = array();
+		$contact_form = WPCF7_ContactForm::get_instance( $form_id );
+		$rows         = $contact_form->scan_form_tags();
+		foreach ( $results as $result ) {
+			$decoded_message = json_decode( $result->message );
+			$message         = array( intval( $result->id ) );
+			foreach ( $rows as $row ) {
+				$row = $row->name;
+				if ( property_exists( $decoded_message, $row ) ) {
+					$content  = esc_html( $decoded_message->$row );
+					$ellipses = strlen( $content ) > 50 ? "..." : '.';
+					array_push( $message, substr( $content, 0, 50 ) . $ellipses );
+				} else {
+					array_push( $message, " " );
+				}
+			}
+
+			array_push( $messages, $message );
+		}
+		$data = [
+			"draw"            => $draw,
+			"recordsTotal"    => $size,
+			"recordsFiltered" => $size,
+			"data"            => $messages
+		];
+
+		echo json_encode( $data );
+		wp_die();
 	}
 }

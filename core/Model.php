@@ -135,19 +135,28 @@ class Model {
 	 */
 	public static function where( $field, $comparison, $value, $add_table_name = true ) {
 		$table_name = $add_table_name ? self::getTableName() . '.' : '';
-		if ( ! is_numeric( $value ) ) {
-			$value = "'" . $value . "'";
-		}
-		self::$where = " WHERE " . $table_name . $field . " " . $comparison . " " . $value;
+		if ( strlen( self::$where ) == 0 ) {
 
-		return new static();
+			if ( ! is_numeric( $value ) ) {
+				$value = "'" . $value . "'";
+			}
+			self::$where = " WHERE " . $table_name . $field . " " . $comparison . " " . $value;
+
+			return new static();
+		} else {
+			return self::andWhere( $field, $comparison, $value );
+		}
+
 	}
 
 	/**
 	 * @return Model
 	 */
 	public static function andWhere( $field, $comparison, $value ) {
-		$table_name  = self::getTableName();
+		$table_name = self::getTableName();
+		if ( ! is_numeric( $value ) ) {
+			$value = "'" . $value . "'";
+		}
 		self::$where .= " AND " . $table_name . '.' . $field . " " . $comparison . " " . $value;
 
 		return new static();
@@ -157,7 +166,10 @@ class Model {
 	 * @return Model
 	 */
 	public static function orWhere( $field, $comparison, $value ) {
-		$table_name  = self::getTableName();
+		$table_name = self::getTableName();
+		if ( ! is_numeric( $value ) ) {
+			$value = "'" . $value . "'";
+		}
 		self::$where .= " OR " . $table_name . '.' . $field . " " . $comparison . " " . $value;
 
 		return new static();
@@ -167,6 +179,9 @@ class Model {
 	 * @return Model
 	 */
 	public static function whereJoin( $field, $comparison, $value, $table ) {
+		if ( ! is_numeric( $value ) ) {
+			$value = "'" . $value . "'";
+		}
 		self::$where = " WHERE " . $table . '.' . $field . " " . $comparison . " " . $value;
 
 		return new static();
@@ -176,6 +191,9 @@ class Model {
 	 * @return Model
 	 */
 	public static function andWhereJoin( $field, $comparison, $value, $table ) {
+		if ( ! is_numeric( $value ) ) {
+			$value = "'" . $value . "'";
+		}
 		self::$where .= " AND " . $table . '.' . $field . " " . $comparison . " " . $value;
 
 		return new static();
@@ -185,6 +203,9 @@ class Model {
 	 * @return Model
 	 */
 	public static function orWhereJoin( $field, $comparison, $value, $table ) {
+		if ( ! is_numeric( $value ) ) {
+			$value = "'" . $value . "'";
+		}
 		self::$where .= " OR " . $table . '.' . $field . " " . $comparison . " " . $value;
 
 		return new static();
@@ -318,7 +339,7 @@ class Model {
 		}
 
 		if ( self::$per_page > 0 || self::$per_page == - 1 ) { // check if the query requires pagination
-			$total_query = "SELECT COUNT(*) as total FROM " . $db_name . $additions;
+			$total_query = $wpdb->prepare( "SELECT COUNT(*) as total FROM %1s%1s", [ $db_name, $additions ] );
 			$total       = intval( $wpdb->get_var( $total_query ) );
 			$query       .= $additions;
 
@@ -359,12 +380,15 @@ class Model {
 	}
 
 	/**
-	 * @return Model
+	 * @return Model|null
 	 */
 	public static function first() {
 		$data = self::get();
+		if ( sizeof( $data ) > 0 ) {
+			return $data[0];
+		}
 
-		return $data[0];
+		return null;
 
 	}
 

@@ -170,12 +170,15 @@ class Migration {
 		if ( $this->is_update ) {
 			$this->update();
 		} else {
-			$query = "CREATE TABLE IF NOT EXISTS `" . $this->table_name . "`(";
+			$column_string = '';
 			foreach ( $this->columns as $column ) {
-				$query .= $column->toString() . ',';
+				$column_string .= $column->toString() . ',';
 			}
-			$query = rtrim( $query, ", " );
-			$query .= ')';
+			$column_string = rtrim( $column_string, ", " );
+			$query         = $wpdb->prepare( "CREATE TABLE IF NOT EXISTS `%1s` (%1s)", [
+				$this->table_name,
+				$column_string
+			] );
 			$wpdb->query( $query );
 
 		}
@@ -190,7 +193,7 @@ class Migration {
 		$last_revision_run = get_option( KMCF7MS_TABLE_PREFIX . '_last_revision', 0 );
 		if ( $last_revision_run < $this->revision_id ) {
 			foreach ( $this->columns as $column ) {
-				$query = "ALTER TABLE `" . $this->table_name . '`' . $column->toString();
+				$query = $wpdb->prepare( "ALTER TABLE `%1s` %1s", [ $this->table_name, $column->toString() ] );
 				$wpdb->query( $query );
 			}
 			update_option( KMCF7MS_TABLE_PREFIX . '_last_revision', $this->revision_id );
@@ -208,7 +211,7 @@ class Migration {
 	public function down() {
 		global $wpdb;
 		if ( ! $this->is_update ) {
-			$wpdb->query( "DROP TABLE IF EXISTS " . $this->table_name );
+			$query = $wpdb->prepare( "DROP TABLE IF EXISTS %1s", [ $this->table_name ] );
 		}
 	}
 
