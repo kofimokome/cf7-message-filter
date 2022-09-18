@@ -140,6 +140,7 @@ class CF7MessageFilter {
 		//wp_enqueue_style( 'style-name', get_stylesheet_uri() );
 		wp_enqueue_script( 'selectize', plugins_url( 'assets/js/selectize.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '0.12.4', true );
 		wp_enqueue_style( 'selectize', plugins_url( '/assets/css/selectize.default.css', dirname( __FILE__ ) ), '', '0.12.4' );
+		wp_enqueue_style( 'cf7-message-filter', plugins_url( '/assets/css/styles.css', dirname( __FILE__ ) ), '', '1.4.0' );
 
 		if ( $hook == 'toplevel_page_kmcf7-message-filter' || $url == '?page=kmcf7-filtered-messages' ) {
 

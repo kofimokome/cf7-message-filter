@@ -223,10 +223,20 @@ class Migration {
 	 */
 	public static function addColumn( $table, $field, $type, $default = '' ) {
 		global $wpdb;
-		$results = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '$table' AND column_name = '$field'" );
+		$query   = $wpdb->prepare( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '%s' AND column_name = '%s'", array(
+			$table,
+			$field
+		) );
+		$results = $wpdb->get_results( $query );
 		if ( empty( $results ) ) {
 			$default_string = is_numeric( $default ) ? "DEFAULT $default" : "DEFAULT " . "'$default'";
-			$wpdb->query( "ALTER TABLE  {$table}  ADD  {$field}  {$type}  NOT NULL {$default_string}" );
+			$query          = $wpdb->prepare( "ALTER TABLE  %s  ADD  %s  %s  NOT NULL %s", array(
+				$table,
+				$field,
+				$type,
+				$default_string
+			) );
+			$wpdb->query( $query );
 		}
 	}
 

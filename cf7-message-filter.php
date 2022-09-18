@@ -27,6 +27,57 @@ require KMCF7MS_CORE_DIR . '/Module.php';
 require KMCF7MS_CORE_DIR . '/Migration.php';
 require KMCF7MS_CORE_DIR . '/Model.php';
 
+if ( ! function_exists( 'kmcf7_message_filter\\kmcfmf_fs' ) ) {
+	// Create a helper function for easy SDK access.
+	function kmcfmf_fs() {
+		global $kmcfmf_fs;
+
+		if ( ! isset( $kmcfmf_fs ) ) {
+			// Include Freemius SDK.
+			require_once dirname( __FILE__ ) . '/freemius/start.php';
+
+			$kmcfmf_fs = fs_dynamic_init( array(
+				'id'                  => '11062',
+				'slug'                => 'cf7-message-filter',
+				'type'                => 'plugin',
+				'public_key'          => 'pk_699cdf1dd29834038369b6605acb5',
+				'is_premium'          => true,
+				'premium_suffix'      => 'Pro',
+				// If your plugin is a serviceware, set this option to false.
+				'has_premium_version' => true,
+				'has_addons'          => false,
+				'has_paid_plans'      => true,
+				'trial'               => array(
+					'days'               => 7,
+					'is_require_payment' => false,
+				),
+				'menu'                => array(
+					'slug' => 'kmcf7-message-filter',
+				),
+				// Set the SDK to work in a sandbox mode (for development & testing).
+				// IMPORTANT: MAKE SURE TO REMOVE SECRET KEY BEFORE DEPLOYMENT.
+				'secret_key'          => 'sk_QeWS=jV8~);E:I:pdEO$F!>r6k7ys',
+			) );
+		}
+
+		return $kmcfmf_fs;
+	}
+
+	// Init Freemius.
+	kmcfmf_fs();
+	// Signal that SDK was initiated.
+	do_action( 'kmcfmf_fs_loaded' );
+
+	function kmcfmf_fs_settings_url() {
+		return admin_url( 'admin.php?page=kmcf7-message-filter' );
+	}
+
+	kmcfmf_fs()->add_filter( 'connect_url', 'kmcf7_message_filter\\kmcfmf_fs_settings_url' );
+	kmcfmf_fs()->add_filter( 'after_skip_url', 'kmcf7_message_filter\\kmcfmf_fs_settings_url' );
+	kmcfmf_fs()->add_filter( 'after_connect_url', 'kmcf7_message_filter\\kmcfmf_fs_settings_url' );
+	kmcfmf_fs()->add_filter( 'after_pending_connect_url', 'kmcf7_message_filter\\kmcfmf_fs_settings_url' );
+}
+
 /**
  * Scan directories for files to include
  */

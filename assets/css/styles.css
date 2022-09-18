@@ -1,0 +1,7 @@
+.sticky-col {
+    position: -webkit-sticky;
+    position: sticky;
+    background-color: white;
+    right:0;
+    width: 200px;
+}

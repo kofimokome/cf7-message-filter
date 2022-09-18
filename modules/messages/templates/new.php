@@ -31,7 +31,7 @@ function decodeUnicodeVars( $message ) {
 
     <form action="" class="form-inline">
         <input type="hidden" name="page" value="kmcf7-filtered-messages">
-        <select name="form" id="" class="form-control form-control-sm">
+        <select name="form" id="" class="py-0 form-control-sm">
             <option value="">Select a form</option>
 			<?php foreach ( MessagesModule::getForms() as $form ): ?>
                 <option value="<?php echo $form[1] ?>" <?php echo $form_id == $form[1] ? 'selected' : '' ?>><?php echo $form[0] ?></option>
@@ -45,17 +45,16 @@ function decodeUnicodeVars( $message ) {
 	$contact_form = WPCF7_ContactForm::get_instance( $form_id );
 	$rows         = $contact_form->scan_form_tags();
 	?>
-    <table class="kmcfmf_table table table-striped">
+    <table class="kmcfmf_table table table-striped" style="overflow-x: scroll">
         <tr>
-            <td><b>S/N</b></td>
+            <td><b>-</b></td>
+            <td><b>ID</b></td>
 			<?php foreach ( $rows as $row ): $row = $row->name ?>
                 <td>
                     <b><?php echo $row ?></b>
                 </td>
 			<?php endforeach; ?>
-            <!--            <td>-->
-            <!--                actions-->
-            <!--            </td>-->
+            <td class="sticky-col"><b>Actions</b></td>
         </tr>
 		<?php
 		$results  = Message::where( 'contact_form', '=', 'contact_form_7' )->where( 'form_id', '=', $form_id )->orderBy( 'id', 'desc' )->paginate( $number_per_page, $pagination )->get();
@@ -64,18 +63,58 @@ function decodeUnicodeVars( $message ) {
 
 		foreach ( $messages as $message ) {
 			$data = json_decode( $message->message );
-			echo "<tr>";
-			echo "<td>" . ( $message->id ) . "</td>";
-			foreach ( $rows as $row ) {
-				$row = $row->name;
-				if ( property_exists( $data, $row ) ) {
-					echo "<td>" . htmlspecialchars( strip_tags( decodeUnicodeVars( $data->$row ) ) ) . "</td>";
-				} else {
-					echo "<td> </td>";
+			?>
+            <tr>
+                <td><input type='checkbox'></td>
+                <td> <?php echo $message->id ?></td>
+				<?php
+				foreach ( $rows as $row ) {
+					$row = $row->name;
+					if ( property_exists( $data, $row ) ) {
+						$content  = htmlspecialchars( strip_tags( decodeUnicodeVars( $data->$row ) ) );
+						$ellipses = strlen( $content ) > 50 ? "..." : '.';
+						echo "<td>" . substr( $content, 0, 50 ) . $ellipses . "</td>";
+					} else {
+						echo "<td> </td>";
+					}
 				}
-			}
-			echo "</tr>";
+				?>
+                <td class='sticky-col'>
+                    <button class='btn btn-primary btn-sm' data-bs-toggle="modal" data-bs-target="#message-<?php echo $message->id ?>" >View</button>
+                    <button class='btn btn-danger btn-sm'>Delete</button>
+                    <div class="modal fade" id="message-<?php echo $message->id ?>" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title"
+                                        id="exampleModalLabel"><?php esc_html_e( "Thank you for choosing Contact Form 7 Filter", KMCF7MS_TEXT_DOMAIN ) ?></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+									<?php
 
+									foreach ( $rows as $row ) {
+										$row = $row->name;
+										if ( property_exists( $data, $row ) ) {
+											$content = htmlspecialchars( strip_tags( decodeUnicodeVars( $data->$row ) ) );
+//											echo "<h2>" . substr( $content, 0, 50 ) . $row . "</h2>";
+											echo $content;
+										}
+									}
+
+									?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </td>
+            </tr>
+			<?php
 		}
 		?>
     </table>
