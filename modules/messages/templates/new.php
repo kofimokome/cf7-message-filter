@@ -29,7 +29,7 @@ function decodeUnicodeVars( $message ) {
 </style>
 <h3><?php echo get_option( 'kmcfmf_messages_blocked' ); ?> messages have been blocked</h3>
 
-<form action="" class="form-inline">
+<form action="" class="form-inline mb-4">
     <input type="hidden" name="page" value="kmcf7-filtered-messages">
     <select name="form" id="" class="py-0 form-control-sm">
         <option value="">Select a form</option>
@@ -57,32 +57,7 @@ function decodeUnicodeVars( $message ) {
         </tr>
         </thead>
         <tbody>
-		<?php
-		$results  = Message::where( 'contact_form', '=', 'contact_form_7' )->where( 'form_id', '=', $form_id )->orderBy( 'id', 'desc' )->paginate( $number_per_page, $pagination )->get();
-		$messages = $results['data'];
-		$size     = $results['totalPages'];
 
-		foreach ( $messages as $message ) {
-			$data = json_decode( $message->message );
-			?>
-            <tr>
-                <td> <?php echo $message->id ?></td>
-				<?php
-				foreach ( $rows as $row ) {
-					$row = $row->name;
-					if ( property_exists( $data, $row ) ) {
-						$content  = htmlspecialchars( strip_tags( decodeUnicodeVars( $data->$row ) ) );
-						$ellipses = strlen( $content ) > 50 ? "..." : '.';
-						echo "<td>" . substr( $content, 0, 50 ) . $ellipses . "</td>";
-					} else {
-						echo "<td> </td>";
-					}
-				}
-				?>
-            </tr>
-			<?php
-		}
-		?>
         </tbody>
     </table>
     <br>
@@ -119,15 +94,15 @@ function decodeUnicodeVars( $message ) {
                     processing: true,
                     serverSide: true,
                     ajax: '<?php echo admin_url( "admin-ajax.php?action=kmcf7_messages&form_id={$form_id}" )?>',
-                columnDefs: [ {
-                    orderable: false,
-                    className: 'select-checkbox',
-                    targets:   0
-                } ],
-                select: {
-                    style:    'os',
-                    selector: 'td:first-child'
-                },
+                    columnDefs: [{
+                        orderable: false,
+                        className: 'select-checkbox',
+                        targets: 0
+                    }],
+                    select: {
+                        style: 'os',
+                        selector: 'td:first-child'
+                    },
                 }
             );
         })

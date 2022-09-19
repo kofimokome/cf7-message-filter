@@ -339,9 +339,10 @@ class Model {
 		}
 
 		if ( self::$per_page > 0 || self::$per_page == - 1 ) { // check if the query requires pagination
-			$total_query = $wpdb->prepare( "SELECT COUNT(*) as total FROM %1s%1s", [ $db_name, $additions ] );
-			$total       = intval( $wpdb->get_var( $total_query ) );
-			$query       .= $additions;
+			$total_query = "SELECT COUNT(*) as total FROM `{$db_name}` " . $wpdb->remove_placeholder_escape( $additions );
+			// todo: escape query additions individually
+			$total = intval( $wpdb->get_var( $total_query ) );
+			$query .= $additions;
 
 			// prevent calculating offset for negative one
 			// negative one was used to show all results in get all requests

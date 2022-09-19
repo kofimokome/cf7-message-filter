@@ -211,7 +211,7 @@ class Migration {
 	public function down() {
 		global $wpdb;
 		if ( ! $this->is_update ) {
-			$query = $wpdb->prepare( "DROP TABLE IF EXISTS %1s", [ $this->table_name ] );
+			$query = $wpdb->prepare( "DROP TABLE IF EXISTS %1s", array( $this->table_name ) );
 		}
 	}
 
