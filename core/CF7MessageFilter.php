@@ -152,9 +152,11 @@ class CF7MessageFilter {
 			wp_enqueue_script( 'app', plugins_url( 'assets/js/app.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '1.0.0', true );
 			wp_enqueue_script( 'bootstrap', plugins_url( 'assets/js/bootstrap.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '4.3.1', false );
 			wp_enqueue_script( 'datatable', plugins_url( 'assets/libs/datatables/datatables.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '1.12.1', false );
+			wp_enqueue_script( 'datatable-select', plugins_url( 'assets/libs/datatables/select.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '1.4.0', false );
 
 
 			wp_enqueue_style( 'datatable', plugins_url( '/assets/libs/datatables/datatables.min.css', dirname( __FILE__ ) ), '', '1.12.1' );
+			wp_enqueue_style( 'datatable-select', plugins_url( '/assets/libs/datatables/select.min.css', dirname( __FILE__ ) ), '', '1.4.0' );
 			wp_enqueue_style( 'bootstrap', plugins_url( '/assets/css/bootstrap.min.css', dirname( __FILE__ ) ), '', '4.3.1' );
 			wp_enqueue_style( 'app', plugins_url( '/assets/css/app.min.css', dirname( __FILE__ ) ), '', '4.3.1' );
 			wp_enqueue_style( 'icons', plugins_url( '/assets/css/icons.min.css', dirname( __FILE__ ) ), '', '4.3.1' );
