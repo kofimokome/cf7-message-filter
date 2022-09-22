@@ -3,3 +3,5 @@ sonar-project.properties
 .scannerwork/
 modules/extensions/
 node_modules/
+cf7-message-filter/
+cf7-message-filter.zip
