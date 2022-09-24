@@ -21,28 +21,28 @@ namespace kmcf7_message_filter;
         </tr>
         <tr>
             <td>3</td>
-            <td><code>[hiragana]</code></td>
+            <td><code>[hiragana]</code>(pro only)</td>
             <td><?php esc_html_e( "Filters messages having japanese (hiragana) characters", KMCF7MS_TEXT_DOMAIN ) ?></td>
         </tr>
         <tr>
             <td>4</td>
-            <td><code>[katakana]</code></td>
+            <td><code>[katakana]</code>(pro only)</td>
             <td><?php esc_html_e( "Filters messages having japanese (katakana) characters", KMCF7MS_TEXT_DOMAIN ) ?></td>
         </tr>
         <tr>
             <td>5</td>
-            <td><code>[kanji]</code></td>
+            <td><code>[kanji]</code>(pro only)</td>
             <td><?php esc_html_e( "Filters messages having japanese (kanji) characters", KMCF7MS_TEXT_DOMAIN ) ?></td>
         </tr>
         <tr>
             <td>6</td>
-            <td><code>[japanese]</code></td>
+            <td><code>[japanese]</code> (pro only)</td>
             <td><?php esc_html_e( "Filters messages having japanese characters. Calls the following filters: <code>[hiragana]</code>,<code>[katakana]</code>
                 and <code>[kanji]</code>", KMCF7MS_TEXT_DOMAIN ) ?></td>
         </tr>
         <tr>
             <td>7</td>
-            <td><code>[emoji]</code></td>
+            <td><code>[emoji]</code>(pro only)</td>
             <td><?php esc_html_e( "Filters messages having emojis", KMCF7MS_TEXT_DOMAIN ) ?> 😀😜</td>
         </tr>
     </table>

@@ -14,12 +14,6 @@ $number_per_page = 10; // per page
 $form_id         = isset( $_GET['form'] ) ? $_GET['form'] : 0;
 $form_id         = $form_id == '' ? - 1 : intval( $form_id );
 
-function decodeUnicodeVars( $message ) {
-	$message = is_array( $message ) ? implode( " ", $message ) : $message;
-
-	return mb_convert_encoding( $message, 'UTF-8',
-		mb_detect_encoding( $message, 'UTF-8, ISO-8859-1', true ) );
-}
 
 // echo "<br>we will search from " . $start . " to " . ( $end - 1 ) . "<br>";
 ?>
@@ -28,18 +22,18 @@ function decodeUnicodeVars( $message ) {
             overflow-x: scroll;
         }
     </style>
-    <h3><?php echo get_option( 'kmcfmf_messages_blocked' ); ?> messages have been blocked</h3>
+    <h3><?php echo get_option( 'kmcfmf_messages_blocked' ); ?> <?php _e( "messages have been blocked", KMCF7MS_TEXT_DOMAIN ) ?></h3>
     <form action="" class="form-inline">
         <input type="hidden" name="page" value="kmcf7-filtered-messages">
         <select name="form" id="" class="form-control form-control-sm">
-            <option value="">Select a form</option>
+            <option value=""><?php _e( "Select a form", KMCF7MS_TEXT_DOMAIN ) ?></option>
 			<?php foreach ( MessagesModule::getForms() as $form ): ?>
                 <option value="<?php echo $form[1] ?>" <?php echo $form_id == $form[1] ? 'selected' : '' ?>><?php echo $form[0] ?></option>
 			<?php endforeach; ?>
         </select>
         <input type="hidden" name="old" value="">
 
-        <button class="btn btn-primary btn-inline ml-1 btn-sm">Show Blocked Messages</button>
+        <button class="btn btn-primary btn-inline ml-1 btn-sm"><?php _e( "Show Blocked Messages", KMCF7MS_TEXT_DOMAIN ) ?></button>
 
     </form>
     <!--<button class="btn btn-primary">Export to CSV</button>-->
@@ -75,7 +69,7 @@ function decodeUnicodeVars( $message ) {
 			echo "<td>" . ( $i + 1 ) . "</td>";
 			foreach ( $rows as $row ) {
 				if ( property_exists( $data, $row ) ) {
-					echo "<td>" . htmlspecialchars( strip_tags( decodeUnicodeVars( $data->$row ) ) ) . "</td>";
+					echo "<td>" . htmlspecialchars( strip_tags( MessagesModule::decodeUnicodeVars( $data->$row ) ) ) . "</td>";
 				} else {
 					echo "<td> </td>";
 				}
@@ -96,11 +90,11 @@ function decodeUnicodeVars( $message ) {
 	}
 } else { ?>
     <div class="jumbotron">
-        <h2 class="display-5d">Blocked Messages Area</h2>
-        <p class="lead">Messages are now grouped per form. Select a form above to view all messages blocked for that
-            form.</p>
-        <p class="lead">If you upgraded from a previous version, all old messages blocked are stored under
-            uncategorized.</p>
+        <h2 class="display-5d"> <?php _e( "Blocked Messages Area", KMCF7MS_TEXT_DOMAIN ) ?></h2>
+        <p class="lead"><?php _e( "Messages are now grouped per form. Select a form above to view all messages blocked for that
+            form.", KMCF7MS_TEXT_DOMAIN ) ?></p>
+        <p class="lead"><?php _e( "If you upgraded from a previous version, all old messages blocked are stored under
+            uncategorized.", KMCF7MS_TEXT_DOMAIN ) ?></p>
         <hr class="my-4">
     </div>
 	<?php

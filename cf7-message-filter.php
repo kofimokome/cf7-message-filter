@@ -26,10 +26,11 @@ require KMCF7MS_CORE_DIR . '/CF7MessageFilter.php';
 require KMCF7MS_CORE_DIR . '/Module.php';
 require KMCF7MS_CORE_DIR . '/Migration.php';
 require KMCF7MS_CORE_DIR . '/Model.php';
+require KMCF7MS_CORE_DIR . '/Validator.php';
 
-if ( ! function_exists( 'kmcf7_message_filter\\kmcfmf_fs' ) ) {
+if ( ! function_exists( 'kmcf7_message_filter\\KMCF7Fs' ) ) {
 	// Create a helper function for easy SDK access.
-	function kmcfmf_fs() {
+	function KMCF7Fs() {
 		global $kmcfmf_fs;
 
 		if ( ! isset( $kmcfmf_fs ) ) {
@@ -64,18 +65,18 @@ if ( ! function_exists( 'kmcf7_message_filter\\kmcfmf_fs' ) ) {
 	}
 
 	// Init Freemius.
-	kmcfmf_fs();
+	KMCF7Fs();
 	// Signal that SDK was initiated.
 	do_action( 'kmcfmf_fs_loaded' );
 
-	function kmcfmf_fs_settings_url() {
+	function KMCF7FsSettingsUrl() {
 		return admin_url( 'admin.php?page=kmcf7-message-filter' );
 	}
 
-	kmcfmf_fs()->add_filter( 'connect_url', 'kmcf7_message_filter\\kmcfmf_fs_settings_url' );
-	kmcfmf_fs()->add_filter( 'after_skip_url', 'kmcf7_message_filter\\kmcfmf_fs_settings_url' );
-	kmcfmf_fs()->add_filter( 'after_connect_url', 'kmcf7_message_filter\\kmcfmf_fs_settings_url' );
-	kmcfmf_fs()->add_filter( 'after_pending_connect_url', 'kmcf7_message_filter\\kmcfmf_fs_settings_url' );
+	KMCF7Fs()->add_filter( 'connect_url', 'kmcf7_message_filter\\KMCF7FsSettingsUrl' );
+	KMCF7Fs()->add_filter( 'after_skip_url', 'kmcf7_message_filter\\KMCF7FsSettingsUrl' );
+	KMCF7Fs()->add_filter( 'after_connect_url', 'kmcf7_message_filter\\KMCF7FsSettingsUrl' );
+	KMCF7Fs()->add_filter( 'after_pending_connect_url', 'kmcf7_message_filter\\KMCF7FsSettingsUrl' );
 }
 
 /**

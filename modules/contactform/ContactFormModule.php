@@ -15,103 +15,6 @@ class ContactFormModule extends Module {
 		$this->spam_email_error = get_option( 'kmcfmf_spam_email_error', false ) ? get_option( 'kmcfmf_spam_email_error' ) : __( 'The e-mail address entered is invalid.', KMCF7MS_TEXT_DOMAIN );
 	}
 
-	/**
-	 * Checks if text has an emoji
-	 * @since v1.3.6
-	 */
-	private function hasEmoji( $emoji ) {
-		$unicodeRegexp = '([*#0-9](?>\\xEF\\xB8\\x8F)?\\xE2\\x83\\xA3|\\xC2[\\xA9\\xAE]|\\xE2..(\\xF0\\x9F\\x8F[\\xBB-\\xBF])?(?>\\xEF\\xB8\\x8F)?|\\xE3(?>\\x80[\\xB0\\xBD]|\\x8A[\\x97\\x99])(?>\\xEF\\xB8\\x8F)?|\\xF0\\x9F(?>[\\x80-\\x86].(?>\\xEF\\xB8\\x8F)?|\\x87.\\xF0\\x9F\\x87.|..(\\xF0\\x9F\\x8F[\\xBB-\\xBF])?|(((?<zwj>\\xE2\\x80\\x8D)\\xE2\\x9D\\xA4\\xEF\\xB8\\x8F\k<zwj>\\xF0\\x9F..(\k<zwj>\\xF0\\x9F\\x91.)?|(\\xE2\\x80\\x8D\\xF0\\x9F\\x91.){2,3}))?))';
-		if ( preg_match( $unicodeRegexp, $emoji ) ) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Removes contact form 7 submit actions
-	 * @since v1.3.6
-	 */
-	private function removeActions() {
-		$this->skip_mail = true;
-		remove_all_actions( 'wpcf7_mail_sent' );
-		remove_all_actions( 'wpcf7_before_send_mail' );
-	}
-
-	/**
-	 */
-	private function checkJapanese( $value, $character_sets = array() ) {
-		$found = false;
-
-		foreach ( $character_sets as $character_set ) {
-
-			switch ( $character_set ) {
-				case 'hiragana':
-					$found = preg_match( '/[\x{3041}-\x{3096}]/ium', $value );
-					break;
-
-				case 'katakana':
-					$found = preg_match( '/[\x{30A0}-\x{30FF}]/ium', $value );
-					break;
-
-				case 'kanji':
-					$found = preg_match( '/[\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{F900}-\x{FA6A}]/ium', $value );
-					break;
-
-				case 'kanji_radicals':
-					$found = preg_match( '/[\x{2E80}-\x{2FD5}]/ium', $value );
-					break;
-
-				case 'katakana_punctuation':
-					$found = preg_match( '/[\x{FF5F}-\x{FF9F}]/ium', $value );
-					break;
-
-				case 'symbols_punctuations':
-					$found = preg_match( '/[\x{3000}-\x{303F}]/ium', $value );
-					break;
-
-				case 'others':
-					$found = preg_match( '/[\x{31F0}-\x{31FF}\x{3220}-\x{3243}\x{3280}-\x{337F}]/ium', $value );
-					break;
-			}
-
-			if ( $found ) {
-				break 1;
-			}
-		}
-
-		return $found;
-	}
-
-	protected function addFilters() {
-		parent::addFilters();
-
-		$enable_message_filter       = get_option( 'kmcfmf_message_filter_toggle' ) == 'on' ? true : false;
-		$enable_email_filter         = get_option( 'kmcfmf_email_filter_toggle' ) == 'on' ? true : false;
-		$enable_tags_by_names_filter = get_option( 'kmcfmf_tags_by_name_filter_toggle' ) == 'on' ? true : false;
-
-		if ( $enable_email_filter ) {
-			add_filter( 'wpcf7_validate_email', array( $this, 'emailValidationFilter' ), 10, 2 );
-			add_filter( 'wpcf7_validate_email*', array( $this, 'emailValidationFilter' ), 10, 2 );
-		}
-
-		if ( $enable_message_filter ) {
-			add_filter( 'wpcf7_validate_textarea', array( $this, 'textareaValidationFilter' ), 10, 2 );
-			add_filter( 'wpcf7_validate_textarea*', array( $this, 'textareaValidationFilter' ), 10, 2 );
-		}
-
-		if ( $enable_tags_by_names_filter ) {
-			add_filter( 'wpcf7_validate_text', array( $this, 'textTagsByNameValidationFilter' ), 999, 2 );
-			add_filter( 'wpcf7_validate_text*', array( $this, 'textTagsByNameValidationFilter' ), 999, 2 );
-		}
-
-	}
-
-	protected function addActions() {
-		parent::addActions();
-		// add_action('wpcf7_submit', array($this, 'onWpcf7Submit'),10, 2);
-	}
-
 	public function onWpcf7Submit( $contact_form, $result ) {
 		$logs_root  = wp_upload_dir()['basedir'] . '/kmcf7mf_logs/';
 		$submission = WPCF7_Submission::get_instance();
@@ -124,7 +27,7 @@ class ContactFormModule extends Module {
 	 * @author: UnderWordPressure
 	 * @since 1.2.3
 	 */
-	function textTagsByNameValidationFilter( $result, $tag ) {
+	function textTagsByNameValidationFilter__premium_only( $result, $tag ) {
 
 		$name  = $tag->name;
 		$names = explode( ',', get_option( 'kmcfmf_tags_by_name' ) );
@@ -193,45 +96,55 @@ class ContactFormModule extends Module {
 							$found = preg_match( '/[а-яА-Я]/miu', $value );
 							break;
 						case '[hiragana]':
-							$character_sets = array(
-								'hiragana'
-							);
-							$found          = $this->checkJapanese( $value, $character_sets );
+							if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) {
+								$character_sets = array(
+									'hiragana'
+								);
+								$found          = $this->checkJapanese( $value, $character_sets );
+							}
 							break;
 						case '[katakana]':
-							$character_sets = array(
-								'katakana',
-								'katakana_punctuation',
-							);
-							$found          = $this->checkJapanese( $value, $character_sets );
+							if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) {
+								$character_sets = array(
+									'katakana',
+									'katakana_punctuation',
+								);
+								$found          = $this->checkJapanese( $value, $character_sets );
+							}
 							break;
 						case '[kanji]':
-							$character_sets = array(
-								'kanji',
-								'kanji_radicals',
-							);
-							$found          = $this->checkJapanese( $value, $character_sets );
+							if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) {
+								$character_sets = array(
+									'kanji',
+									'kanji_radicals',
+								);
+								$found          = $this->checkJapanese( $value, $character_sets );
+							}
 							break;
 						case '[japanese]':
-							// this blog post http://www.localizingjapan.com/blog/2012/01/20/regular-expressions-for-japanese-text/
-							// todo: add option to store messages in the database
-							$character_sets = array(
-								'hiragana',
-								'katakana',
-								'kanji',
-								'kanji_radicals',
-								'katakana_punctuation',
-								'symbols_punctuations',
-								'others'
-							);
-							$found          = $this->checkJapanese( $value, $character_sets );
+							if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) {
+								// this blog post http://www.localizingjapan.com/blog/2012/01/20/regular-expressions-for-japanese-text/
+								// todo: add option to store messages in the database
+								$character_sets = array(
+									'hiragana',
+									'katakana',
+									'kanji',
+									'kanji_radicals',
+									'katakana_punctuation',
+									'symbols_punctuations',
+									'others'
+								);
+								$found          = $this->checkJapanese( $value, $character_sets );
+							}
 							break;
 						case '[link]':
 							$pattern = '/((ftp|http|https):\/\/\w+)|(www\.\w+\.\w+)/ium'; // filters http://google.com and http://www.google.com and www.google.com
 							$found   = preg_match( $pattern, $value );
 							break;
 						case '[emoji]':
-							$found = $this->hasEmoji( $message );
+							if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) {
+								$found = $this->hasEmoji( $message );
+							}
 							break;
 						default:
 
@@ -291,6 +204,64 @@ class ContactFormModule extends Module {
 	}
 
 	/**
+	 */
+	private function checkJapanese( $value, $character_sets = array() ) {
+		$found = false;
+
+		foreach ( $character_sets as $character_set ) {
+
+			switch ( $character_set ) {
+				case 'hiragana':
+					$found = preg_match( '/[\x{3041}-\x{3096}]/ium', $value );
+					break;
+
+				case 'katakana':
+					$found = preg_match( '/[\x{30A0}-\x{30FF}]/ium', $value );
+					break;
+
+				case 'kanji':
+					$found = preg_match( '/[\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{F900}-\x{FA6A}]/ium', $value );
+					break;
+
+				case 'kanji_radicals':
+					$found = preg_match( '/[\x{2E80}-\x{2FD5}]/ium', $value );
+					break;
+
+				case 'katakana_punctuation':
+					$found = preg_match( '/[\x{FF5F}-\x{FF9F}]/ium', $value );
+					break;
+
+				case 'symbols_punctuations':
+					$found = preg_match( '/[\x{3000}-\x{303F}]/ium', $value );
+					break;
+
+				case 'others':
+					$found = preg_match( '/[\x{31F0}-\x{31FF}\x{3220}-\x{3243}\x{3280}-\x{337F}]/ium', $value );
+					break;
+			}
+
+			if ( $found ) {
+				break 1;
+			}
+		}
+
+		return $found;
+	}
+
+	/**
+	 * Checks if text has an emoji
+	 * @since v1.3.6
+	 */
+	private function hasEmoji( $emoji ) {
+		$unicodeRegexp = '([*#0-9](?>\\xEF\\xB8\\x8F)?\\xE2\\x83\\xA3|\\xC2[\\xA9\\xAE]|\\xE2..(\\xF0\\x9F\\x8F[\\xBB-\\xBF])?(?>\\xEF\\xB8\\x8F)?|\\xE3(?>\\x80[\\xB0\\xBD]|\\x8A[\\x97\\x99])(?>\\xEF\\xB8\\x8F)?|\\xF0\\x9F(?>[\\x80-\\x86].(?>\\xEF\\xB8\\x8F)?|\\x87.\\xF0\\x9F\\x87.|..(\\xF0\\x9F\\x8F[\\xBB-\\xBF])?|(((?<zwj>\\xE2\\x80\\x8D)\\xE2\\x9D\\xA4\\xEF\\xB8\\x8F\k<zwj>\\xF0\\x9F..(\k<zwj>\\xF0\\x9F\\x91.)?|(\\xE2\\x80\\x8D\\xF0\\x9F\\x91.){2,3}))?))';
+		if ( preg_match( $unicodeRegexp, $emoji ) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Filters text from email fields
 	 * @since 1.0.0
 	 */
@@ -322,5 +293,47 @@ class ContactFormModule extends Module {
 		}
 
 		return $result;
+	}
+
+	protected function addFilters() {
+		parent::addFilters();
+
+		$enable_message_filter       = get_option( 'kmcfmf_message_filter_toggle' ) == 'on' ? true : false;
+		$enable_email_filter         = get_option( 'kmcfmf_email_filter_toggle' ) == 'on' ? true : false;
+		$enable_tags_by_names_filter = get_option( 'kmcfmf_tags_by_name_filter_toggle' ) == 'on' ? true : false;
+
+		if ( $enable_email_filter ) {
+			add_filter( 'wpcf7_validate_email', array( $this, 'emailValidationFilter' ), 10, 2 );
+			add_filter( 'wpcf7_validate_email*', array( $this, 'emailValidationFilter' ), 10, 2 );
+		}
+
+		if ( $enable_message_filter ) {
+			add_filter( 'wpcf7_validate_textarea', array( $this, 'textareaValidationFilter' ), 10, 2 );
+			add_filter( 'wpcf7_validate_textarea*', array( $this, 'textareaValidationFilter' ), 10, 2 );
+		}
+
+		if ( $enable_tags_by_names_filter && KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) {
+			add_filter( 'wpcf7_validate_text', array( $this, 'textTagsByNameValidationFilter__premium_only' ), 999, 2 );
+			add_filter( 'wpcf7_validate_text*', array(
+				$this,
+				'textTagsByNameValidationFilter__premium_only'
+			), 999, 2 );
+		}
+
+	}
+
+	protected function addActions() {
+		parent::addActions();
+		// add_action('wpcf7_submit', array($this, 'onWpcf7Submit'),10, 2);
+	}
+
+	/**
+	 * Removes contact form 7 submit actions
+	 * @since v1.3.6
+	 */
+	private function removeActions() {
+		$this->skip_mail = true;
+		remove_all_actions( 'wpcf7_mail_sent' );
+		remove_all_actions( 'wpcf7_before_send_mail' );
 	}
 }
