@@ -96,7 +96,7 @@ $link_to_messages = admin_url( 'admin.php' ) . '?page=kmcf7-filtered-messages';
                     error_container.addClass("d-none")
                     let formData = new FormData();
                     formData.append("action", 'kmcf7_delete_message');
-                    formData.append("message_id", message_id);
+                    formData.append("message_ids", message_id);
 
                     $.ajax({
                         type: "POST",

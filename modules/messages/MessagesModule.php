@@ -382,18 +382,22 @@ class MessagesModule extends Module {
 
 		$validator = Validator::make(
 			array(
-				'message_id' => 'required'
+				'message_ids' => 'required'
 			),
 			$_POST
 		);
 
 		if ( $validator->validate() ) {
-			$message_id = intval( sanitize_text_field( $_POST['message_id'] ) );
-			$message    = Message::find( $message_id );
-			if ( $message->delete() ) {
-				echo "message deleted";
-			} else {
-				wp_send_json_error( __( "We could not find this message", KMCF7MS_TEXT_DOMAIN ), 400 );
+			$message_ids = sanitize_text_field( $_POST['message_ids'] );
+			$message_ids = explode( ',', $message_ids );
+			foreach ( $message_ids as $message_id ) {
+				$message_id = intval( $message_id );
+				$message    = Message::find( $message_id );
+				if ( $message->delete() ) {
+					echo "message deleted";
+				} else {
+					wp_send_json_error( __( "We could not find this message", KMCF7MS_TEXT_DOMAIN ), 400 );
+				}
 			}
 		} else {
 			wp_send_json_error( __( "An error occurred. Please try again", KMCF7MS_TEXT_DOMAIN ), 400 );

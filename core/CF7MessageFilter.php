@@ -153,10 +153,15 @@ class CF7MessageFilter {
 			wp_enqueue_script( 'bootstrap', plugins_url( 'assets/js/bootstrap.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '4.3.1', false );
 			wp_enqueue_script( 'datatable', plugins_url( 'assets/libs/datatables/datatables.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '1.12.1', false );
 			wp_enqueue_script( 'datatable-select', plugins_url( 'assets/libs/datatables/select.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '1.4.0', false );
+			wp_enqueue_script( 'datatable-buttons', plugins_url( 'assets/libs/datatables/buttons.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '2.2.3', false );
+			wp_enqueue_script( 'datatable-pdfmake', plugins_url( 'assets/libs/datatables/pdfmake.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '0.1.53', false );
+			wp_enqueue_script( 'datatable-buttons-html5', plugins_url( 'assets/libs/datatables/buttons.html5.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '2.2.3', false );
+			wp_enqueue_script( 'datatable-jszip', plugins_url( 'assets/libs/datatables/jszio.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '3.1.3', false );
 
 
 			wp_enqueue_style( 'datatable', plugins_url( '/assets/libs/datatables/datatables.min.css', dirname( __FILE__ ) ), '', '1.12.1' );
 			wp_enqueue_style( 'datatable-select', plugins_url( '/assets/libs/datatables/select.min.css', dirname( __FILE__ ) ), '', '1.4.0' );
+			wp_enqueue_style( 'datatable-buttons', plugins_url( '/assets/libs/datatables/buttons.min.css', dirname( __FILE__ ) ), '', '2.2.3' );
 			wp_enqueue_style( 'bootstrap', plugins_url( '/assets/css/bootstrap.min.css', dirname( __FILE__ ) ), '', '4.3.1' );
 			wp_enqueue_style( 'app', plugins_url( '/assets/css/app.min.css', dirname( __FILE__ ) ), '', '4.3.1' );
 			wp_enqueue_style( 'icons', plugins_url( '/assets/css/icons.min.css', dirname( __FILE__ ) ), '', '4.3.1' );
