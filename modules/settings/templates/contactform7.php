@@ -3,7 +3,11 @@
 namespace kmcf7_message_filter;
 ?>
     <h1><?php esc_html_e( "Contact Form 7 Settings ", KMCF7MS_TEXT_DOMAIN ) ?></h1>
+
 	<?php settings_errors(); ?>
+    <div>
+        <strong>Tip:</strong> <?php _e( "Use <code>*</code> to analyse all fields for each category below:", KMCF7MS_TEXT_DOMAIN ) ?>
+    </div>
     <form method="post" action="options.php">
 		<?php
 

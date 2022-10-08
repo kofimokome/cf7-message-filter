@@ -4,7 +4,7 @@ namespace kmcf7_message_filter;
 
 use WPCF7_Submission;
 
-class ContactFormModule extends Module {
+class ContactForm7Module extends Module {
 	private $count_updated = false;
 	private $spam_word_error;
 	private $spam_email_error;
@@ -27,13 +27,14 @@ class ContactFormModule extends Module {
 	 * @author: UnderWordPressure
 	 * @since 1.2.3
 	 */
-	function textTagsByNameValidationFilter__premium_only( $result, $tag ) {
+	function textValidationFilter__premium_only( $result, $tag ) {
 
 		$name  = $tag->name;
 		$names = explode( ',', get_option( 'kmcfmf_tags_by_name' ) );
-
-		if ( in_array( $name, $names ) ) {
-			$result = $this->textareaValidationFilter( $result, $tag );
+		if ( in_array( '*', $names ) ) {
+			$result = $this->validateTextField( $result, $tag );
+		} else if ( in_array( $name, $names ) ) {
+			$result = $this->validateTextField( $result, $tag );
 		}
 
 		return $result;
@@ -41,10 +42,10 @@ class ContactFormModule extends Module {
 	}
 
 	/**
-	 * Filters text from textarea
-	 * @since 1.0.0
+	 * Runs spam filter on text fields and text area fields
+	 * @since 1.4.0
 	 */
-	function textareaValidationFilter( $result, $tag ) {
+	private function validateTextField( $result, $tag ) {
 
 		$name = $tag->name;
 
@@ -262,10 +263,46 @@ class ContactFormModule extends Module {
 	}
 
 	/**
+	 * Filters text from textarea
+	 * @since 1.0.0
+	 */
+	function textareaValidationFilter( $result, $tag ) {
+		$name = $tag->name;
+
+		$names = explode( ',', get_option( 'kmcfmf_contact_form_7_textarea_fields' ) );
+		if ( in_array( '*', $names ) ) {
+			$result = $this->validateTextField( $result, $tag );
+
+		} else if ( in_array( $name, $names ) ) {
+			$result = $this->validateTextField( $result, $tag );
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Filters text from email fields
 	 * @since 1.0.0
 	 */
 	function emailValidationFilter( $result, $tag ) {
+		$name = $tag->name;
+
+		$names = explode( ',', get_option( 'kmcfmf_contact_form_7_email_fields' ) );
+		if ( in_array( '*', $names ) ) {
+			$result = $this->validateEmailField( $result, $tag );
+
+		} else if ( in_array( $name, $names ) ) {
+			$result = $this->validateEmailField( $result, $tag );
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Runs spam filter on email fields
+	 * @since v1.4.0
+	 */
+	private function validateEmailField( $result, $tag ) {
 		$name        = $tag->name;
 		$check_words = strlen( trim( get_option( 'kmcfmf_restricted_emails' ) ) ) > 0 ? explode( ",", get_option( 'kmcfmf_restricted_emails' ) ) : [];
 
@@ -298,27 +335,31 @@ class ContactFormModule extends Module {
 	protected function addFilters() {
 		parent::addFilters();
 
-		$enable_message_filter       = get_option( 'kmcfmf_message_filter_toggle' ) == 'on' ? true : false;
-		$enable_email_filter         = get_option( 'kmcfmf_email_filter_toggle' ) == 'on' ? true : false;
-		$enable_tags_by_names_filter = get_option( 'kmcfmf_tags_by_name_filter_toggle' ) == 'on' ? true : false;
+		$enable_message_filter        = get_option( 'kmcfmf_message_filter_toggle' ) == 'on' ? true : false;
+		$enable_email_filter          = get_option( 'kmcfmf_email_filter_toggle' ) == 'on' ? true : false;
+		$enable_contact_form_7_filter = get_option( 'kmcfmf_enable_contact_form_7_toggle' ) == 'on' ? true : false;
 
 		if ( $enable_email_filter ) {
-			add_filter( 'wpcf7_validate_email', array( $this, 'emailValidationFilter' ), 10, 2 );
-			add_filter( 'wpcf7_validate_email*', array( $this, 'emailValidationFilter' ), 10, 2 );
+			if ( $enable_contact_form_7_filter ) {
+				add_filter( 'wpcf7_validate_email', array( $this, 'emailValidationFilter' ), 10, 2 );
+				add_filter( 'wpcf7_validate_email*', array( $this, 'emailValidationFilter' ), 10, 2 );
+			}
 		}
 
 		if ( $enable_message_filter ) {
-			add_filter( 'wpcf7_validate_textarea', array( $this, 'textareaValidationFilter' ), 10, 2 );
-			add_filter( 'wpcf7_validate_textarea*', array( $this, 'textareaValidationFilter' ), 10, 2 );
+			if ( $enable_contact_form_7_filter ) {
+				add_filter( 'wpcf7_validate_textarea', array( $this, 'textareaValidationFilter' ), 10, 2 );
+				add_filter( 'wpcf7_validate_textarea*', array( $this, 'textareaValidationFilter' ), 10, 2 );
+				if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) {
+					add_filter( 'wpcf7_validate_text', array( $this, 'textValidationFilter__premium_only' ), 999, 2 );
+					add_filter( 'wpcf7_validate_text*', array(
+						$this,
+						'textValidationFilter__premium_only'
+					), 999, 2 );
+				}
+			}
 		}
 
-		if ( $enable_tags_by_names_filter && KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) {
-			add_filter( 'wpcf7_validate_text', array( $this, 'textTagsByNameValidationFilter__premium_only' ), 999, 2 );
-			add_filter( 'wpcf7_validate_text*', array(
-				$this,
-				'textTagsByNameValidationFilter__premium_only'
-			), 999, 2 );
-		}
 
 	}
 

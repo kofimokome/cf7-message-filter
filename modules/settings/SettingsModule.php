@@ -9,6 +9,7 @@ class SettingsModule extends Module {
 	public function __construct() {
 		parent::__construct();
 		$this->addSettings();
+		$this->checkWildcardInSettingFields();
 //		$this->module = 'packages';
 	}
 
@@ -26,7 +27,7 @@ class SettingsModule extends Module {
 			array(
 				'type'  => 'checkbox',
 				'id'    => 'kmcfmf_message_filter_toggle',
-				'label' => __( 'Enable message filter?: ', KMCF7MS_TEXT_DOMAIN ),
+				'label' => __( 'Enable spam words filter?: ', KMCF7MS_TEXT_DOMAIN ),
 				'tip'   => ''
 			)
 		);
@@ -44,7 +45,7 @@ class SettingsModule extends Module {
 			array(
 				'type'  => 'checkbox',
 				'id'    => 'kmcfmf_email_filter_toggle',
-				'label' => __( 'Enable email filter?: ', KMCF7MS_TEXT_DOMAIN ),
+				'label' => __( 'Enable spam email filter?: ', KMCF7MS_TEXT_DOMAIN ),
 				'tip'   => ''
 			)
 		);
@@ -154,28 +155,41 @@ class SettingsModule extends Module {
 		$settings->add_field(
 			array(
 				'type'  => 'checkbox',
-				'id'    => 'kmcfmf_tags_by_name_filter_toggle',
-				'label' => __( 'Enable Filter on single line Text Fields by Name?: ', KMCF7MS_TEXT_DOMAIN ),
+				'id'    => 'kmcfmf_enable_contact_form_7_toggle',
+				'label' => __( 'Enable Contact Form 7 filter: ', KMCF7MS_TEXT_DOMAIN ),
 				'tip'   => ''
 			)
 		);
+		if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) {
+			$settings->add_field(
+				array(
+					'type'        => 'textarea',
+					'id'          => 'kmcfmf_tags_by_name',
+					'input_class' => 'select2',
+					'label'       => __( 'Text fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
+					'tip'         => 'Note: your-subject, your-address, your-lastname, etc.',
+					'placeholder' => ''
+				)
+			);
+		} else {
+			$settings->add_field(
+				array(
+					'type'        => 'text',
+					'id'          => 'kmcfmf_tags_by_name_free',
+					'label'       => __( 'Text fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
+					'tip'         => 'Note: your-subject, your-address, your-lastname, etc.',
+					'placeholder' => __( "Pro version only" ),
+					'read_only'   => true
+				)
+			);
+		}
 		$settings->add_field(
 			array(
 				'type'        => 'textarea',
-				'id'          => 'kmcfmf_tags_by_name',
+				'id'          => 'kmcfmf_contact_form_7_textarea_fields',
 				'input_class' => 'select2',
-				'label'       => __( 'Analyze single line Text Fields with these names for restricted word, also: ', KMCF7MS_TEXT_DOMAIN ),
-				'tip'         => 'Note: your-subject, your-address, your-lastname, etc.',
-				'placeholder' => ''
-			)
-		);
-		$settings->add_field(
-			array(
-				'type'        => 'textarea',
-				'id'          => 'kmcfmf_contact_form_7_text_fields',
-				'input_class' => 'select2',
-				'label'       => __( 'Text fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
-				'tip'         => 'Note: your-message, your-subject, your-address, your-lastname, etc.',
+				'label'       => __( 'Text area fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
+				'tip'         => 'Note: your-message, etc.',
 				'placeholder' => ''
 			)
 		);
@@ -194,6 +208,24 @@ class SettingsModule extends Module {
 		$settings = apply_filters( 'kmcf7_advanced_settings', $settings );
 
 		$settings->save();
+	}
+
+	/**
+	 * Deletes duplicate data in fields having the * wildcard.
+	 * @since v1.4.0
+	 */
+	private function checkWildcardInSettingFields() {
+		$options = array(
+			'kmcfmf_tags_by_name',
+			'kmcfmf_contact_form_7_textarea_fields',
+			'kmcfmf_contact_form_7_email_fields'
+		);
+		foreach ( $options as $option ) {
+			$names = explode( ',', get_option( $option ) );
+			if ( in_array( '*', $names ) ) {
+				update_option( $option, '*' );
+			}
+		}
 	}
 
 	/**
@@ -299,4 +331,5 @@ class SettingsModule extends Module {
 		add_filter( 'kmcf7_sub_menu_pages_filter', [ $this, 'addSubMenuPage' ] );
 		// add actions here
 	}
+
 }

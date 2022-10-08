@@ -37,13 +37,19 @@ if ( ! class_exists( 'KMSubMenuPage' ) ) {
 				'use_tabs'    => false
 			);
 			$data         = array_merge( $default_data, $data );
+			$page_title   = sanitize_text_field( $data['page_title'] );
+			$menu_title   = sanitize_text_field( $data['menu_title'] );
+			$capability   = sanitize_text_field( $data['capability'] );
+			$menu_slug    = sanitize_text_field( $data['menu_slug'] );
+			$position     = sanitize_text_field( $data['position'] );
+			$parent_slug  = sanitize_text_field( $data['parent_slug'] );
 
-			$this->page_title  = $data['page_title'];
-			$this->menu_title  = $data['menu_title'];
-			$this->capability  = $data['capability'];
-			$this->menu_slug   = $data['menu_slug'];
-			$this->position    = $data['position'];
-			$this->parent_slug = $data['parent_slug'];
+			$this->page_title  = $page_title;
+			$this->menu_title  = $menu_title;
+			$this->capability  = $capability;
+			$this->menu_slug   = $menu_slug;
+			$this->position    = $position;
+			$this->parent_slug = $parent_slug;
 			$this->function    = $data['function'];
 			if ( $data['use_tabs'] ) {
 				$this->function = array( &$this, 'show_tabs' );
@@ -55,16 +61,16 @@ if ( ! class_exists( 'KMSubMenuPage' ) ) {
 		 * @since 1.0.0
 		 */
 		public function show_tabs() {
-			$current_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : null;
+			$current_tab = isset( $_GET['tab'] ) ? esc_html( $_GET['tab'] ) : null;
 			?>
             <div class="wrap">
                 <div id="icon-options-general" class="icon32"></div>
-                <h1><?php echo $this->page_title ?></h1>
+                <h1><?php echo esc_html( $this->page_title ) ?></h1>
 				<?php if ( sizeof( $this->tabs ) > 0 ): ?>
                     <nav class="nav-tab-wrapper">
 						<?php foreach ( $this->tabs as $id => $tab ): ?>
-                            <a href="?page=<?php echo $this->menu_slug ?>&tab=<?php echo $id ?>"
-                               class="nav-tab <?php if ( $id === $current_tab ): ?>nav-tab-active<?php endif; ?>"><?php echo $tab['title'] ?></a>
+                            <a href="?page=<?php echo esc_html( $this->menu_slug ) ?>&tab=<?php echo esc_html( $id ) ?>"
+                               class="nav-tab <?php if ( $id === $current_tab ): ?>nav-tab-active<?php endif; ?>"><?php echo esc_html( $tab['title'] ) ?></a>
 						<?php endforeach; ?>
 
                     </nav>
@@ -95,7 +101,7 @@ if ( ! class_exists( 'KMSubMenuPage' ) ) {
 		 * @since 1.0.0
 		 */
 		public function add_tab( $id, $title, $contents, array $args = [] ) {
-			$id                = trim( $id );
+			$id                = trim( sanitize_text_field( $id ) );
 			$this->tabs[ $id ] = array( 'title' => $title, 'contents' => $contents, 'args' => $args );
 			// array_push($this->tabs, array($id, $title));
 		}

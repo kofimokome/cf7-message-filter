@@ -42,22 +42,22 @@ if ( ! function_exists( 'kmcf7_message_filter\\KMCF7Fs' ) ) {
 				'slug'                => 'cf7-message-filter',
 				'type'                => 'plugin',
 				'public_key'          => 'pk_699cdf1dd29834038369b6605acb5',
-				'is_premium'          => false,
+				'is_premium'          => true,
 				'premium_suffix'      => 'Pro',
 				// If your plugin is a serviceware, set this option to false.
 				'has_premium_version' => true,
 				'has_addons'          => false,
 				'has_paid_plans'      => true,
-				'trial'               => array(
-					'days'               => 7,
-					'is_require_payment' => false,
-				),
+//				'trial'               => array(
+//					'days'               => 7,
+//					'is_require_payment' => false,
+//				),
 				'menu'                => array(
 					'slug' => 'kmcf7-message-filter',
 				),
 				// Set the SDK to work in a sandbox mode (for development & testing).
 				// IMPORTANT: MAKE SURE TO REMOVE SECRET KEY BEFORE DEPLOYMENT.
-				'secret_key'          => 'sk_QeWS=jV8~);E:I:pdEO$F!>r6k7ys',
+//				'secret_key'          => 'sk_QeWS=jV8~);E:I:pdEO$F!>r6k7ys',
 			) );
 		}
 
