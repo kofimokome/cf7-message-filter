@@ -18,7 +18,7 @@ class SettingsModule extends Module {
 	public function addSettings() {
 
 		// Check documentation here https://github.com/kofimokome/WordPress-Tools
-		// basic settings
+		// Plugin settings
 		$link_to_filters = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-options&tab=filters';
 		$settings        = new KMSetting( 'kmcf7-message-filter-options&tab=basic' );
 		$settings->add_section( 'kmcfmf_message_filter_basic' );
@@ -26,7 +26,7 @@ class SettingsModule extends Module {
 			array(
 				'type'  => 'checkbox',
 				'id'    => 'kmcfmf_message_filter_toggle',
-				'label' => __( 'Enable Message Filter?: ', KMCF7MS_TEXT_DOMAIN ),
+				'label' => __( 'Enable message filter?: ', KMCF7MS_TEXT_DOMAIN ),
 				'tip'   => ''
 			)
 		);
@@ -35,7 +35,7 @@ class SettingsModule extends Module {
 				'type'        => 'textarea',
 				'id'          => 'kmcfmf_restricted_words',
 				'input_class' => 'select2',
-				'label'       => __( 'Restricted Words: ', KMCF7MS_TEXT_DOMAIN ),
+				'label'       => __( 'Spam words: ', KMCF7MS_TEXT_DOMAIN ),
 				'tip'         => "<a href='$link_to_filters'>" . __( "Click here to view list of filters", KMCF7MS_TEXT_DOMAIN ) . "</a>",
 				'placeholder' => 'eg john, doe, baby, man, [link], [russian]'
 			)
@@ -44,7 +44,7 @@ class SettingsModule extends Module {
 			array(
 				'type'  => 'checkbox',
 				'id'    => 'kmcfmf_email_filter_toggle',
-				'label' => __( 'Enable Email Filter?: ', KMCF7MS_TEXT_DOMAIN ),
+				'label' => __( 'Enable email filter?: ', KMCF7MS_TEXT_DOMAIN ),
 				'tip'   => ''
 			)
 		);
@@ -52,78 +52,12 @@ class SettingsModule extends Module {
 			array(
 				'type'        => 'textarea',
 				'id'          => 'kmcfmf_restricted_emails',
-				'label'       => __( 'Restricted Emails: ', KMCF7MS_TEXT_DOMAIN ),
+				'label'       => __( 'Spam emails: ', KMCF7MS_TEXT_DOMAIN ),
 				'input_class' => 'select2',
 				'tip'         => 'Eg. ( john@gmail.com, john@yahoo.com, john@hotmail.com, etc... )',
 				'placeholder' => 'eg john@doe.com, mary@doman.tk,'
 			)
 		);
-		if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) {
-			$settings->add_field(
-				array(
-					'type'  => 'checkbox',
-					'id'    => 'kmcfmf_tags_by_name_filter_toggle',
-					'label' => __( 'Enable Filter on single line Text Fields by Name?: ', KMCF7MS_TEXT_DOMAIN ),
-					'tip'   => ''
-				)
-			);
-			$settings->add_field(
-				array(
-					'type'        => 'textarea',
-					'id'          => 'kmcfmf_tags_by_name',
-					'input_class' => 'select2',
-					'label'       => __( 'Analyze single line Text Fields with these names for restricted word, also: ', KMCF7MS_TEXT_DOMAIN ),
-					'tip'         => 'Note: your-subject, your-address, your-lastname, etc.',
-					'placeholder' => ''
-				)
-			);
-		}
-
-		$settings->add_field(
-			array(
-				'type'  => 'checkbox',
-				'id'    => 'kmcfmf_message_filter_reset',
-				'label' => __( 'Reset Filter Count?: ', KMCF7MS_TEXT_DOMAIN ),
-				'tip'   => ''
-			)
-		);
-
-		$settings = apply_filters( 'kmcf7_basic_settings', $settings );
-
-		$settings->save();
-
-		// Error messages settings
-		if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) {
-			$settings = new KMSetting( 'kmcf7-message-filter-options&tab=messages' );
-			$settings->add_section( 'kmcfmf_message_filter_messages' );
-			$settings->add_field(
-				array(
-					'type'        => 'textarea',
-					'id'          => 'kmcfmf_spam_word_error',
-					'label'       => __( 'Error Message For Restricted Words: ', KMCF7MS_TEXT_DOMAIN ),
-					'tip'         => '',
-					'placeholder' => __( 'You have entered a word marked as spam', 'contact-form-7' )
-				)
-			);
-			$settings->add_field(
-				array(
-					'type'        => 'textarea',
-					'id'          => 'kmcfmf_spam_email_error',
-					'label'       => __( 'Error Message For Restricted Emails: ', KMCF7MS_TEXT_DOMAIN ),
-					'tip'         => '',
-					'placeholder' => __( 'The e-mail address entered is invalid.', 'contact-form-7' ),
-				)
-			);
-
-			$settings = apply_filters( 'kmcf7_message_settings', $settings );
-
-			$settings->save();
-		}
-
-		// Advanced settings
-		$settings = new KMSetting( 'kmcf7-message-filter-options&tab=advanced' );
-		$settings->add_section( 'kmcfmf_message_filter_advanced' );
-
 		$settings->add_field(
 			array(
 				'type'  => 'checkbox',
@@ -172,6 +106,91 @@ class SettingsModule extends Module {
 			)
 		);
 
+		$settings->add_field(
+			array(
+				'type'  => 'checkbox',
+				'id'    => 'kmcfmf_message_filter_reset',
+				'label' => __( 'Reset plugin: ', KMCF7MS_TEXT_DOMAIN ),
+				'tip'   => ''
+			)
+		);
+
+		$settings = apply_filters( 'kmcf7_basic_settings', $settings );
+
+		$settings->save();
+
+		// Error messages settings
+		if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) {
+			$settings = new KMSetting( 'kmcf7-message-filter-options&tab=messages' );
+			$settings->add_section( 'kmcfmf_message_filter_messages' );
+			$settings->add_field(
+				array(
+					'type'        => 'textarea',
+					'id'          => 'kmcfmf_spam_word_error',
+					'label'       => __( 'Error Message For Spam Words: ', KMCF7MS_TEXT_DOMAIN ),
+					'tip'         => '',
+					'placeholder' => __( 'You have entered a word marked as spam', 'contact-form-7' )
+				)
+			);
+			$settings->add_field(
+				array(
+					'type'        => 'textarea',
+					'id'          => 'kmcfmf_spam_email_error',
+					'label'       => __( 'Error Message For Spam Emails: ', KMCF7MS_TEXT_DOMAIN ),
+					'tip'         => '',
+					'placeholder' => __( 'The e-mail address entered is invalid.', 'contact-form-7' ),
+				)
+			);
+
+			$settings = apply_filters( 'kmcf7_message_settings', $settings );
+
+			$settings->save();
+		}
+
+		// Contact Form 7 settings
+		$settings = new KMSetting( 'kmcf7-message-filter-options&tab=contactform7' );
+		$settings->add_section( 'kmcfmf_message_filter_contact_form_7' );
+
+		$settings->add_field(
+			array(
+				'type'  => 'checkbox',
+				'id'    => 'kmcfmf_tags_by_name_filter_toggle',
+				'label' => __( 'Enable Filter on single line Text Fields by Name?: ', KMCF7MS_TEXT_DOMAIN ),
+				'tip'   => ''
+			)
+		);
+		$settings->add_field(
+			array(
+				'type'        => 'textarea',
+				'id'          => 'kmcfmf_tags_by_name',
+				'input_class' => 'select2',
+				'label'       => __( 'Analyze single line Text Fields with these names for restricted word, also: ', KMCF7MS_TEXT_DOMAIN ),
+				'tip'         => 'Note: your-subject, your-address, your-lastname, etc.',
+				'placeholder' => ''
+			)
+		);
+		$settings->add_field(
+			array(
+				'type'        => 'textarea',
+				'id'          => 'kmcfmf_contact_form_7_text_fields',
+				'input_class' => 'select2',
+				'label'       => __( 'Text fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
+				'tip'         => 'Note: your-message, your-subject, your-address, your-lastname, etc.',
+				'placeholder' => ''
+			)
+		);
+		$settings->add_field(
+			array(
+				'type'        => 'textarea',
+				'id'          => 'kmcfmf_contact_form_7_email_fields',
+				'input_class' => 'select2',
+				'label'       => __( 'Email fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
+				'tip'         => 'Note: your-email  etc.',
+				'placeholder' => ''
+			)
+		);
+
+
 		$settings = apply_filters( 'kmcf7_advanced_settings', $settings );
 
 		$settings->save();
@@ -195,10 +214,10 @@ class SettingsModule extends Module {
 				'use_tabs'   => true
 			) );
 
-		$settings_page->add_tab( 'basic', __( 'Basic', KMCF7MS_TEXT_DOMAIN ), array(
+		$settings_page->add_tab( 'settings', __( 'Settings', KMCF7MS_TEXT_DOMAIN ), array(
 			$this,
 			'statusTabView'
-		), array( 'tab' => 'basic' ) );
+		), array( 'tab' => 'settings' ) );
 
 		if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) {
 			$settings_page->add_tab( 'messages', __( 'Error Messages', KMCF7MS_TEXT_DOMAIN ), array(
@@ -207,10 +226,10 @@ class SettingsModule extends Module {
 			), array( 'tab' => 'messages' ) );
 		}
 
-		$settings_page->add_tab( 'advanced', __( 'Advanced', KMCF7MS_TEXT_DOMAIN ), array(
+		$settings_page->add_tab( 'contactform7', __( 'Contact Form 7', KMCF7MS_TEXT_DOMAIN ), array(
 			$this,
 			'statusTabView'
-		), array( 'tab' => 'advanced' ) );
+		), array( 'tab' => 'contactform7' ) );
 		/*
 				$settings_page->add_tab( 'extensions', __( 'Extensions', KMCF7MS_TEXT_DOMAIN ), array(
 					$this,
@@ -252,8 +271,8 @@ class SettingsModule extends Module {
 			case 'plugins':
 				$this->renderContent( 'plugins' );
 				break;
-			case 'advanced':
-				$this->renderContent( 'advanced' );
+			case 'contactform7':
+				$this->renderContent( 'contactform7' );
 				break;
 			case 'filters':
 				$this->renderContent( 'filters' );
@@ -267,7 +286,7 @@ class SettingsModule extends Module {
 				$this->renderContent( 'extensions' );
 				break;
 			default:
-				$this->renderContent( 'basic' );
+				$this->renderContent( 'settings' );
 				break;
 		}
 	}

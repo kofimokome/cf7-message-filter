@@ -2,7 +2,7 @@
 
 namespace kmcf7_message_filter;
 ?>
-    <h1><?php esc_html_e( "Basic Plugin Settings", KMCF7MS_TEXT_DOMAIN ) ?></h1>
+    <h1><?php esc_html_e( "Plugin Settings", KMCF7MS_TEXT_DOMAIN ) ?></h1>
 	<?php settings_errors(); ?>
     <form method="post" action="options.php" id="basic_settings_form">
 		<?php

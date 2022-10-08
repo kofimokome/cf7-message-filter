@@ -42,7 +42,7 @@ if ( ! function_exists( 'kmcf7_message_filter\\KMCF7Fs' ) ) {
 				'slug'                => 'cf7-message-filter',
 				'type'                => 'plugin',
 				'public_key'          => 'pk_699cdf1dd29834038369b6605acb5',
-				'is_premium'          => true,
+				'is_premium'          => false,
 				'premium_suffix'      => 'Pro',
 				// If your plugin is a serviceware, set this option to false.
 				'has_premium_version' => true,
