@@ -222,7 +222,7 @@ class SettingsModule extends Module {
 		);
 		foreach ( $options as $option ) {
 			$names = explode( ',', get_option( $option ) );
-			if ( in_array( '*', $names ) ) {
+			if ( in_array( '*', $names ) && sizeof( $names ) > 1 ) {
 				update_option( $option, '*' );
 			}
 		}

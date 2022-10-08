@@ -4,7 +4,7 @@
  * User: kofi
  * Date: 6/5/19
  * Time: 11:59 AM
- * @version 1.0.3
+ * @version 1.0.4
  * @author kofi mokome
  */
 if ( ! class_exists( 'KMMenuPage' ) ) {

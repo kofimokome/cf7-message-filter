@@ -5,7 +5,7 @@
  * Date: 6/5/19
  * Time: 12:41 PM
  * @author kofi mokome
- * @version  1.0.3
+ * @version  1.0.4
  */
 
 if ( ! class_exists( 'KMSubMenuPage' ) ) {
