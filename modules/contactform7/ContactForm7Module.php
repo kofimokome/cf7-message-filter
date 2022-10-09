@@ -4,6 +4,8 @@ namespace kmcf7_message_filter;
 
 use WPCF7_Submission;
 
+$kmcf7_spam_status = false;
+
 class ContactForm7Module extends Module {
 	private $count_updated = false;
 	private $spam_word_error;
@@ -59,7 +61,7 @@ class ContactForm7Module extends Module {
 	 * @since 1.4.0
 	 */
 	private function validateTextField( $result, $tag ) {
-
+		global $kmcf7_spam_status;
 		$name = $tag->name;
 
 		$found     = false;
@@ -206,6 +208,8 @@ class ContactForm7Module extends Module {
 			$invalidate_field = apply_filters( 'kmcf7_invalidate_text_field', $invalidate_field );
 			if ( $invalidate_field ) {
 				$result->invalidate( $tag, $this->spam_word_error );
+			} else {
+				$kmcf7_spam_status = true;
 			}
 			if ( ! $this->count_updated ) {
 				MessagesModule::updateDatabase( $spam_word );
