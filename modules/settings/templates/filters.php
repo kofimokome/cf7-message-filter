@@ -2,50 +2,94 @@
 
 namespace kmcf7_message_filter;
 ?>
-    <h1><?php esc_html_e( "List of filters", KMCF7MS_TEXT_DOMAIN ) ?></h1>
-    <table class="wp-list-table widefat fixed striped table-view-list posts">
-        <tr>
-            <th>S/N</th>
-            <th><?php esc_html_e( "Name", KMCF7MS_TEXT_DOMAIN ) ?></th>
-            <th><?php esc_html_e( "Description", KMCF7MS_TEXT_DOMAIN ) ?></th>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td><code>[link]</code></td>
-            <td><?php esc_html_e( "Filters messages having links", KMCF7MS_TEXT_DOMAIN ) ?></td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td><code>[russian]</code></td>
-            <td><?php esc_html_e( "Filters messages having russian (cyrillic) characters", KMCF7MS_TEXT_DOMAIN ) ?></td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td><code>[hiragana]</code>(pro only)</td>
-            <td><?php esc_html_e( "Filters messages having japanese (hiragana) characters", KMCF7MS_TEXT_DOMAIN ) ?></td>
-        </tr>
-        <tr>
-            <td>4</td>
-            <td><code>[katakana]</code>(pro only)</td>
-            <td><?php esc_html_e( "Filters messages having japanese (katakana) characters", KMCF7MS_TEXT_DOMAIN ) ?></td>
-        </tr>
-        <tr>
-            <td>5</td>
-            <td><code>[kanji]</code>(pro only)</td>
-            <td><?php esc_html_e( "Filters messages having japanese (kanji) characters", KMCF7MS_TEXT_DOMAIN ) ?></td>
-        </tr>
-        <tr>
-            <td>6</td>
-            <td><code>[japanese]</code> (pro only)</td>
-            <td><?php esc_html_e( "Filters messages having japanese characters. Calls the following filters: <code>[hiragana]</code>,<code>[katakana]</code>
+    <h1 style="position:sticky; top:0; margin-bottom: 10px; background: white; text-align: center"><?php esc_html_e( "List of filters", KMCF7MS_TEXT_DOMAIN ) ?></h1>
+    <h2>Select the filters to add</h2>
+    <form id="km-filters">
+        <table class="wp-list-table widefat fixed striped table-view-list posts">
+            <tr>
+                <th></th>
+                <th><?php esc_html_e( "Name", KMCF7MS_TEXT_DOMAIN ) ?></th>
+                <th><?php esc_html_e( "Description", KMCF7MS_TEXT_DOMAIN ) ?></th>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="filter" value="[link]"></td>
+                <td><code>[link]</code></td>
+                <td><?php esc_html_e( "Filters messages having links", KMCF7MS_TEXT_DOMAIN ) ?></td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="filter" value="[russian]"></td>
+                <td><code>[russian]</code></td>
+                <td><?php esc_html_e( "Filters messages having russian (cyrillic) characters", KMCF7MS_TEXT_DOMAIN ) ?></td>
+            </tr>
+            <tr>
+                <td>
+					<?php if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) { ?>
+                        <input type="checkbox" name="filter" value="[hiragana]">
+					<?php } else {
+						_e( "pro version", KMCF7MS_TEXT_DOMAIN );
+					} ?>
+                </td>
+
+                <td><code>[hiragana]</code></td>
+                <td><?php esc_html_e( "Filters messages having japanese (hiragana) characters", KMCF7MS_TEXT_DOMAIN ) ?></td>
+            </tr>
+            <tr>
+                <td>
+					<?php if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) { ?>
+                        <input type="checkbox" name="filter" value="[katakana]">
+					<?php } else {
+						_e( "pro version", KMCF7MS_TEXT_DOMAIN );
+					} ?>
+                </td>
+
+                <td><code>[katakana]</code></td>
+                <td><?php esc_html_e( "Filters messages having japanese (katakana) characters", KMCF7MS_TEXT_DOMAIN ) ?></td>
+            </tr>
+            <tr>
+                <td>
+					<?php if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) { ?>
+                        <input type="checkbox" name="filter" value="[kanji]">
+					<?php } else {
+						_e( "pro version", KMCF7MS_TEXT_DOMAIN );
+					} ?>
+                </td>
+
+                <td><code>[kanji]</code></td>
+                <td><?php esc_html_e( "Filters messages having japanese (kanji) characters", KMCF7MS_TEXT_DOMAIN ) ?></td>
+            </tr>
+            <tr>
+                <td>
+					<?php if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) { ?>
+                        <input type="checkbox" name="filter" value="[japanese]">
+					<?php } else {
+						_e( "pro version", KMCF7MS_TEXT_DOMAIN );
+					} ?>
+                </td>
+
+                <td><code>[japanese]</code></td>
+                <td><?php esc_html_e( "Filter messages having japanese characters. Calls the following filters: <code>[hiragana]</code>,<code>[katakana]</code>
                 and <code>[kanji]</code>", KMCF7MS_TEXT_DOMAIN ) ?></td>
-        </tr>
-        <tr>
-            <td>7</td>
-            <td><code>[emoji]</code>(pro only)</td>
-            <td><?php esc_html_e( "Filters messages having emojis", KMCF7MS_TEXT_DOMAIN ) ?> 😀😜</td>
-        </tr>
-    </table>
+            </tr>
+            <tr>
+                <td>
+					<?php if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) { ?>
+                        <input type="checkbox" name="filter" value="[emoji]">
+					<?php } else {
+						_e( "pro version", KMCF7MS_TEXT_DOMAIN );
+					} ?>
+                </td>
+
+                <td><code>[emoji]</code></td>
+                <td><?php esc_html_e( "Filters messages having emojis", KMCF7MS_TEXT_DOMAIN ) ?> 😀😜</td>
+            </tr>
+        </table>
+        <div style="display: flex; justify-content: space-between; padding-top: 10px;padding-bottom: 10px; position: sticky; bottom: 0; background: white">
+            <button type="button" class="button"
+                    id="km-hide-filters"><?php _e( "Cancel", KMCF7MS_TEXT_DOMAIN ) ?></button>
+            <button type="submit" class="button"><?php _e( "Add", KMCF7MS_TEXT_DOMAIN ) ?></button>
+        </div>
+
+    </form>
 
 <?php
 // $settings->run();

@@ -38,7 +38,7 @@ if ( ! class_exists( 'KMSubMenuPage' ) ) {
 			);
 			$data         = array_merge( $default_data, $data );
 			$page_title   = sanitize_text_field( $data['page_title'] );
-			$menu_title   = sanitize_text_field( $data['menu_title'] );
+			$menu_title   = wp_kses_post( $data['menu_title'] );
 			$capability   = sanitize_text_field( $data['capability'] );
 			$menu_slug    = sanitize_text_field( $data['menu_slug'] );
 			$position     = sanitize_text_field( $data['position'] );

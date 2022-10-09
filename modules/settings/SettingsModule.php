@@ -37,7 +37,7 @@ class SettingsModule extends Module {
 				'id'          => 'kmcfmf_restricted_words',
 				'input_class' => 'select2',
 				'label'       => __( 'Spam words: ', KMCF7MS_TEXT_DOMAIN ),
-				'tip'         => "<a href='$link_to_filters'>" . __( "Click here to view list of filters", KMCF7MS_TEXT_DOMAIN ) . "</a>",
+				'tip'         => "<a href='#' id='km-show-filters'>" . __( "Click here to view list of filters", KMCF7MS_TEXT_DOMAIN ) . "</a>",
 				'placeholder' => 'eg john, doe, baby, man, [link], [russian]'
 			)
 		);
@@ -268,11 +268,6 @@ class SettingsModule extends Module {
 					'statusTabView'
 				), array( 'tab' => 'extensions' ) );*/
 
-		$settings_page->add_tab( 'filters', __( 'Filters', KMCF7MS_TEXT_DOMAIN ), array(
-			$this,
-			'statusTabView'
-		), array( 'tab' => 'filters' ) );
-
 		$settings_page->add_tab( 'plugins', __( 'More Plugins', KMCF7MS_TEXT_DOMAIN ), array(
 			$this,
 			'statusTabView'
@@ -305,9 +300,6 @@ class SettingsModule extends Module {
 				break;
 			case 'contactform7':
 				$this->renderContent( 'contactform7' );
-				break;
-			case 'filters':
-				$this->renderContent( 'filters' );
 				break;
 			case 'messages':
 				if ( KMCF7Fs()->is_plan__premium_only( 'pro' ) ) {
