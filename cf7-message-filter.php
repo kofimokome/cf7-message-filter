@@ -2,7 +2,7 @@
 /**
  * @link              www.kofimokome.stream
  * @since             1.0.0
- * @package           kmcf7_message_filter
+ * @package           km_message_filter
  *
  * @wordpress-plugin
  * Plugin Name: Message Filter for Contact Form 7
@@ -17,20 +17,21 @@
  * Domain Path: /languages
  */
 
-namespace kmcf7_message_filter;
+namespace km_message_filter;
 
 defined( 'ABSPATH' ) or die( 'Giving To Cesar What Belongs To Caesar' );
 
 require 'constants.php';
-require KMCF7MS_CORE_DIR . '/CF7MessageFilter.php';
+require KMCF7MS_CORE_DIR . '/KMCFMessageFilter.php';
 require KMCF7MS_CORE_DIR . '/Module.php';
 require KMCF7MS_CORE_DIR . '/Migration.php';
 require KMCF7MS_CORE_DIR . '/Model.php';
 require KMCF7MS_CORE_DIR . '/Validator.php';
+require KMCF7MS_CORE_DIR . '/Filter.php';
 
-if ( ! function_exists( 'kmcf7_message_filter\\KMCF7Fs' ) ) {
+if ( ! function_exists( 'km_message_filter\\KMCFMFs' ) ) {
 	// Create a helper function for easy SDK access.
-	function KMCF7Fs() {
+	function KMCFMFs() {
 		global $kmcfmf_fs;
 
 		if ( ! isset( $kmcfmf_fs ) ) {
@@ -65,18 +66,18 @@ if ( ! function_exists( 'kmcf7_message_filter\\KMCF7Fs' ) ) {
 	}
 
 	// Init Freemius.
-	KMCF7Fs();
+	KMCFMFs();
 	// Signal that SDK was initiated.
 	do_action( 'kmcfmf_fs_loaded' );
 
-	function KMCF7FsSettingsUrl() {
+	function KMCFMFsSettingsUrl() {
 		return admin_url( 'admin.php?page=kmcf7-message-filter' );
 	}
 
-	KMCF7Fs()->add_filter( 'connect_url', 'kmcf7_message_filter\\KMCF7FsSettingsUrl' );
-	KMCF7Fs()->add_filter( 'after_skip_url', 'kmcf7_message_filter\\KMCF7FsSettingsUrl' );
-	KMCF7Fs()->add_filter( 'after_connect_url', 'kmcf7_message_filter\\KMCF7FsSettingsUrl' );
-	KMCF7Fs()->add_filter( 'after_pending_connect_url', 'kmcf7_message_filter\\KMCF7FsSettingsUrl' );
+	KMCFMFs()->add_filter( 'connect_url', 'km_message_filter\\KMCFMFsSettingsUrl' );
+	KMCFMFs()->add_filter( 'after_skip_url', 'km_message_filter\\KMCFMFsSettingsUrl' );
+	KMCFMFs()->add_filter( 'after_connect_url', 'km_message_filter\\KMCFMFsSettingsUrl' );
+	KMCFMFs()->add_filter( 'after_pending_connect_url', 'km_message_filter\\KMCFMFsSettingsUrl' );
 }
 
 /**
@@ -98,7 +99,7 @@ function KMCF7ErrorNotice( $message = '' ) {
 	endif;
 }
 
-add_action( 'admin_notices', 'kmcf7_message_filter\\KMCF7ErrorNotice', 10, 1 );
+add_action( 'admin_notices', 'km_message_filter\\KMCF7ErrorNotice', 10, 1 );
 
 // loads classes / files
 function KMCF7Loader() {
@@ -125,7 +126,7 @@ function KMCF7Start() {
 	} else {
 		Migration::runUpdateMigrations();
 	}
-	$message_filter = new CF7MessageFilter();
+	$message_filter = new KMCFMessageFilter();
 	$message_filter->run();
 }
 
@@ -137,14 +138,14 @@ if ( ! KMCF7Loader() ) {
 
 // remove options upon deactivation
 
-register_deactivation_hook( __FILE__, 'kmcf7_message_filter\\KMCF7Deactivation' );
+register_deactivation_hook( __FILE__, 'km_message_filter\\KMCF7Deactivation' );
 
 function KMCF7Deactivation() {
 	// set options to remove here
 }
 
 
-register_uninstall_hook( __FILE__, 'kmcf7_message_filter\\KMCF7Uninstall' );
+register_uninstall_hook( __FILE__, 'km_message_filter\\KMCF7Uninstall' );
 
 /**
  * Set of actions to be performed on uninstallation
@@ -154,7 +155,7 @@ function KMCF7Uninstall() {
 	Migration::dropAll();
 }
 
-register_activation_hook( __FILE__, 'kmcf7_message_filter\\KMCF7Activation' );
+register_activation_hook( __FILE__, 'km_message_filter\\KMCF7Activation' );
 
 /**
  * Set of actions to be performed on activation

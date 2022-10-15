@@ -1,6 +1,6 @@
 <?php
 
-namespace kmcf7_message_filter;
+namespace km_message_filter;
 ?>
     <h1><?php esc_html_e( "Here is a list of other plugins I am currently working on", KMCF7MS_TEXT_DOMAIN ) ?></h1>
 

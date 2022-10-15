@@ -1,6 +1,6 @@
 <?php
 
-namespace kmcf7_message_filter;
+namespace km_message_filter;
 
 use KMSetting;
 use KMSubMenuPage;
@@ -22,7 +22,7 @@ class SettingsModule extends Module {
 		// Plugin settings
 		$link_to_filters = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-options&tab=filters';
 		$settings        = new KMSetting( 'kmcf7-message-filter-options&tab=basic' );
-		$settings->add_section( 'kmcfmf_message_filter_basic' );
+		$settings->add_section( 'kmcfmf_basic' );
 		$settings->add_field(
 			array(
 				'type'  => 'checkbox',
@@ -116,14 +116,14 @@ class SettingsModule extends Module {
 			)
 		);
 
-		$settings = apply_filters( 'kmcf7_basic_settings', $settings );
+		$settings = apply_filters( 'kmcfmf_basic_settings', $settings );
 
 		$settings->save();
 
 		// Error messages settings
-		if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) {
+		if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
 			$settings = new KMSetting( 'kmcf7-message-filter-options&tab=messages' );
-			$settings->add_section( 'kmcfmf_message_filter_messages' );
+			$settings->add_section( 'kmcfmf_messages' );
 			$settings->add_field(
 				array(
 					'type'        => 'textarea',
@@ -143,14 +143,14 @@ class SettingsModule extends Module {
 				)
 			);
 
-			$settings = apply_filters( 'kmcf7_message_settings', $settings );
+			$settings = apply_filters( 'kmcfmf_messages_settings', $settings );
 
 			$settings->save();
 		}
 
 		// Contact Form 7 settings
 		$settings = new KMSetting( 'kmcf7-message-filter-options&tab=contactform7' );
-		$settings->add_section( 'kmcfmf_message_filter_contact_form_7' );
+		$settings->add_section( 'kmcfmf_contact_form_7' );
 
 		$settings->add_field(
 			array(
@@ -160,29 +160,17 @@ class SettingsModule extends Module {
 				'tip'   => ''
 			)
 		);
-		if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) {
-			$settings->add_field(
-				array(
-					'type'        => 'textarea',
-					'id'          => 'kmcfmf_tags_by_name',
-					'input_class' => 'select2',
-					'label'       => __( 'Text fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
-					'tip'         => 'Note: your-subject, your-address, your-lastname, etc.',
-					'placeholder' => ''
-				)
-			);
-		} else {
-			$settings->add_field(
-				array(
-					'type'        => 'text',
-					'id'          => 'kmcfmf_tags_by_name_free',
-					'label'       => __( 'Text fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
-					'tip'         => 'Note: your-subject, your-address, your-lastname, etc.',
-					'placeholder' => __( "Pro version only" ),
-					'read_only'   => true
-				)
-			);
-		}
+		$settings->add_field(
+			array(
+				'type'        => 'textarea',
+				'id'          => 'kmcfmf_tags_by_name',
+				'input_class' => 'select2',
+				'label'       => __( 'Text fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
+				'tip'         => 'Note: your-subject, your-address, your-lastname, etc.',
+				'placeholder' => ''
+			)
+		);
+
 		$settings->add_field(
 			array(
 				'type'        => 'textarea',
@@ -204,8 +192,54 @@ class SettingsModule extends Module {
 			)
 		);
 
+		$settings = apply_filters( 'kmcfmf_contact_form_7_settings', $settings );
+		$settings->save();
 
-		$settings = apply_filters( 'kmcf7_advanced_settings', $settings );
+		// WP Forms settings
+		$settings = new KMSetting( 'kmcf7-message-filter-options&tab=wpforms' );
+		$settings->add_section( 'kmcfmf_wp_forms' );
+
+		$settings->add_field(
+			array(
+				'type'  => 'checkbox',
+				'id'    => 'kmcfmf_enable_wp_forms_toggle',
+				'label' => __( 'Enable WP Forms filter: ', KMCF7MS_TEXT_DOMAIN ),
+				'tip'   => ''
+			)
+		);
+		$settings->add_field(
+			array(
+				'type'        => 'textarea',
+				'id'          => 'kmcfmf_wp_forms_text_fields',
+				'input_class' => 'select2',
+				'label'       => __( 'Text fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
+				'tip'         => 'Note: your-subject, your-address, your-lastname, etc.',
+				'placeholder' => ''
+			)
+		);
+
+		$settings->add_field(
+			array(
+				'type'        => 'textarea',
+				'id'          => 'kmcfmf_wp_forms_textarea_fields',
+				'input_class' => 'select2',
+				'label'       => __( 'Text area fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
+				'tip'         => 'Note: your-message, etc.',
+				'placeholder' => ''
+			)
+		);
+		$settings->add_field(
+			array(
+				'type'        => 'textarea',
+				'id'          => 'kmcfmf_wp_forms_email_fields',
+				'input_class' => 'select2',
+				'label'       => __( 'Email fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
+				'tip'         => 'Note: your-email  etc.',
+				'placeholder' => ''
+			)
+		);
+
+		$settings = apply_filters( 'kmcf7_wp_forms_settings', $settings );
 
 		$settings->save();
 	}
@@ -251,7 +285,7 @@ class SettingsModule extends Module {
 			'statusTabView'
 		), array( 'tab' => 'settings' ) );
 
-		if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) {
+		if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
 			$settings_page->add_tab( 'messages', __( 'Error Messages', KMCF7MS_TEXT_DOMAIN ), array(
 				$this,
 				'statusTabView'
@@ -262,6 +296,11 @@ class SettingsModule extends Module {
 			$this,
 			'statusTabView'
 		), array( 'tab' => 'contactform7' ) );
+
+		$settings_page->add_tab( 'wpforms', __( 'WP Forms', KMCF7MS_TEXT_DOMAIN ), array(
+			$this,
+			'statusTabView'
+		), array( 'tab' => 'wpforms' ) );
 		/*
 				$settings_page->add_tab( 'extensions', __( 'Extensions', KMCF7MS_TEXT_DOMAIN ), array(
 					$this,
@@ -302,12 +341,15 @@ class SettingsModule extends Module {
 				$this->renderContent( 'contactform7' );
 				break;
 			case 'messages':
-				if ( KMCF7Fs()->is_plan__premium_only( 'pro' ) ) {
+				if ( KMCFMFs()->is_plan__premium_only( 'pro' ) ) {
 					$this->renderContent( 'messages__premium_only' );
 				}
 				break;
 			case 'extensions':
 				$this->renderContent( 'extensions' );
+				break;
+			case 'wpforms':
+				$this->renderContent( 'wpforms' );
 				break;
 			default:
 				$this->renderContent( 'settings' );

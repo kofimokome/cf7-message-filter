@@ -1,13 +1,13 @@
 <?php
 
-namespace kmcf7_message_filter;
+namespace km_message_filter;
 ?>
     <h1><?php esc_html_e( "Plugin Settings", KMCF7MS_TEXT_DOMAIN ) ?></h1>
 	<?php settings_errors(); ?>
     <form method="post" action="options.php" id="basic_settings_form">
 		<?php
 
-		settings_fields( 'kmcfmf_message_filter_basic' );
+		settings_fields( 'kmcfmf_basic' );
 		do_settings_sections( 'kmcf7-message-filter-options&tab=basic' );
 
 		submit_button();

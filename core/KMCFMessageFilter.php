@@ -1,10 +1,10 @@
 <?php
 
-namespace kmcf7_message_filter;
+namespace km_message_filter;
 
 use KMMenuPage;
 
-class CF7MessageFilter {
+class KMCFMessageFilter {
 	private $blocked;
 	private static $version;
 
@@ -200,7 +200,7 @@ class CF7MessageFilter {
 	 */
 	public function initModules() {
 		foreach ( Module::getModules( KMCF7MS_MODULE_DIR, false ) as $dir ) {
-			$module = 'kmcf7_message_filter\\' . rtrim( $dir, ".php " );
+			$module = 'km_message_filter\\' . rtrim( $dir, ".php " );
 			new $module();
 		}
 	}

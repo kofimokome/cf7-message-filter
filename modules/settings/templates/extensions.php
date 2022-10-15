@@ -1,6 +1,6 @@
 <?php
 
-namespace kmcf7_message_filter;
+namespace km_message_filter;
 $extensions       = apply_filters( 'kmcf7_extensions', array() );
 $link_to_messages = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-options&tab=messages';
 

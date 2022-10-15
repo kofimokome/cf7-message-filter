@@ -1,6 +1,6 @@
 <?php
 
-namespace kmcf7_message_filter;
+namespace km_message_filter;
 
 use Exception;
 
@@ -12,7 +12,7 @@ class Module {
 	public function __construct() {
 		$module       = get_called_class();
 		$module       = str_replace( 'Module', '', $module );
-		$module       = str_replace( 'kmcf7_message_filter\\', '', $module );
+		$module       = str_replace( 'km_message_filter\\', '', $module );
 		$this->module = strtolower( $module );
 		$this->addActions();
 		$this->addFilters();

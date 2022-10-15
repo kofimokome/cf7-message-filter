@@ -1,6 +1,6 @@
 <?php
 
-namespace kmcf7_message_filter;
+namespace km_message_filter;
 ?>
     <h1 style="position:sticky; top:0; margin-bottom: 10px; background: white; text-align: center"><?php esc_html_e( "List of filters", KMCF7MS_TEXT_DOMAIN ) ?></h1>
     <h2>Select the filters to add</h2>
@@ -23,7 +23,7 @@ namespace kmcf7_message_filter;
             </tr>
             <tr>
                 <td>
-					<?php if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) { ?>
+					<?php if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) { ?>
                         <input type="checkbox" name="filter" value="[hiragana]">
 					<?php } else {
 						_e( "pro version", KMCF7MS_TEXT_DOMAIN );
@@ -35,7 +35,7 @@ namespace kmcf7_message_filter;
             </tr>
             <tr>
                 <td>
-					<?php if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) { ?>
+					<?php if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) { ?>
                         <input type="checkbox" name="filter" value="[katakana]">
 					<?php } else {
 						_e( "pro version", KMCF7MS_TEXT_DOMAIN );
@@ -47,7 +47,7 @@ namespace kmcf7_message_filter;
             </tr>
             <tr>
                 <td>
-					<?php if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) { ?>
+					<?php if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) { ?>
                         <input type="checkbox" name="filter" value="[kanji]">
 					<?php } else {
 						_e( "pro version", KMCF7MS_TEXT_DOMAIN );
@@ -59,7 +59,7 @@ namespace kmcf7_message_filter;
             </tr>
             <tr>
                 <td>
-					<?php if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) { ?>
+					<?php if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) { ?>
                         <input type="checkbox" name="filter" value="[japanese]">
 					<?php } else {
 						_e( "pro version", KMCF7MS_TEXT_DOMAIN );
@@ -72,7 +72,7 @@ namespace kmcf7_message_filter;
             </tr>
             <tr>
                 <td>
-					<?php if ( KMCF7Fs()->is_plan_or_trial__premium_only( 'pro' ) ) { ?>
+					<?php if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) { ?>
                         <input type="checkbox" name="filter" value="[emoji]">
 					<?php } else {
 						_e( "pro version", KMCF7MS_TEXT_DOMAIN );
@@ -86,7 +86,7 @@ namespace kmcf7_message_filter;
         <div style="display: flex; justify-content: space-between; padding-top: 10px;padding-bottom: 10px; position: sticky; bottom: 0; background: white">
             <button type="button" class="button"
                     id="km-hide-filters"><?php _e( "Cancel", KMCF7MS_TEXT_DOMAIN ) ?></button>
-            <button type="submit" class="button"><?php _e( "Add", KMCF7MS_TEXT_DOMAIN ) ?></button>
+            <button type="submit" class="button button-primary"><?php _e( "Add", KMCF7MS_TEXT_DOMAIN ) ?></button>
         </div>
 
     </form>

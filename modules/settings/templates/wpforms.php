@@ -3,7 +3,7 @@
 namespace km_message_filter;
 $tags = ContactForm7Module::getTags();
 ?>
-    <h1><?php esc_html_e( "Contact Form 7 Settings ", KMCF7MS_TEXT_DOMAIN ) ?></h1>
+    <h1><?php esc_html_e( "WP Forms Settings ", KMCF7MS_TEXT_DOMAIN ) ?></h1>
 
 	<?php settings_errors(); ?>
     <div>
@@ -12,8 +12,8 @@ $tags = ContactForm7Module::getTags();
     <form method="post" action="options.php">
 		<?php
 
-		settings_fields( 'kmcfmf_contact_form_7' );
-		do_settings_sections( 'kmcf7-message-filter-options&tab=contactform7' );
+		settings_fields( 'kmcfmf_wp_forms' );
+		do_settings_sections( 'kmcf7-message-filter-options&tab=wpforms' );
 
 		submit_button();
 		?>

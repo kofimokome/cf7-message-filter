@@ -1,5 +1,5 @@
 <?php
-namespace kmcf7_message_filter;
+namespace km_message_filter;
 $link_to_filters  = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-options&tab=filters';
 $link_to_extensions = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-options&tab=extensions';
 ?>
@@ -33,7 +33,7 @@ $link_to_extensions = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-opt
                 <div class="row page-title align-items-center">
                     <div class="col-sm-4 col-xl-6">
                         <h4 class="mb-1 mt-0">Message Filter for Contact Form 7
-                            v.<?php echo CF7MessageFilter::getVersion() ?></h4>
+                            v.<?php echo KMCFMessageFilter::getVersion() ?></h4>
                     </div>
 
                 </div>
@@ -242,10 +242,10 @@ $words .= "]";
 
     var word_chart = new ApexCharts(document.querySelector("#words-chart"), word_options);
     word_chart.render();
-	<?php if(get_option( 'kmcfmf_version', '0' ) != CF7MessageFilter::getVersion()):?>
+	<?php if(get_option( 'kmcfmf_version', '0' ) != KMCFMessageFilter::getVersion()):?>
     jQuery(document).ready(function ($) {
         $('#myModal').modal()
     });
-	<?php update_option( 'kmcfmf_version', CF7MessageFilter::getVersion() );endif;?>
+	<?php update_option( 'kmcfmf_version', KMCFMessageFilter::getVersion() );endif;?>
 </script>
 <!-- END wrapper -->

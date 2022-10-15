@@ -1,6 +1,6 @@
 <?php
 
-namespace kmcf7_message_filter;
+namespace km_message_filter;
 
 use KMSubMenuPage;
 use WPCF7_ContactForm;
@@ -18,7 +18,7 @@ class MessagesModule extends Module {
 	}
 
 	/**
-	 * Creates a directory in wordpress upload folder if it does not exist
+	 * Creates a directory in WordPress upload folder if it does not exist
 	 * @since 1.2.5
 	 */
 	private function initUploadDir() {
@@ -89,7 +89,7 @@ class MessagesModule extends Module {
 				update_option( 'kmcfmf_contact_form_7_textarea_fields', '*' );
 				update_option( 'kmcfmf_contact_form_7_textarea_fields', '*' );
 				update_option( 'kmcfmf_enable_contact_form_7_toggle', 'on' );
-				delete_option('kmcfmf_tags_by_name_filter_toggle');
+				delete_option( 'kmcfmf_tags_by_name_filter_toggle' );
 				update_option( 'kmcfmf_updated_to_1_4_0', 'yes' );
 			}
 
@@ -171,14 +171,13 @@ class MessagesModule extends Module {
 	 * Logs messages blocked to the database
 	 * @since 1.4.0
 	 */
-	public static function updateDatabase( $spam ) {
+	public static function updateDatabase( $data ) {
 
-		$submission            = WPCF7_Submission::get_instance();
-		$contact_form          = $submission->get_contact_form();
+
 		$message               = new Message();
-		$message->contact_form = 'contact_form_7';
-		$message->form_id      = $contact_form->id();
-		$message->message      = json_encode( $submission->get_posted_data() );
+		$message->contact_form = $data['form'];
+		$message->form_id      = $data['form_id'];
+		$message->message      = $data['message'];
 		$message->save();
 
 		update_option( 'kmcfmf_messages_blocked', get_option( 'kmcfmf_messages_blocked' ) + 1 );
@@ -188,9 +187,9 @@ class MessagesModule extends Module {
 		$weekly_stats[ $today - 1 ] = get_option( "kmcfmf_messages_blocked_today" );
 		update_option( 'kmcfmf_weekly_stats', json_encode( $weekly_stats ) );
 
-		if ( trim( $spam ) !== '' ) {
-			$word_stats          = json_decode( get_option( 'kmcfmf_word_stats' ), true );
-			$word_stats[ $spam ] = isset( $word_stats[ $spam ] ) ? ( (int) $word_stats[ $spam ] ) + 1 : 1;
+		if ( trim( $data['spam'] ) !== '' ) {
+			$word_stats                  = json_decode( get_option( 'kmcfmf_word_stats' ), true );
+			$word_stats[ $data['spam'] ] = isset( $word_stats[ $data['spam'] ] ) ? ( (int) $word_stats[ $data['spam'] ] ) + 1 : 1;
 			update_option( 'kmcfmf_word_stats', json_encode( $word_stats ) );
 		}
 	}
