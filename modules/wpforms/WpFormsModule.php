@@ -8,6 +8,9 @@ class WpFormsModule extends Module {
 	private $count_updated = false;
 	private $spam_word_error;
 	private $spam_email_error;
+	private $form_fields = array();
+	private $fields = array();
+	private $form_id;
 
 	public function __construct() {
 		parent::__construct();
@@ -34,10 +37,13 @@ class WpFormsModule extends Module {
 	 */
 	function textValidationFilter( $errors, $form_data ) {
 
-		$fields         = $_POST['wpforms']['fields'];
-		$form_fields    = $form_data['fields'];
-		$names          = explode( ',', get_option( 'kmcfmf_wp_forms_text_fields' ) );
-		$invalid_fields = empty( $errors[ $_POST['wpforms']['id'] ] ) ? array() : $errors[ $_POST['wpforms']['id'] ];
+		$fields            = $_POST['wpforms']['fields'];
+		$form_fields       = $form_data['fields'];
+		$this->form_fields = $form_fields;
+		$this->fields      = $fields;
+		$this->form_id     = sanitize_text_field( $_POST['wpforms']['id'] );
+		$names             = explode( ',', get_option( 'kmcfmf_wp_forms_text_fields' ) );
+		$invalid_fields    = empty( $errors[ $_POST['wpforms']['id'] ] ) ? array() : $errors[ $_POST['wpforms']['id'] ];
 
 		if ( in_array( '*', $names ) ) {
 			foreach ( $form_fields as $field ) {
@@ -89,7 +95,13 @@ class WpFormsModule extends Module {
 				$km_wp_forms_spam_status = true;
 			}
 			if ( ! $this->count_updated ) {
-				MessagesModule::updateDatabase( $spam_word, 'wp_forms' );
+				$data = array(
+					'spam'    => $spam_word,
+					'form'    => 'wp_forms',
+					'message' => json_encode( $this->getPostedData() ),
+					'form_id' => $this->form_id
+				);
+				MessagesModule::updateDatabase( $data );
 				$this->count_updated = true;
 			}
 			do_action( 'km_wp_forms_after_invalidate_text_field' );
@@ -99,15 +111,36 @@ class WpFormsModule extends Module {
 	}
 
 	/**
+	 * @since v1.4.0
+	 * Matches submitted data to their field names
+	 * @returns array
+	 */
+	private function getPostedData() {
+		$postedData = array();
+		foreach ( $this->form_fields as $field ) {
+			if ( is_array( $this->fields[ $field['id'] ] ) ) {
+				$postedData[ $field['label'] ] = implode( ' ', $this->fields[ $field['id'] ] );
+			} else {
+				$postedData[ $field['label'] ] = $this->fields[ $field['id'] ];
+			}
+		}
+
+		return $postedData;
+	}
+
+	/**
 	 * Filters text from textarea
 	 * @since 1.4.0
 	 */
 	function textareaValidationFilter( $errors, $form_data ) {
 
-		$fields         = $_POST['wpforms']['fields'];
-		$form_fields    = $form_data['fields'];
-		$names          = explode( ',', get_option( 'kmcfmf_wp_forms_textarea_fields' ) );
-		$invalid_fields = empty( $errors[ $_POST['wpforms']['id'] ] ) ? array() : $errors[ $_POST['wpforms']['id'] ];
+		$fields            = $_POST['wpforms']['fields'] ;
+		$form_fields       = $form_data['fields'];
+		$this->form_fields = $form_fields;
+		$this->fields      = $fields;
+		$this->form_id     = sanitize_text_field( $_POST['wpforms']['id'] );
+		$names             = explode( ',', get_option( 'kmcfmf_wp_forms_textarea_fields' ) );
+		$invalid_fields    = empty( $errors[ $_POST['wpforms']['id'] ] ) ? array() : $errors[ $_POST['wpforms']['id'] ];
 
 		if ( in_array( '*', $names ) ) {
 			foreach ( $form_fields as $field ) {
@@ -142,10 +175,13 @@ class WpFormsModule extends Module {
 	 * @since 1.4.0
 	 */
 	function emailValidationFilter( $errors, $form_data ) {
-		$fields         = $_POST['wpforms']['fields'];
-		$form_fields    = $form_data['fields'];
-		$names          = explode( ',', get_option( 'kmcfmf_wp_forms_email_fields' ) );
-		$invalid_fields = empty( $errors[ $_POST['wpforms']['id'] ] ) ? array() : $errors[ $_POST['wpforms']['id'] ];
+		$fields            =  $_POST['wpforms']['fields'] ;
+		$form_fields       = $form_data['fields'];
+		$this->form_fields = $form_fields;
+		$this->fields      = $fields;
+		$this->form_id     = sanitize_text_field( $_POST['wpforms']['id'] );
+		$names             = explode( ',', get_option( 'kmcfmf_wp_forms_email_fields' ) );
+		$invalid_fields    = empty( $errors[ $_POST['wpforms']['id'] ] ) ? array() : $errors[ $_POST['wpforms']['id'] ];
 
 		if ( in_array( '*', $names ) ) {
 			foreach ( $form_fields as $field ) {
@@ -196,7 +232,13 @@ class WpFormsModule extends Module {
 				$km_wp_forms_spam_status = true;
 			}
 			if ( ! $this->count_updated ) {
-				MessagesModule::updateDatabase( '', 'wp_forms' );
+				$data = array(
+					'spam'    => '',
+					'form'    => 'wp_forms',
+					'message' => json_encode( $this->getPostedData() ),
+					'form_id' => $this->form_id
+				);
+				MessagesModule::updateDatabase( $data );
 				$this->count_updated = true;
 			}
 			do_action( 'km_wp_forms_after_invalidate_email_field' );
@@ -204,24 +246,6 @@ class WpFormsModule extends Module {
 
 		return $return;
 	}
-
-	/**
-	 * @since v1.4.0
-	 * Adds validation for wp forms
-	 */
-	public function emailValidationFilterc( $errors, $form_data ) {
-//		print_r( $_POST['wpforms'] );
-//		print_r( $form_data['fields'] );
-		$test    = array();
-		$test[0] = 'see';
-//		$test['footer']='footere error';
-		$errors[ $_POST['wpforms']['id'] ] = $test;
-
-
-//print_r($errors);
-		return $errors;
-	}
-
 
 	protected function addFilters() {
 		parent::addFilters();
