@@ -20,10 +20,10 @@ $tags = ContactForm7Module::getTags();
     </form>
     <script>
         jQuery(document).ready(function ($) {
-            $('#kmcfmf_tags_by_name').selectize({
+            $('#kmcfmf_wp_forms_text_fields').selectize({
                 delimiter: ',',
                 persist: false,
-                options: <?php echo json_encode( $tags['text'] )?>,
+                //options: <?php //echo json_encode( $tags['text'] )?>//,
                 create: function (input) {
                     return {
                         value: input,
@@ -31,10 +31,10 @@ $tags = ContactForm7Module::getTags();
                     }
                 }
             });
-            $('#kmcfmf_contact_form_7_textarea_fields').selectize({
+            $('#kmcfmf_wp_forms_textarea_fields').selectize({
                 delimiter: ',',
                 persist: false,
-                options: <?php echo json_encode( $tags['textarea'] )?>,
+                //options: <?php //echo json_encode( $tags['textarea'] )?>//,
                 create: function (input) {
                     return {
                         value: input,
@@ -42,10 +42,10 @@ $tags = ContactForm7Module::getTags();
                     }
                 }
             });
-            $('#kmcfmf_contact_form_7_email_fields').selectize({
+            $('#kmcfmf_wp_forms_email_fields').selectize({
                 delimiter: ',',
                 persist: false,
-                options: <?php echo json_encode( $tags['email'] )?>,
+                //options: <?php //echo json_encode( $tags['email'] )?>//,
                 create: function (input) {
                     return {
                         value: input,

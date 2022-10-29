@@ -120,33 +120,42 @@ class SettingsModule extends Module {
 
 		$settings->save();
 
+		$settings = new KMSetting( 'kmcf7-message-filter-options&tab=messages' );
+		$settings->add_section( 'kmcfmf_messages' );
 		// Error messages settings
-		if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
-			$settings = new KMSetting( 'kmcf7-message-filter-options&tab=messages' );
-			$settings->add_section( 'kmcfmf_messages' );
-			$settings->add_field(
-				array(
-					'type'        => 'textarea',
-					'id'          => 'kmcfmf_spam_word_error',
-					'label'       => __( 'Error Message For Spam Words: ', KMCF7MS_TEXT_DOMAIN ),
-					'tip'         => '',
-					'placeholder' => __( 'You have entered a word marked as spam', 'contact-form-7' )
-				)
-			);
-			$settings->add_field(
-				array(
-					'type'        => 'textarea',
-					'id'          => 'kmcfmf_spam_email_error',
-					'label'       => __( 'Error Message For Spam Emails: ', KMCF7MS_TEXT_DOMAIN ),
-					'tip'         => '',
-					'placeholder' => __( 'The e-mail address entered is invalid.', 'contact-form-7' ),
-				)
-			);
+		$settings->add_field(
+			array(
+				'type'        => 'textarea',
+				'id'          => 'kmcfmf_spam_word_error',
+				'label'       => __( 'Error Message For Spam Words: ', KMCF7MS_TEXT_DOMAIN ),
+				'tip'         => '',
+				'read_only'   => ( !KMCFMFs()->is_plan__premium_only('pro') ),
+				'placeholder' => __( 'You have entered a word marked as spam', 'contact-form-7' )
+			)
+		);
+		$settings->add_field(
+			array(
+				'type'        => 'textarea',
+				'id'          => 'kmcfmf_spam_email_error',
+				'label'       => __( 'Error Message For Spam Emails: ', KMCF7MS_TEXT_DOMAIN ),
+				'tip'         => '',
+				'read_only'   => ( !KMCFMFs()->is_plan__premium_only('pro')),
+				'placeholder' => __( 'The e-mail address entered is invalid.', 'contact-form-7' ),
+			)
+		);
+		$settings->add_field(
+			array(
+				'type'      => 'checkbox',
+				'id'        => 'kmcfmf_hide_error_message',
+				'label'     => __( 'Hide error messages: ', KMCF7MS_TEXT_DOMAIN ),
+				'read_only'   => ( !KMCFMFs()->is_plan__premium_only('pro') ),
+				'tip'       => __( "Show a success message instead of an error message if a spam is found", KMCF7MS_TEXT_DOMAIN )
+			)
+		);
 
-			$settings = apply_filters( 'kmcfmf_messages_settings', $settings );
 
-			$settings->save();
-		}
+		$settings = apply_filters( 'kmcfmf_messages_settings', $settings );
+		$settings->save();
 
 		// Contact Form 7 settings
 		$settings = new KMSetting( 'kmcf7-message-filter-options&tab=contactform7' );
@@ -166,7 +175,7 @@ class SettingsModule extends Module {
 				'id'          => 'kmcfmf_tags_by_name',
 				'input_class' => 'select2',
 				'label'       => __( 'Text fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
-				'tip'         => 'Note: your-subject, your-address, your-lastname, etc.',
+				'tip'         => 'Eg: your-subject, your-address, your-lastname, etc.',
 				'placeholder' => ''
 			)
 		);
@@ -177,7 +186,7 @@ class SettingsModule extends Module {
 				'id'          => 'kmcfmf_contact_form_7_textarea_fields',
 				'input_class' => 'select2',
 				'label'       => __( 'Text area fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
-				'tip'         => 'Note: your-message, etc.',
+				'tip'         => 'Eg: your-message, etc.',
 				'placeholder' => ''
 			)
 		);
@@ -187,7 +196,7 @@ class SettingsModule extends Module {
 				'id'          => 'kmcfmf_contact_form_7_email_fields',
 				'input_class' => 'select2',
 				'label'       => __( 'Email fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
-				'tip'         => 'Note: your-email  etc.',
+				'tip'         => 'Eg: your-email  etc.',
 				'placeholder' => ''
 			)
 		);
@@ -213,7 +222,7 @@ class SettingsModule extends Module {
 				'id'          => 'kmcfmf_wp_forms_text_fields',
 				'input_class' => 'select2',
 				'label'       => __( 'Text fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
-				'tip'         => 'Note: your-subject, your-address, your-lastname, etc.',
+				'tip'         => 'Eg: Name, Subject etc.',
 				'placeholder' => ''
 			)
 		);
@@ -224,7 +233,7 @@ class SettingsModule extends Module {
 				'id'          => 'kmcfmf_wp_forms_textarea_fields',
 				'input_class' => 'select2',
 				'label'       => __( 'Text area fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
-				'tip'         => 'Note: your-message, etc.',
+				'tip'         => 'Eg: Comment or Message, etc.',
 				'placeholder' => ''
 			)
 		);
@@ -234,7 +243,7 @@ class SettingsModule extends Module {
 				'id'          => 'kmcfmf_wp_forms_email_fields',
 				'input_class' => 'select2',
 				'label'       => __( 'Email fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
-				'tip'         => 'Note: your-email  etc.',
+				'tip'         => 'Eg: Email  etc.',
 				'placeholder' => ''
 			)
 		);
@@ -285,12 +294,11 @@ class SettingsModule extends Module {
 			'statusTabView'
 		), array( 'tab' => 'settings' ) );
 
-		if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
-			$settings_page->add_tab( 'messages', __( 'Error Messages', KMCF7MS_TEXT_DOMAIN ), array(
-				$this,
-				'statusTabView'
-			), array( 'tab' => 'messages' ) );
-		}
+		$settings_page->add_tab( 'messages', __( 'Error Messages', KMCF7MS_TEXT_DOMAIN ), array(
+			$this,
+			'statusTabView'
+		), array( 'tab' => 'messages' ) );
+
 
 		$settings_page->add_tab( 'contactform7', __( 'Contact Form 7', KMCF7MS_TEXT_DOMAIN ), array(
 			$this,
@@ -341,9 +349,7 @@ class SettingsModule extends Module {
 				$this->renderContent( 'contactform7' );
 				break;
 			case 'messages':
-				if ( KMCFMFs()->is_plan__premium_only( 'pro' ) ) {
-					$this->renderContent( 'messages__premium_only' );
-				}
+				$this->renderContent( 'messages' );
 				break;
 			case 'extensions':
 				$this->renderContent( 'extensions' );

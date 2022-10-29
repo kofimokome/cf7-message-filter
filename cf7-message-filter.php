@@ -58,7 +58,7 @@ if ( ! function_exists( 'km_message_filter\\KMCFMFs' ) ) {
 				),
 				// Set the SDK to work in a sandbox mode (for development & testing).
 				// IMPORTANT: MAKE SURE TO REMOVE SECRET KEY BEFORE DEPLOYMENT.
-//				'secret_key'          => 'sk_QeWS=jV8~);E:I:pdEO$F!>r6k7ys',
+				'secret_key'          => 'sk_QeWS=jV8~);E:I:pdEO$F!>r6k7ys',
 			) );
 		}
 

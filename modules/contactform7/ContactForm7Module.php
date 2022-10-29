@@ -8,12 +8,14 @@ use WPCF7_Submission;
 $kmcf7_spam_status = false;
 
 class ContactForm7Module extends Module {
+	private $prevent_default_validation;
 	private $count_updated = false;
 	private $spam_word_error;
 	private $spam_email_error;
 
 	public function __construct() {
 		parent::__construct();
+		$this->prevent_default_validation = get_option( 'kmcfmf_hide_error_message' ) == 'on' ? true : false;
 		$this->getErrorMessages();
 	}
 
@@ -103,8 +105,7 @@ class ContactForm7Module extends Module {
 
 		// Spam word is recognized
 		if ( $spam_word ) {
-			$invalidate_field = true;
-			$invalidate_field = apply_filters( 'kmcf7_invalidate_text_field', $invalidate_field );
+			$invalidate_field = $this->preventDefaultValidation();
 			if ( $invalidate_field ) {
 				$result->invalidate( $tag, $this->spam_word_error );
 			} else {
@@ -126,6 +127,34 @@ class ContactForm7Module extends Module {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Prevent default validation if a spam is found
+	 *
+	 * @return  bool
+	 *
+	 * @since v1.3.6
+	 */
+	private function preventDefaultValidation() {
+		if ( $this->prevent_default_validation ) {
+			if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
+				$this->removeActions__premium_only();
+			}
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Removes contact form 7 submit actions
+	 * @since v1.3.6
+	 */
+	private function removeActions__premium_only() {
+		remove_all_actions( 'wpcf7_mail_sent' );
+		remove_all_actions( 'wpcf7_before_send_mail' );
 	}
 
 	/**
@@ -179,8 +208,7 @@ class ContactForm7Module extends Module {
 		$spam   = $filter->validateEmail( $value );
 
 		if ( $spam ) {
-			$invalidate_field = true;
-			$invalidate_field = apply_filters( 'kmcf7_invalidate_email_field', $invalidate_field );
+			$invalidate_field = $this->preventDefaultValidation();
 			if ( $invalidate_field ) {
 				$result->invalidate( $tag, $this->spam_email_error );
 			} else {
@@ -203,6 +231,20 @@ class ContactForm7Module extends Module {
 
 
 		return $result;
+	}
+
+	/**
+	 * Skips sending of contact form mail
+	 * @since v1.3.6
+	 */
+	function skipMail__premium_only( $skip_mail, $contact_form ) {
+		global $kmcf7_spam_status;
+
+		if ( $this->prevent_default_validation && $kmcf7_spam_status ) {
+			return true;
+		}
+
+		return $skip_mail;
 	}
 
 	protected function addFilters() {
@@ -233,5 +275,8 @@ class ContactForm7Module extends Module {
 	protected function addActions() {
 		parent::addActions();
 		// add_action('wpcf7_submit', array($this, 'onWpcf7Submit'),10, 2);
+		if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
+			add_filter( 'wpcf7_skip_mail', array( $this, 'skipMail__premium_only' ), 999, 2 );
+		}
 	}
 }

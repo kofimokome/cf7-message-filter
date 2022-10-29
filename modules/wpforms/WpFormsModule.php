@@ -11,9 +11,11 @@ class WpFormsModule extends Module {
 	private $form_fields = array();
 	private $fields = array();
 	private $form_id;
+	private $prevent_default_validation;
 
 	public function __construct() {
 		parent::__construct();
+		$this->prevent_default_validation = get_option( 'kmcfmf_hide_error_message' ) == 'on' ? true : false;
 		$this->getErrorMessages();
 	}
 
@@ -37,8 +39,8 @@ class WpFormsModule extends Module {
 	 */
 	function textValidationFilter( $errors, $form_data ) {
 
-		$fields            = $_POST['wpforms']['fields'];
-		$form_fields       = $form_data['fields'];
+		$fields      = $_POST['wpforms']['fields'];
+		$form_fields = $form_data['fields'];
 		$this->form_fields = $form_fields;
 		$this->fields      = $fields;
 		$this->form_id     = sanitize_text_field( $_POST['wpforms']['id'] );
@@ -47,12 +49,12 @@ class WpFormsModule extends Module {
 
 		if ( in_array( '*', $names ) ) {
 			foreach ( $form_fields as $field ) {
+
 				if ( $field['type'] == 'name' ) {
 					if ( $this->validateTextField( $fields[ $field['id'] ] ) ) {
-						$invalid_fields[ $field['id'] ]    = $this->spam_email_error;
+						$invalid_fields[ $field['id'] ]    = $this->spam_word_error;
 						$errors[ $_POST['wpforms']['id'] ] = $invalid_fields;
-
-						return $errors;
+//						return $errors;
 					}
 				}
 			}
@@ -69,6 +71,7 @@ class WpFormsModule extends Module {
 			}
 		}
 
+//print_r($errors);
 		return $errors;
 
 	}
@@ -88,7 +91,7 @@ class WpFormsModule extends Module {
 		$return    = false;
 		// Spam word is recognized
 		if ( $spam_word ) {
-			$invalidate_field = apply_filters( 'km_wp_forms_invalidate_text_field', true );
+			$invalidate_field = $this->preventDefaultValidation();
 			if ( $invalidate_field ) {
 				$return = true;
 			} else {
@@ -108,6 +111,21 @@ class WpFormsModule extends Module {
 		}
 
 		return $return;
+	}
+
+	/**
+	 * Prevent default validation if a spam is found
+	 *
+	 * @return  bool
+	 *
+	 * @since v1.4.0
+	 */
+	private function preventDefaultValidation() {
+		if ( $this->prevent_default_validation ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -134,7 +152,7 @@ class WpFormsModule extends Module {
 	 */
 	function textareaValidationFilter( $errors, $form_data ) {
 
-		$fields            = $_POST['wpforms']['fields'] ;
+		$fields            = $_POST['wpforms']['fields'];
 		$form_fields       = $form_data['fields'];
 		$this->form_fields = $form_fields;
 		$this->fields      = $fields;
@@ -175,7 +193,7 @@ class WpFormsModule extends Module {
 	 * @since 1.4.0
 	 */
 	function emailValidationFilter( $errors, $form_data ) {
-		$fields            =  $_POST['wpforms']['fields'] ;
+		$fields            = $_POST['wpforms']['fields'];
 		$form_fields       = $form_data['fields'];
 		$this->form_fields = $form_fields;
 		$this->fields      = $fields;
@@ -225,7 +243,7 @@ class WpFormsModule extends Module {
 		$spam   = $filter->validateEmail( $value );
 		$return = false;
 		if ( $spam ) {
-			$invalidate_field = apply_filters( 'km_wp_forms_invalidate_email_field', true );
+			$invalidate_field = $this->preventDefaultValidation();
 			if ( $invalidate_field ) {
 				$return = true;
 			} else {
@@ -247,6 +265,34 @@ class WpFormsModule extends Module {
 		return $return;
 	}
 
+	/**
+	 * Skips sending of mails on submission if a spam word is found
+	 * @return bool
+	 * @since v1.4.0
+	 */
+	public function skipMail__premium_only( $value, $object ) {
+		global $km_wp_forms_spam_status;
+		if ( $km_wp_forms_spam_status && $this->prevent_default_validation ) {
+			return true;
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Prevents sending of mails if skipMail() fails prevent sending of mails
+	 * @return array
+	 * @since v1.4.0
+	 */
+	public function removeEmailAddress__premium_only( $email, $fields, $entry, $form_data, $notification_id ) {
+		global $km_wp_forms_spam_status;
+		if ( $km_wp_forms_spam_status && $this->prevent_default_validation ) {
+			$email['address'] = array();
+		}
+
+		return $email;
+	}
+
 	protected function addFilters() {
 		parent::addFilters();
 
@@ -256,7 +302,6 @@ class WpFormsModule extends Module {
 
 		if ( $enable_email_filter && $enable_wp_form_filter ) {
 			add_filter( 'wpforms_process_initial_errors', array( $this, 'emailValidationFilter' ), 999, 2 );
-//			add_filter( 'wpforms_process_initial_errors', array( $this, 'emailValidationFilterc' ), 999, 2 );
 		}
 
 		if ( $enable_message_filter && $enable_wp_form_filter ) {
@@ -265,12 +310,14 @@ class WpFormsModule extends Module {
 
 		}
 
-
 	}
 
 	protected function addActions() {
 		parent::addActions();
-		// add_action('wpcf7_submit', array($this, 'onWpcf7Submit'),10, 2);
+		if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
+			add_action( 'wpforms_disable_all_emails', array( $this, 'skipMail__premium_only' ), 999, 2 );
+			add_action( 'wpforms_entry_email_atts', array( $this, 'removeEmailAddress__premium_only' ), 999, 5 );
+		}
 	}
 
 }
