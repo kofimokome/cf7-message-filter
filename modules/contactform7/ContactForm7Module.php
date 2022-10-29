@@ -39,26 +39,28 @@ class ContactForm7Module extends Module {
 	 * @returns  array
 	 */
 	public static function getTags() {
-		$forms    = WPCF7_ContactForm::find();
 		$email    = array( array( 'text' => '*', 'value' => '*' ) );
 		$text     = array( array( 'text' => '*', 'value' => '*' ) );
 		$textarea = array( array( 'text' => '*', 'value' => '*' ) );
 
 
-		foreach ( $forms as $form ) {
-			$contact_form = WPCF7_ContactForm::get_instance( $form->id() );
-			$rows         = $contact_form->scan_form_tags();
-			foreach ( $rows as $row ) {
-				switch ( $row->basetype ) {
-					case 'email':
-						array_push( $email, array( 'text' => $row->name, 'value' => $row->name ) );
-						break;
-					case 'text':
-						array_push( $text, array( 'text' => $row->name, 'value' => $row->name ) );
-						break;
-					case 'textarea':
-						array_push( $textarea, array( 'text' => $row->name, 'value' => $row->name ) );
-						break;
+		if ( class_exists( 'WPCF7_ContactForm' ) ) {
+			$forms = WPCF7_ContactForm::find();
+			foreach ( $forms as $form ) {
+				$contact_form = WPCF7_ContactForm::get_instance( $form->id() );
+				$rows         = $contact_form->scan_form_tags();
+				foreach ( $rows as $row ) {
+					switch ( $row->basetype ) {
+						case 'email':
+							array_push( $email, array( 'text' => $row->name, 'value' => $row->name ) );
+							break;
+						case 'text':
+							array_push( $text, array( 'text' => $row->name, 'value' => $row->name ) );
+							break;
+						case 'textarea':
+							array_push( $textarea, array( 'text' => $row->name, 'value' => $row->name ) );
+							break;
+					}
 				}
 			}
 		}

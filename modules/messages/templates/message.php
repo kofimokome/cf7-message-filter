@@ -6,7 +6,6 @@ use WPCF7_ContactForm;
 
 $message_id       = intval( sanitize_text_field( $_GET['message_id'] ) );
 $ajax_url         = admin_url( "admin-ajax.php" );
-$link_to_messages = admin_url( 'admin.php' ) . '?page=kmcf7-filtered-messages';
 
 ?>
     <style>

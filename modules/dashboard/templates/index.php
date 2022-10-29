@@ -17,11 +17,6 @@ $link_to_extensions = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-opt
 
     <div class="content-page" style="margin-top:0; margin-left:0;">
         <div class="content">
-			<?php if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ): ?>
-                <div class="alert alert-danger alert-dismissible">
-                    <p><?php esc_html_e( 'Please Install / Enable Contact Form 7 Plugin First!', KMCF7MS_TEXT_DOMAIN ); ?></p>
-                </div>
-			<?php endif; ?>
             <!--<div class="alert alert-info alert-dismissible">
 				<p>Hello There!. Thank for using this plugin. It will be great if you can take just 5 minutes of your
 					time to leave a review<br>

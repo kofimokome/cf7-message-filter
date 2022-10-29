@@ -10,7 +10,6 @@ class SettingsModule extends Module {
 		parent::__construct();
 		$this->addSettings();
 		$this->checkWildcardInSettingFields();
-//		$this->module = 'packages';
 	}
 
 	/**
@@ -20,7 +19,6 @@ class SettingsModule extends Module {
 
 		// Check documentation here https://github.com/kofimokome/WordPress-Tools
 		// Plugin settings
-		$link_to_filters = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-options&tab=filters';
 		$settings        = new KMSetting( 'kmcf7-message-filter-options&tab=basic' );
 		$settings->add_section( 'kmcfmf_basic' );
 		$settings->add_field(
@@ -120,9 +118,11 @@ class SettingsModule extends Module {
 
 		$settings->save();
 
+		// Error messages settings
+
 		$settings = new KMSetting( 'kmcf7-message-filter-options&tab=messages' );
 		$settings->add_section( 'kmcfmf_messages' );
-		// Error messages settings
+
 		$settings->add_field(
 			array(
 				'type'        => 'textarea',
@@ -261,7 +261,10 @@ class SettingsModule extends Module {
 		$options = array(
 			'kmcfmf_tags_by_name',
 			'kmcfmf_contact_form_7_textarea_fields',
-			'kmcfmf_contact_form_7_email_fields'
+			'kmcfmf_contact_form_7_email_fields',
+			'kmcfmf_wp_forms_text_fields',
+			'kmcfmf_wp_forms_textarea_fields',
+			'kmcfmf_wp_forms_email_fields',
 		);
 		foreach ( $options as $option ) {
 			$names = explode( ',', get_option( $option ) );

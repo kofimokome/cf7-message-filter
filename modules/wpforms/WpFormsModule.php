@@ -34,13 +34,57 @@ class WpFormsModule extends Module {
 	}
 
 	/**
+	 * @since v1.4.0
+	 * Gets and group all tags from wp forma forms into three categories: email, text and textarea
+	 * @returns  array
+	 */
+	public static function getTags() {
+
+		$email    = array( array( 'text' => '*', 'value' => '*' ) );
+		$text     = array( array( 'text' => '*', 'value' => '*' ) );
+		$textarea = array( array( 'text' => '*', 'value' => '*' ) );
+
+		if ( function_exists( 'wpforms' ) ) {
+			$args['post_status'] = 'publish';
+			$forms               = wpforms()->get( 'form' )->get( '', $args );
+			foreach ( $forms as $form ) {
+				$content = json_decode( $form->post_content, true );
+				$fields = $content['fields'];
+
+				foreach ( $fields as $field ) {
+					switch ( $field['type'] ) {
+						case 'email':
+							array_push( $email, array( 'text' => $field['label'], 'value' => $field['label'] ) );
+							break;
+						case 'name':
+							array_push( $text, array( 'text' => $field['label'], 'value' => $field['label'] ) );
+							break;
+						case 'textarea':
+							array_push( $textarea, array( 'text' => $field['label'], 'value' => $field['label'] ) );
+							break;
+					}
+				}
+
+			}
+		}
+
+		$tags = array(
+			'text'     => array_unique( $text, SORT_REGULAR ),
+			'textarea' => array_unique( $textarea, SORT_REGULAR ),
+			'email'    => array_unique( $email, SORT_REGULAR )
+		);
+
+		return $tags;
+	}
+
+	/**
 	 * Filters text from form text elements from elems_names List
 	 * @since 1.4.0
 	 */
 	function textValidationFilter( $errors, $form_data ) {
 
-		$fields      = $_POST['wpforms']['fields'];
-		$form_fields = $form_data['fields'];
+		$fields            = $_POST['wpforms']['fields'];
+		$form_fields       = $form_data['fields'];
 		$this->form_fields = $form_fields;
 		$this->fields      = $fields;
 		$this->form_id     = sanitize_text_field( $_POST['wpforms']['id'] );
@@ -71,7 +115,6 @@ class WpFormsModule extends Module {
 			}
 		}
 
-//print_r($errors);
 		return $errors;
 
 	}
@@ -114,6 +157,15 @@ class WpFormsModule extends Module {
 	}
 
 	/**
+	 * Removes wp forms submit actions
+	 * @since v1.4.0
+	 */
+	private function removeActions__premium_only() {
+		remove_all_actions('wpforms_process_entry_save');
+		remove_all_actions('wpforms_process_entry_saved');
+	}
+
+	/**
 	 * Prevent default validation if a spam is found
 	 *
 	 * @return  bool
@@ -122,6 +174,9 @@ class WpFormsModule extends Module {
 	 */
 	private function preventDefaultValidation() {
 		if ( $this->prevent_default_validation ) {
+			if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
+				$this->removeActions__premium_only();
+			}
 			return false;
 		}
 

@@ -1,17 +1,21 @@
 <?php
 
 namespace km_message_filter;
-$tags = ContactForm7Module::getTags();
+
+$tags = WpFormsModule::getTags();
 ?>
     <h1><?php esc_html_e( "WP Forms Settings ", KMCF7MS_TEXT_DOMAIN ) ?></h1>
-
+	<?php /*if ( ! is_plugin_active( 'wpforms-lite/wpforms.php' ) && ! is_plugin_active( 'wpforms/wpforms.php' ) ): */?><!--
+    <div class="alert alert-danger alert-dismissible">
+        <p><?php /*esc_html_e( 'Please Install & Activate WPForms Plugin First!', KMCF7MS_TEXT_DOMAIN ); */?></p>
+    </div>
+--><?php /*else: */?>
 	<?php settings_errors(); ?>
     <div>
         <strong>Tip:</strong> <?php _e( "Use <code>*</code> to analyse all fields for each category below:", KMCF7MS_TEXT_DOMAIN ) ?>
     </div>
     <form method="post" action="options.php">
 		<?php
-
 		settings_fields( 'kmcfmf_wp_forms' );
 		do_settings_sections( 'kmcf7-message-filter-options&tab=wpforms' );
 
@@ -23,7 +27,7 @@ $tags = ContactForm7Module::getTags();
             $('#kmcfmf_wp_forms_text_fields').selectize({
                 delimiter: ',',
                 persist: false,
-                //options: <?php //echo json_encode( $tags['text'] )?>//,
+                options: <?php echo json_encode( $tags['text'] )?>,
                 create: function (input) {
                     return {
                         value: input,
@@ -34,7 +38,7 @@ $tags = ContactForm7Module::getTags();
             $('#kmcfmf_wp_forms_textarea_fields').selectize({
                 delimiter: ',',
                 persist: false,
-                //options: <?php //echo json_encode( $tags['textarea'] )?>//,
+                options: <?php echo json_encode( $tags['textarea'] )?>,
                 create: function (input) {
                     return {
                         value: input,
@@ -45,7 +49,7 @@ $tags = ContactForm7Module::getTags();
             $('#kmcfmf_wp_forms_email_fields').selectize({
                 delimiter: ',',
                 persist: false,
-                //options: <?php //echo json_encode( $tags['email'] )?>//,
+                options: <?php echo json_encode( $tags['email'] )?>,
                 create: function (input) {
                     return {
                         value: input,
@@ -57,4 +61,3 @@ $tags = ContactForm7Module::getTags();
         })
     </script>
 <?php
-// $settings->run();

@@ -4,7 +4,11 @@ namespace km_message_filter;
 $tags = ContactForm7Module::getTags();
 ?>
     <h1><?php esc_html_e( "Contact Form 7 Settings ", KMCF7MS_TEXT_DOMAIN ) ?></h1>
-
+	<?php if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ): ?>
+    <div class="alert alert-danger alert-dismissible">
+        <p><?php esc_html_e( 'Please Install & Activate Contact Form 7 Plugin First!', KMCF7MS_TEXT_DOMAIN ); ?></p>
+    </div>
+<?php else: ?>
 	<?php settings_errors(); ?>
     <div>
         <strong>Tip:</strong> <?php _e( "Use <code>*</code> to analyse all fields for each category below:", KMCF7MS_TEXT_DOMAIN ) ?>
@@ -56,5 +60,5 @@ $tags = ContactForm7Module::getTags();
 
         })
     </script>
-<?php
+<?php endif;
 // $settings->run();
