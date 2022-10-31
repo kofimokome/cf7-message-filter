@@ -91,6 +91,7 @@ class MessagesModule extends Module {
 				update_option( 'kmcfmf_enable_contact_form_7_toggle', 'on' );
 				delete_option( 'kmcfmf_tags_by_name_filter_toggle' );
 				update_option( 'kmcfmf_updated_to_1_4_0', 'yes' );
+				update_option( 'kmcfmf_hide_error_message', 'off' );
 			}
 
 		} else {
