@@ -118,7 +118,7 @@ class ContactForm7Module extends Module {
 				$contact_form = $submission->get_contact_form();
 				$data         = array(
 					'spam'    => $spam_word,
-					'form'    => 'contact-form-7',
+					'form'    => 'cf7',
 					'message' => json_encode( $submission->get_posted_data() ),
 					'form_id' => $contact_form->id()
 				);
@@ -221,7 +221,7 @@ class ContactForm7Module extends Module {
 				$contact_form = $submission->get_contact_form();
 				$data         = array(
 					'spam'    => '',
-					'form'    => 'contact-form-7',
+					'form'    => 'cf7',
 					'message' => json_encode( $submission->get_posted_data() ),
 					'form_id' => $contact_form->id()
 				);

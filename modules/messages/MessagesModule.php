@@ -207,10 +207,19 @@ class MessagesModule extends Module {
 	 * @since 1.2.5.2
 	 */
 	public static function getForms() {
-		$forms  = WPCF7_ContactForm::find();
 		$result = array();
-		foreach ( $forms as $form ) {
-			array_push( $result, array( $form->title(), $form->id() ) );
+		if ( class_exists( 'WPCF7_ContactForm' ) ) {
+			$cf7_forms = WPCF7_ContactForm::find();
+			foreach ( $cf7_forms as $form ) {
+				array_push( $result, array( '[CF7] ' . $form->title(), 'cf7-' . $form->id() ) );
+			}
+		}
+		if ( function_exists( 'wpforms' ) ) {
+			$args['post_status'] = 'publish';
+			$wp_forms            = wpforms()->get( 'form' )->get( '', $args );
+			foreach ( $wp_forms as $form ) {
+				array_push( $result, array( '[WPForms] ' . $form->post_title, 'wpforms-' . $form->ID ) );
+			}
 		}
 
 		return $result;
@@ -220,6 +229,7 @@ class MessagesModule extends Module {
 	/**
 	 * Gets all rows for a particular form
 	 * @since 1.2.5.2
+	 * @deprecated
 	 */
 	public static function getRows( $form_id = 0 ) {
 		$messages = self::getMessages();
@@ -326,6 +336,7 @@ class MessagesModule extends Module {
 	public function serverMessages() {
 		$link_to_messages = admin_url( 'admin.php' ) . '?page=kmcf7-filtered-messages';
 		$form_id          = sanitize_text_field( $_REQUEST['form_id'] );
+		$contact_form     = sanitize_text_field( $_REQUEST['contact_form'] );
 		$draw             = intval( sanitize_text_field( $_REQUEST['draw'] ) );
 		$length           = sanitize_text_field( $_REQUEST['length'] );
 		$start            = sanitize_text_field( $_REQUEST['start'] );
@@ -333,12 +344,11 @@ class MessagesModule extends Module {
 		$search_value     = sanitize_text_field( $search['value'] );
 		$search_value     = trim( $search_value );
 		$current_page     = ( $start / $length ) + 1;
-		$results          = Message::where( 'contact_form', '=', 'contact_form_7' )->andWhere( 'message', 'LIKE', "%{$search_value}%" )->andWhere( 'form_id', '=', $form_id )->orderBy( 'id', 'desc' )->paginate( $length, $current_page )->get();;
-		$size         = $results['totalItems'];
-		$results      = $results['data'];
-		$messages     = array();
-		$contact_form = WPCF7_ContactForm::get_instance( $form_id );
-		$rows         = $contact_form->scan_form_tags();
+		$results          = Message::where( 'contact_form', '=', $contact_form )->andWhere( 'message', 'LIKE', "%{$search_value}%" )->andWhere( 'form_id', '=', $form_id )->orderBy( 'id', 'desc' )->paginate( $length, $current_page )->get();;
+		$size     = $results['totalItems'];
+		$results  = $results['data'];
+		$messages = array();
+		$rows     = self::getRows2( $form_id, $contact_form );
 		foreach ( $results as $result ) {
 			$decoded_message = json_decode( $result->message );
 			$message         = array(
@@ -347,7 +357,6 @@ class MessagesModule extends Module {
 				intval( $result->id )
 			);
 			foreach ( $rows as $row ) {
-				$row = $row->name;
 				if ( property_exists( $decoded_message, $row ) ) {
 					$content  = esc_html( self::decodeUnicodeVars( $decoded_message->$row ) );
 					$ellipses = strlen( $content ) > 50 ? "..." : '.';
@@ -371,6 +380,39 @@ class MessagesModule extends Module {
 
 		echo json_encode( $data );
 		wp_die();
+	}
+
+	/**
+	 * New version of getRows()
+	 * @since 1.4.0
+	 */
+	public static function getRows2( $form_id, $contact_form ) {
+		$rows = array();
+		switch ( $contact_form ) {
+			case 'cf7':
+				if ( class_exists( 'WPCF7_ContactForm' ) ) {
+					$form = WPCF7_ContactForm::get_instance( $form_id );
+					$tags = $form->scan_form_tags();
+					foreach ( $tags as $tag ) {
+						array_push( $rows, $tag->name );
+					}
+				}
+				break;
+			case 'wpforms':
+				if ( function_exists( 'wpforms' ) ) {
+					$form = wpforms()->get( 'form' )->get( $form_id );
+
+					$content = json_decode( $form->post_content, true );
+					$fields  = $content['fields'];
+
+					foreach ( $fields as $field ) {
+						array_push( $rows, $field['label'] );
+					}
+				}
+				break;
+		}
+
+		return array_unique( $rows, SORT_REGULAR );
 	}
 
 	/**

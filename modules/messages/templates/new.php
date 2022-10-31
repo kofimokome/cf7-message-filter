@@ -2,15 +2,20 @@
 
 namespace km_message_filter;
 
-use WPCF7_ContactForm;
-
 $link_to_messages     = admin_url( 'admin.php' ) . '?page=kmcf7-filtered-messages';
 $link_to_old_messages = $link_to_messages . '&old';
 $ajax_url             = admin_url( "admin-ajax.php" );
 
 
-$form_id = isset( $_GET['form'] ) ? sanitize_text_field( $_GET['form'] ) : 0;
-$form_id = $form_id == '' ? - 1 : intval( $form_id );
+$selected_form = isset( $_GET['form'] ) ? sanitize_text_field( $_GET['form'] ) : '';
+$data          = explode( '-', $selected_form );
+$form_id       = - 1;
+$contact_form     = '';
+if ( sizeof( $data ) > 1 ) {
+	$contact_form = trim( $data[0] );
+	$form_id   = $data[1];
+	$form_id   = $form_id == '' ? - 1 : intval( $form_id );
+}
 
 ?>
 <style>
@@ -20,20 +25,18 @@ $form_id = $form_id == '' ? - 1 : intval( $form_id );
 </style>
 
 <!--<button class="btn btn-primary">Export to CSV</button>-->
-<?php if ( $form_id > 0 ) {
-	$contact_form = WPCF7_ContactForm::get_instance( $form_id );
-	$rows         = $contact_form->scan_form_tags();
+<?php if ( $form_id > 0 && $contact_form != '' ) {
+	$rows = MessagesModule::getRows2( $form_id, $contact_form );
 	?>
     <form action="" class="form-inline mb-4 mt-4">
         <input type="hidden" name="page" value="kmcf7-filtered-messages">
         <select name="form" id="" class="py-0 form-control">
             <option value=""><?php _e( "Select a form", KMCF7MS_TEXT_DOMAIN ) ?></option>
 			<?php foreach ( MessagesModule::getForms() as $form ): ?>
-                <option value="<?php echo $form[1] ?>" <?php echo $form_id == $form[1] ? 'selected' : '' ?>><?php echo $form[0] ?></option>
+                <option value="<?php echo $form[1] ?>" <?php echo $selected_form == $form[1] ? 'selected' : '' ?>><?php echo $form[0] ?></option>
 			<?php endforeach; ?>
         </select>
         <button class="btn btn-primary btn-inline ml-1"><?php _e( "Show Blocked Messages", KMCF7MS_TEXT_DOMAIN ) ?></button>
-
     </form>
     <div class="mb-2">
         <div class="alert alert-info">
@@ -50,7 +53,7 @@ $form_id = $form_id == '' ? - 1 : intval( $form_id );
             <th></th>
             <th><?php _e( "Actions", KMCF7MS_TEXT_DOMAIN ) ?></th>
             <th><b>ID</b></th>
-			<?php foreach ( $rows as $row ): $row = $row->name ?>
+			<?php foreach ( $rows as $row ): ?>
                 <td>
                     <b><?php echo $row ?></b>
                 </td>
@@ -138,7 +141,7 @@ $form_id = $form_id == '' ? - 1 : intval( $form_id );
                     ordering: false,
                     processing: true,
                     serverSide: true,
-                    ajax: '<?php echo admin_url( "admin-ajax.php?action=kmcf7_messages&form_id={$form_id}" )?>',
+                    ajax: '<?php echo admin_url( "admin-ajax.php?action=kmcf7_messages&form_id={$form_id}&contact_form={$contact_form}" )?>',
                     columnDefs: [{
                         orderable: false,
                         className: 'select-checkbox',

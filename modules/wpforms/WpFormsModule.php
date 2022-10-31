@@ -143,7 +143,7 @@ class WpFormsModule extends Module {
 			if ( ! $this->count_updated ) {
 				$data = array(
 					'spam'    => $spam_word,
-					'form'    => 'wp_forms',
+					'form'    => 'wpforms',
 					'message' => json_encode( $this->getPostedData() ),
 					'form_id' => $this->form_id
 				);
@@ -307,7 +307,7 @@ class WpFormsModule extends Module {
 			if ( ! $this->count_updated ) {
 				$data = array(
 					'spam'    => '',
-					'form'    => 'wp_forms',
+					'form'    => 'wpforms',
 					'message' => json_encode( $this->getPostedData() ),
 					'form_id' => $this->form_id
 				);
