@@ -379,7 +379,8 @@ class MessagesModule extends Module {
 			"className"       => 'select-checkbox'
 		];
 
-		echo json_encode( $data );
+		wp_send_json($data);
+
 		wp_die();
 	}
 
