@@ -1,5 +1,11 @@
 # Change Log
 
+## v1.4.0 Changes
+
+1. Add support for WPForms
+2. Add premium plugin
+
+
 ## v1.3.6 Changes
 
 1. Fix emoji in filter not working

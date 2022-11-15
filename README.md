@@ -20,25 +20,3 @@ codes, checkout the `master` branch
 
 1. **[Cameroon Boyo](https://cameroonboyo.com)**
 2. **[Luca Ortis](http://lucaortis.com/)**
-
-## v1.3.6 Changes
-
-1. Fix emoji in filter not working
-2. Add `[emoji]` filter to filter messages with emoji
-3. Add option to show a success message if a spam is found.
-4. Fix single line text filters not working
-
-## v1.3.5 Changes
-
-1. Fix wrong filter name on the filters page
-
-## v1.3.4 Changes
-
-1. Add `[japanesse]` `[hiragana]` `[katakana]` and `[kanji]` filters
-2. Compatibility with WordPress 6.0
-
-## v1.3.3 Changes
-
-1. Add tests
-2. Compatibility with WordPress 5.9
-3. Update min php version to 5.6

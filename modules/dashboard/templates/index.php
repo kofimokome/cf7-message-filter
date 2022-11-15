@@ -98,7 +98,7 @@ $link_to_extensions = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-opt
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"
-                        id="exampleModalLabel"><?php esc_html_e( "Thank you for choosing Contact Form 7 Filter", KMCF7MS_TEXT_DOMAIN ) ?></h5>
+                        id="exampleModalLabel"><?php esc_html_e( "Thank You For Choosing Contact Form 7 Filter", KMCF7MS_TEXT_DOMAIN ) ?></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -117,14 +117,8 @@ $link_to_extensions = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-opt
                     </div>
                     <h5> Here are a few changes in this version:</h5>
                     <ol>
-                        <li>Fix emoji in filter not working</li>
-                        <li>Fix single line text filters not working</li>
-                        <li>Add [emoji] shortcut to filter messages having emoji. <br/>
-                            <a href="<?php echo $link_to_filters ?>"> View filters </a>
-                        </li>
-                        <li>Add option to show a success message if a spam is found. <br/>
-                            <a href="<?php echo $link_to_extensions ?>"> View settings </a>
-                        </li>
+                        <li>We now support WPForms</li>
+                        <li>We now have a premium version.</li>
                     </ol>
 					<?php esc_html_e( "Please help translate this plugin to your language", KMCF7MS_TEXT_DOMAIN ) ?> <a
                             href="https://translate.wordpress.org/projects/wp-plugins/cf7-message-filter/"

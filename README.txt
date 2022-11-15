@@ -1,9 +1,9 @@
 === Message Filter for Contact Form 7 ===
 Contributors: kofimokome
 Donate link: https://ko-fi.com/kofimokome
-Tags: spam, filter, spam-filter
+Tags: spam, filter, spam-filter, contact form 7, wp forms, wpforms, contact-form-7
 Requires at least: 5.9
-Tested up to: 6.0
+Tested up to: 6.1
 Stable tag: 1.4.0
 Requires PHP: 5.6
 License: GPLv2 or later
@@ -17,18 +17,27 @@ Do you receive spams every day? have you installed a dozen plugins and you still
 This plugin filters messages submitted from contact form 7. You can decide to either filter messages based on restricted words found in the content of the message or filter based on the email of the person submitting the form.
 Filters will be extended to other contact form plugins with time.
 
+== Supported Plugins ==
+
+1. Contact form 7
+2. WPForms
+
 Note: This is just an extension. This plugin is not affiliated with or endorsed by Contact Form 7.
 
 == Installation ==
 
 1. Download the plugin
 2. Install and activate
-3. Open Form Filter from your admin menu
+3. Open CF7 Form Filter from your admin menu
 4. Go to Options and fill your restricted words and/or emails
 5. You can decide to activate the words filter and/or email filter
 6. Save and wait for someone to submit
 
 == Changelog ==
+
+= 1.4.0 =
+* Add support for WPForms
+* Add premium plugin
 
 = 1.3.6 =
 * Fix emoji in filter not working
