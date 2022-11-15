@@ -56,7 +56,7 @@ class Filter {
 							$character_sets = array(
 								'hiragana'
 							);
-							$found          = $this->checkJapanese( $value, $character_sets );
+							$found          = $this->checkJapanese__premium_only( $value, $character_sets );
 						}
 						break;
 					case '[katakana]':
@@ -65,7 +65,7 @@ class Filter {
 								'katakana',
 								'katakana_punctuation',
 							);
-							$found          = $this->checkJapanese( $value, $character_sets );
+							$found          = $this->checkJapanese__premium_only( $value, $character_sets );
 						}
 						break;
 					case '[kanji]':
@@ -74,7 +74,7 @@ class Filter {
 								'kanji',
 								'kanji_radicals',
 							);
-							$found          = $this->checkJapanese( $value, $character_sets );
+							$found          = $this->checkJapanese__premium_only( $value, $character_sets );
 						}
 						break;
 					case '[japanese]':
@@ -90,7 +90,7 @@ class Filter {
 								'symbols_punctuations',
 								'others'
 							);
-							$found          = $this->checkJapanese( $value, $character_sets );
+							$found          = $this->checkJapanese__premium_only( $value, $character_sets );
 						}
 						break;
 					case '[link]':
@@ -119,7 +119,7 @@ class Filter {
 						if ( $like_end || $like_start ) {
 							$found = preg_match( '/^' . $regex_pattern . '$/miu', $value );
 						} else {
-							if ( $this->hasEmoji( $check_word ) ) {
+							if ( $this->hasEmoji( $check_word ) ) { // if the checkword is an emoji
 								$found = strpos( $message, $check_word ) !== false;
 							} else {
 								$found = preg_match( '/\b' . $regex_pattern . '\b/miu', $value );
@@ -145,7 +145,7 @@ class Filter {
 
 	/**
 	 */
-	private function checkJapanese( $value, $character_sets = array() ) {
+	private function checkJapanese__premium_only( $value, $character_sets = array() ) {
 		$found = false;
 
 		foreach ( $character_sets as $character_set ) {

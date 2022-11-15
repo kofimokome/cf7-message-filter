@@ -48,10 +48,10 @@ class MessagesModule extends Module {
 				$diff = round( $diff / ( 60 * 60 * 24 ) );
 				if ( $diff >= $frequency ) {
 					// clear messages
-					$log_messages = (array) json_decode( file_get_contents( self::$log_file ) );
-					$log_messages = array_slice( $log_messages, $to_delete );
-					$log_messages = json_encode( (object) $log_messages );
-					file_put_contents( self::$log_file, $log_messages );
+					$messages = Message::paginate( $to_delete )->get();
+					foreach ( $messages['data'] as $message ) {
+						$message->delete();
+					}
 					update_option( 'kmcfmf_last_cleared_date', $now );
 				}
 			}
@@ -379,7 +379,7 @@ class MessagesModule extends Module {
 			"className"       => 'select-checkbox'
 		];
 
-		wp_send_json($data);
+		wp_send_json( $data );
 
 		wp_die();
 	}
