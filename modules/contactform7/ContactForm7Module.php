@@ -155,8 +155,10 @@ class ContactForm7Module extends Module {
 	 * @since v1.3.6
 	 */
 	private function removeActions__premium_only() {
-		remove_all_actions( 'wpcf7_mail_sent' );
-		remove_all_actions( 'wpcf7_before_send_mail' );
+		if ( KMCFMFs()->is_plan_or_trial( 'pro' ) ) {
+			remove_all_actions( 'wpcf7_mail_sent' );
+			remove_all_actions( 'wpcf7_before_send_mail' );
+		}
 	}
 
 	/**
@@ -241,9 +243,10 @@ class ContactForm7Module extends Module {
 	 */
 	function skipMail__premium_only( $skip_mail, $contact_form ) {
 		global $kmcf7_spam_status;
-
-		if ( $this->prevent_default_validation && $kmcf7_spam_status ) {
-			return true;
+		if ( KMCFMFs()->is_plan_or_trial( 'pro' ) ) {
+			if ( $this->prevent_default_validation && $kmcf7_spam_status ) {
+				return true;
+			}
 		}
 
 		return $skip_mail;

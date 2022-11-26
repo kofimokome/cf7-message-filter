@@ -19,7 +19,7 @@ class SettingsModule extends Module {
 
 		// Check documentation here https://github.com/kofimokome/WordPress-Tools
 		// Plugin settings
-		$settings        = new KMSetting( 'kmcf7-message-filter-options&tab=basic' );
+		$settings = new KMSetting( 'kmcf7-message-filter-options&tab=basic' );
 		$settings->add_section( 'kmcfmf_basic' );
 		$settings->add_field(
 			array(
@@ -129,7 +129,7 @@ class SettingsModule extends Module {
 				'id'          => 'kmcfmf_spam_word_error',
 				'label'       => __( 'Error Message For Spam Words: ', KMCF7MS_TEXT_DOMAIN ),
 				'tip'         => '',
-				'read_only'   => ( !KMCFMFs()->is_plan__premium_only('pro') ),
+				'read_only'   => ( ! KMCFMFs()->is_premium() || ! KMCFMFs()->is_plan_or_trial( 'pro' ) ),
 				'placeholder' => __( 'You have entered a word marked as spam', 'contact-form-7' )
 			)
 		);
@@ -139,7 +139,7 @@ class SettingsModule extends Module {
 				'id'          => 'kmcfmf_spam_email_error',
 				'label'       => __( 'Error Message For Spam Emails: ', KMCF7MS_TEXT_DOMAIN ),
 				'tip'         => '',
-				'read_only'   => ( !KMCFMFs()->is_plan__premium_only('pro')),
+				'read_only'   => ( ! KMCFMFs()->is_premium() || ! KMCFMFs()->is_plan_or_trial( 'pro' ) ),
 				'placeholder' => __( 'The e-mail address entered is invalid.', 'contact-form-7' ),
 			)
 		);
@@ -148,7 +148,7 @@ class SettingsModule extends Module {
 				'type'      => 'checkbox',
 				'id'        => 'kmcfmf_hide_error_message',
 				'label'     => __( 'Hide error messages: ', KMCF7MS_TEXT_DOMAIN ),
-				'read_only'   => ( !KMCFMFs()->is_plan__premium_only('pro') ),
+				'read_only' => ( ! KMCFMFs()->is_premium() || ! KMCFMFs()->is_plan_or_trial( 'pro' ) ),
 				'tip'       => __( "Show a success message instead of an error message if a spam is found", KMCF7MS_TEXT_DOMAIN )
 			)
 		);
@@ -322,7 +322,12 @@ class SettingsModule extends Module {
 			$this,
 			'statusTabView'
 		), array( 'tab' => 'plugins' ) );
-
+		if ( ! KMCFMFs()->is_premium() ) {
+			$settings_page->add_tab( 'upgrade', __( 'How to Upgrade', KMCF7MS_TEXT_DOMAIN ), array(
+				$this,
+				'statusTabView'
+			), array( 'tab' => 'upgrade' ) );
+		}
 		$settings_page = apply_filters( 'kmcf7_settings_tab', $settings_page );
 
 
@@ -359,6 +364,9 @@ class SettingsModule extends Module {
 				break;
 			case 'wpforms':
 				$this->renderContent( 'wpforms' );
+				break;
+			case 'upgrade':
+				$this->renderContent( 'upgrade' );
 				break;
 			default:
 				$this->renderContent( 'settings' );

@@ -13,7 +13,8 @@ const KMCF7MS_CORE_DIR       = KMCF7MS_DIR . 'core';
 const KMCF7MS_MODELS_DIR     = KMCF7MS_DIR . 'models';
 const KMCF7MS_MIGRATIONS_DIR = KMCF7MS_DIR . 'migrations';
 const KMCF7MS_MODULE_DIR     = KMCF7MS_DIR . 'modules';
-const KMCF7MS_AJAX_DIR       = KMCF7MS_DIR . 'ajax';
+const KMCF7MS_ASSET_URL      = KMCF7MS_URL . 'assets';
+const KMCF7MS_IMAGES_URL     = KMCF7MS_ASSET_URL . '/images';
 
 const KMCF7MS_TEXT_DOMAIN = 'cf7-message-filter';
 define( 'KMCF7MS_TABLE_PREFIX', $wpdb->prefix . 'kmcf7_' );

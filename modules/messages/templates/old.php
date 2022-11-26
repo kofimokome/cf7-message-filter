@@ -3,7 +3,7 @@
 namespace km_message_filter;
 
 $pagination = isset( $_GET['pagination'] ) ? (int) $_GET['pagination'] : 0;
-
+$site_url = site_url();
 if ( $pagination <= 0 ) {
 	$pagination = 1;
 }
@@ -15,11 +15,11 @@ $number_per_page = 10; // per page
 $selected_form = isset( $_GET['form'] ) ? sanitize_text_field( $_GET['form'] ) : '';
 $data          = explode( '-', $selected_form );
 $form_id       = - 1;
-$contact_form     = '';
+$contact_form  = '';
 if ( sizeof( $data ) > 1 ) {
 	$contact_form = trim( $data[0] );
-	$form_id   = $data[1];
-	$form_id   = $form_id == '' ? - 1 : intval( $form_id );
+	$form_id      = $data[1];
+	$form_id      = $form_id == '' ? - 1 : intval( $form_id );
 }
 
 
@@ -30,7 +30,7 @@ if ( sizeof( $data ) > 1 ) {
             overflow-x: scroll;
         }
     </style>
-    <h3><?php echo get_option( 'kmcfmf_messages_blocked' ); ?> <?php _e( "messages have been blocked", KMCF7MS_TEXT_DOMAIN ) ?></h3>
+    <h3><?php echo get_option( 'kmcfmf_messages_blocked' ); ?><?php _e( "messages have been blocked", KMCF7MS_TEXT_DOMAIN ) ?></h3>
     <form action="" class="form-inline">
         <input type="hidden" name="page" value="kmcf7-filtered-messages">
         <select name="form" id="" class="form-control form-control-sm">
@@ -44,6 +44,7 @@ if ( sizeof( $data ) > 1 ) {
         <button class="btn btn-primary btn-inline ml-1 btn-sm"><?php _e( "Show Blocked Messages", KMCF7MS_TEXT_DOMAIN ) ?></button>
 
     </form>
+    <a class="btn btn-sm btn-primary mt-2" href="<?php echo $site_url.'/wp-content/uploads/kmcf7mf_logs/messages.txt'?>" download="messages.json">Download blocked messages</a>
     <!--<button class="btn btn-primary">Export to CSV</button>-->
 	<?php if ( $form_id >= 0 && $contact_form == 'cf7' ) {
 	$rows = MessagesModule::getRows( $form_id ) ?>

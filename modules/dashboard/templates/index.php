@@ -1,7 +1,7 @@
 <?php
 namespace km_message_filter;
-$link_to_filters  = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-options&tab=filters';
-$link_to_extensions = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-options&tab=extensions';
+$upgrade_url       = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-pricing';
+$upgrade_guide_url = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-options&tab=upgrade';
 ?>
 
 <style>
@@ -28,11 +28,44 @@ $link_to_extensions = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-opt
                 <div class="row page-title align-items-center">
                     <div class="col-sm-4 col-xl-6">
                         <h4 class="mb-1 mt-0">Message Filter for Contact Form 7
-                            v.<?php echo KMCFMessageFilter::getVersion() ?></h4>
+                            v.<?php echo KMCFMessageFilter::getVersion() ?>
+							<?php if ( KMCFMFs()->is_premium() ): ?>
+                                pro
+							<?php else: ?>
+                                free
+							<?php endif; ?>
+                        </h4>
                     </div>
 
                 </div>
-
+				<?php if ( KMCFMFs()->is_free_plan() ): ?>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="alert alert-danger">
+                                <h4 style="color:white;">
+                                    You are using the free version.
+                                    <a class="btn btn-primary" href="<?php echo $upgrade_url ?>"> Upgrade </a> to
+                                    access unlock all features
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+				<?php endif; ?>
+				<?php if ( KMCFMFs()->can_use_premium_code() ): ?>
+					<?php if ( ! KMCFMFs()->is_premium() ): ?>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="alert alert-info">
+                                    <h4 style="color:white;">
+                                        Looks like you have a premium license. <br/>Please check the
+                                        <a class="btn btn-primary" href="<?php echo $upgrade_guide_url ?>"> Upgrade
+                                            Guide </a>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+					<?php endif; ?>
+				<?php endif; ?>
                 <!-- stats + charts -->
                 <div class="row">
                     <div class="col-xl-5">
@@ -123,7 +156,8 @@ $link_to_extensions = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-opt
 					<?php esc_html_e( "Please help translate this plugin to your language", KMCF7MS_TEXT_DOMAIN ) ?> <a
                             href="https://translate.wordpress.org/projects/wp-plugins/cf7-message-filter/"
                             target="_blank"
-                            class="btn btn-sm btn-primary"><?php esc_html_e( "Translate Now", KMCF7MS_TEXT_DOMAIN ) ?></a> <br>
+                            class="btn btn-sm btn-primary"><?php esc_html_e( "Translate Now", KMCF7MS_TEXT_DOMAIN ) ?></a>
+                    <br>
 					<?php _e( 'If you find an issue, please <a href="https://wordpress.org/support/plugin/cf7-message-filter/"
                                                     target="_blank">create a support ticket here</a> and I will do my
                     best to fix as soon as possible', KMCF7MS_TEXT_DOMAIN ) ?>

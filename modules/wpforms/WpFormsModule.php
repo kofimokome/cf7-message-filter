@@ -49,7 +49,7 @@ class WpFormsModule extends Module {
 			$forms               = wpforms()->get( 'form' )->get( '', $args );
 			foreach ( $forms as $form ) {
 				$content = json_decode( $form->post_content, true );
-				$fields = $content['fields'];
+				$fields  = $content['fields'];
 
 				foreach ( $fields as $field ) {
 					switch ( $field['type'] ) {
@@ -157,15 +157,6 @@ class WpFormsModule extends Module {
 	}
 
 	/**
-	 * Removes wp forms submit actions
-	 * @since v1.4.0
-	 */
-	private function removeActions__premium_only() {
-		remove_all_actions('wpforms_process_entry_save');
-		remove_all_actions('wpforms_process_entry_saved');
-	}
-
-	/**
 	 * Prevent default validation if a spam is found
 	 *
 	 * @return  bool
@@ -177,10 +168,22 @@ class WpFormsModule extends Module {
 			if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
 				$this->removeActions__premium_only();
 			}
+
 			return false;
 		}
 
 		return true;
+	}
+
+	/**
+	 * Removes wp forms submit actions
+	 * @since v1.4.0
+	 */
+	private function removeActions__premium_only() {
+		if ( KMCFMFs()->is_plan_or_trial( 'pro' ) ) {
+			remove_all_actions( 'wpforms_process_entry_save' );
+			remove_all_actions( 'wpforms_process_entry_saved' );
+		}
 	}
 
 	/**
@@ -327,8 +330,10 @@ class WpFormsModule extends Module {
 	 */
 	public function skipMail__premium_only( $value, $object ) {
 		global $km_wp_forms_spam_status;
-		if ( $km_wp_forms_spam_status && $this->prevent_default_validation ) {
-			return true;
+		if ( KMCFMFs()->is_plan_or_trial( 'pro' ) ) {
+			if ( $km_wp_forms_spam_status && $this->prevent_default_validation ) {
+				return true;
+			}
 		}
 
 		return $value;
@@ -341,8 +346,10 @@ class WpFormsModule extends Module {
 	 */
 	public function removeEmailAddress__premium_only( $email, $fields, $entry, $form_data, $notification_id ) {
 		global $km_wp_forms_spam_status;
-		if ( $km_wp_forms_spam_status && $this->prevent_default_validation ) {
-			$email['address'] = array();
+		if ( KMCFMFs()->is_plan_or_trial( 'pro' ) ) {
+			if ( $km_wp_forms_spam_status && $this->prevent_default_validation ) {
+				$email['address'] = array();
+			}
 		}
 
 		return $email;

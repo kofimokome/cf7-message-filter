@@ -60,6 +60,7 @@ class Filter {
 						}
 						break;
 					case '[katakana]':
+						// implemented in the pro version
 						if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
 							$character_sets = array(
 								'katakana',
@@ -69,6 +70,7 @@ class Filter {
 						}
 						break;
 					case '[kanji]':
+						// implemented in the pro version
 						if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
 							$character_sets = array(
 								'kanji',
@@ -78,6 +80,7 @@ class Filter {
 						}
 						break;
 					case '[japanese]':
+						// implemented in the pro version
 						if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
 							// this blog post http://www.localizingjapan.com/blog/2012/01/20/regular-expressions-for-japanese-text/
 							// todo: add option to store messages in the database
@@ -98,6 +101,7 @@ class Filter {
 						$found   = preg_match( $pattern, $value );
 						break;
 					case '[emoji]':
+						// implemented in the pro version
 						if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
 							$found = $this->hasEmoji( $message );
 						}
