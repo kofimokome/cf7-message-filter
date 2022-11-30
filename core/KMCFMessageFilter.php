@@ -157,6 +157,7 @@ class KMCFMessageFilter {
 			wp_enqueue_script( 'datatable-pdfmake', plugins_url( 'assets/libs/datatables/pdfmake.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '0.1.53', false );
 			wp_enqueue_script( 'datatable-buttons-html5', plugins_url( 'assets/libs/datatables/buttons.html5.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '2.2.3', false );
 			wp_enqueue_script( 'datatable-jszip', plugins_url( 'assets/libs/datatables/jszio.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '3.1.3', false );
+			wp_enqueue_script( 'datatable-colvis', plugins_url( 'assets/libs/datatables/colvis.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '2.3.2', false );
 
 
 			wp_enqueue_style( 'datatable', plugins_url( '/assets/libs/datatables/datatables.min.css', dirname( __FILE__ ) ), '', '1.12.1' );

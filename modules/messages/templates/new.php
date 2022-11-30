@@ -148,6 +148,7 @@ if ( sizeof( $data ) > 1 ) {
                         targets: 0
                     }],
                     buttons: [
+                        'colvis',
                         {
                             extend: 'csv',
                             text: 'Download CSV'
