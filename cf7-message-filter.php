@@ -120,7 +120,7 @@ function KMCF7Loader() {
 }
 
 function KMCF7Start() {
-	if ( get_option( 'is_initial_db_migration_run', false ) ) {
+	if ( get_option( 'is_initial_db_migration_run', 'not_set' ) == 'not_set' ) {
 		Migration::runMigrations();
 		update_option( 'is_initial_db_migration_run', 1 );
 	} else {
