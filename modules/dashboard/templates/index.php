@@ -45,7 +45,7 @@ $upgrade_guide_url = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-opti
                                 <h4 style="color:white;">
                                     You are using the free version.
                                     <a class="btn btn-primary" href="<?php echo $upgrade_url ?>"> Upgrade </a> to
-                                    access unlock all features
+                                    unlock all features
                                 </h4>
                             </div>
                         </div>
@@ -150,8 +150,7 @@ $upgrade_guide_url = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-opti
                     </div>
                     <h5> Here are a few changes in this version:</h5>
                     <ol>
-                        <li>We now support WPForms</li>
-                        <li>We now have a premium version.</li>
+                        <li>Upgrade guide updated</li>
                     </ol>
 					<?php esc_html_e( "Please help translate this plugin to your language", KMCF7MS_TEXT_DOMAIN ) ?> <a
                             href="https://translate.wordpress.org/projects/wp-plugins/cf7-message-filter/"

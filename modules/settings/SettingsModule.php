@@ -375,11 +375,33 @@ class SettingsModule extends Module {
 	}
 
 	/**
+	 * @since v1.4.2
+	 * Removes pro filters if the user is using the free plugin
+	 */
+	public function removeProFilters( $values ) {
+		if ( KMCFMFs()->is_plan_or_trial( 'pro' ) ) {
+			return $values;
+		} else {
+			$pro_filters = array( '[hiragana]', '[katakana]', '[kanji]', '[japanese]', '[emoji]' );
+			$values      = explode( ',', $values );
+			$filters     = array();
+			foreach ( $values as $value ) {
+				if ( ! in_array( $value, $pro_filters ) ) {
+					array_push( $filters, $value );
+				}
+			}
+
+			return implode( ',', $filters );
+		}
+	}
+
+	/**
 	 * @since v1.3.4
 	 */
 	protected function addFilters() {
 		parent::addFilters();
 		add_filter( 'kmcf7_sub_menu_pages_filter', [ $this, 'addSubMenuPage' ] );
+		add_filter( 'km_setting_kmcfmf_restricted_words', [ $this, 'removeProFilters' ], 10, 1 );
 		// add actions here
 	}
 

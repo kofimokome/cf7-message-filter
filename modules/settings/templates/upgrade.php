@@ -8,6 +8,7 @@ namespace km_message_filter;
     <h2>
         1. <?php _e( "Download the pro version", KMCF7MS_TEXT_DOMAIN ) ?>
     </h2>
+    You will receive an email, containing your payment invoice and link to download the premium version. Please contact us if you did not receive an email after your purchase.<br/>
     <img src="<?php echo KMCF7MS_IMAGES_URL . '/upgrade1.png' ?>" alt="" style="max-width: 1000px;">
 </div>
 <hr>
@@ -55,7 +56,22 @@ namespace km_message_filter;
 </div>
 <div>
     <h2>
-        10. <?php _e( "You can delete the free plugin if you wish", KMCF7MS_TEXT_DOMAIN ) ?>
+        10. <?php _e( "Copy your license key", KMCF7MS_TEXT_DOMAIN ) ?>
+    </h2>
+    <img src="<?php echo KMCF7MS_IMAGES_URL . '/upgrade8.png' ?>" alt="" style="max-width: 1000px;">
+</div>
+<div>
+    <h2>
+        11. <?php _e( "Paste your license key into the input field", KMCF7MS_TEXT_DOMAIN ) ?>
+    </h2>
+    <h2>
+        12. <?php _e( "Click on the Activate License button", KMCF7MS_TEXT_DOMAIN ) ?>
+    </h2>
+    <img src="<?php echo KMCF7MS_IMAGES_URL . '/upgrade9.png' ?>" alt="" style="max-width: 1000px;">
+</div>
+<div>
+    <h2>
+        13. <?php _e( "You can delete the free plugin if you wish", KMCF7MS_TEXT_DOMAIN ) ?>
     </h2>
     <img src="<?php echo KMCF7MS_IMAGES_URL . '/upgrade7.png' ?>" alt="" style="max-width: 1000px;">
 </div>
