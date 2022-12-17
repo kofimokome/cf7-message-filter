@@ -23,11 +23,7 @@ namespace km_message_filter;
             </tr>
             <tr>
                 <td>
-					<?php if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) { ?>
-                        <input type="checkbox" name="filter" value="[hiragana]">
-					<?php } else {
-						_e( "pro version", KMCF7MS_TEXT_DOMAIN );
-					} ?>
+                    <input type="checkbox" name="filter" value="[hiragana]">
                 </td>
 
                 <td><code>[hiragana]</code></td>
@@ -35,11 +31,7 @@ namespace km_message_filter;
             </tr>
             <tr>
                 <td>
-					<?php if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) { ?>
-                        <input type="checkbox" name="filter" value="[katakana]">
-					<?php } else {
-						_e( "pro version", KMCF7MS_TEXT_DOMAIN );
-					} ?>
+                    <input type="checkbox" name="filter" value="[katakana]">
                 </td>
 
                 <td><code>[katakana]</code></td>
@@ -47,11 +39,7 @@ namespace km_message_filter;
             </tr>
             <tr>
                 <td>
-					<?php if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) { ?>
-                        <input type="checkbox" name="filter" value="[kanji]">
-					<?php } else {
-						_e( "pro version", KMCF7MS_TEXT_DOMAIN );
-					} ?>
+                    <input type="checkbox" name="filter" value="[kanji]">
                 </td>
 
                 <td><code>[kanji]</code></td>
@@ -59,11 +47,7 @@ namespace km_message_filter;
             </tr>
             <tr>
                 <td>
-					<?php if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) { ?>
-                        <input type="checkbox" name="filter" value="[japanese]">
-					<?php } else {
-						_e( "pro version", KMCF7MS_TEXT_DOMAIN );
-					} ?>
+                    <input type="checkbox" name="filter" value="[japanese]">
                 </td>
 
                 <td><code>[japanese]</code></td>
@@ -72,11 +56,7 @@ namespace km_message_filter;
             </tr>
             <tr>
                 <td>
-					<?php if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) { ?>
-                        <input type="checkbox" name="filter" value="[emoji]">
-					<?php } else {
-						_e( "pro version", KMCF7MS_TEXT_DOMAIN );
-					} ?>
+                    <input type="checkbox" name="filter" value="[emoji]">
                 </td>
 
                 <td><code>[emoji]</code></td>

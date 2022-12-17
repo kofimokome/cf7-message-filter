@@ -29,43 +29,11 @@ $upgrade_guide_url = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-opti
                     <div class="col-sm-4 col-xl-6">
                         <h4 class="mb-1 mt-0">Message Filter for Contact Form 7
                             v.<?php echo KMCFMessageFilter::getVersion() ?>
-							<?php if ( KMCFMFs()->is_premium() ): ?>
-                                pro
-							<?php else: ?>
-                                free
-							<?php endif; ?>
                         </h4>
                     </div>
 
                 </div>
-				<?php if ( KMCFMFs()->is_free_plan() ): ?>
-                    <div class="row">
-                        <div class="col-md-5">
-                            <div class="alert alert-danger">
-                                <h4 style="color:white;">
-                                    You are using the free version.
-                                    <a class="btn btn-primary" href="<?php echo $upgrade_url ?>"> Upgrade </a> to
-                                    unlock all features
-                                </h4>
-                            </div>
-                        </div>
-                    </div>
-				<?php endif; ?>
-				<?php if ( KMCFMFs()->can_use_premium_code() ): ?>
-					<?php if ( ! KMCFMFs()->is_premium() ): ?>
-                        <div class="row">
-                            <div class="col-md-5">
-                                <div class="alert alert-info">
-                                    <h4 style="color:white;">
-                                        Looks like you have a premium license. <br/>Please check the
-                                        <a class="btn btn-primary" href="<?php echo $upgrade_guide_url ?>"> Upgrade
-                                            Guide </a>
-                                    </h4>
-                                </div>
-                            </div>
-                        </div>
-					<?php endif; ?>
-				<?php endif; ?>
+
                 <!-- stats + charts -->
                 <div class="row">
                     <div class="col-xl-5">

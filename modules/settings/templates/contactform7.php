@@ -1,7 +1,30 @@
 <?php
 
 namespace km_message_filter;
-$tags = ContactForm7Module::getTags();
+$tags                  = ContactForm7Module::getTags();
+$text_fields          = $tags['text'];
+$selected_text_fields = get_option( 'kmcfmf_tags_by_name' );
+$selected_text_fields = explode( ',', $selected_text_fields );
+$selected_text_fields = array_map( function ( $e ) {
+	return array( 'text' => $e, 'value' => $e );
+}, $selected_text_fields );
+$text_fields          = array_merge( $text_fields, $selected_text_fields );
+
+$textarea_fields          = $tags['textarea'];
+$selected_textarea_fields = get_option( 'kmcfmf_contact_form_7_textarea_fields' );
+$selected_textarea_fields = explode( ',', $selected_textarea_fields );
+$selected_textarea_fields = array_map( function ( $e ) {
+	return array( 'text' => $e, 'value' => $e );
+}, $selected_textarea_fields );
+$textarea_fields          = array_merge( $textarea_fields, $selected_textarea_fields );
+
+$email_fields          = $tags['email'];
+$selected_email_fields = get_option( 'kmcfmf_contact_form_7_email_fields' );
+$selected_email_fields = explode( ',', $selected_email_fields );
+$selected_email_fields = array_map( function ( $e ) {
+	return array( 'text' => $e, 'value' => $e );
+}, $selected_email_fields );
+$email_fields          = array_merge( $email_fields, $selected_email_fields );
 ?>
     <h1><?php esc_html_e( "Contact Form 7 Settings ", KMCF7MS_TEXT_DOMAIN ) ?></h1>
 	<?php if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ): ?>
@@ -26,8 +49,8 @@ $tags = ContactForm7Module::getTags();
         jQuery(document).ready(function ($) {
             $('#kmcfmf_tags_by_name').selectize({
                 delimiter: ',',
-                persist: false,
-                options: <?php echo json_encode( $tags['text'] )?>,
+                persist: true,
+                options: <?php echo json_encode( $text_fields )?>,
                 create: function (input) {
                     return {
                         value: input,
@@ -37,8 +60,8 @@ $tags = ContactForm7Module::getTags();
             });
             $('#kmcfmf_contact_form_7_textarea_fields').selectize({
                 delimiter: ',',
-                persist: false,
-                options: <?php echo json_encode( $tags['textarea'] )?>,
+                persist: true,
+                options: <?php echo json_encode( $textarea_fields )?>,
                 create: function (input) {
                     return {
                         value: input,
@@ -48,8 +71,8 @@ $tags = ContactForm7Module::getTags();
             });
             $('#kmcfmf_contact_form_7_email_fields').selectize({
                 delimiter: ',',
-                persist: false,
-                options: <?php echo json_encode( $tags['email'] )?>,
+                persist: true,
+                options: <?php echo json_encode( $email_fields )?>,
                 create: function (input) {
                     return {
                         value: input,

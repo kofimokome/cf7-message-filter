@@ -24,13 +24,8 @@ class ContactForm7Module extends Module {
 	 * @since v1.4.0
 	 */
 	private function getErrorMessages() {
-		if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
-			$this->spam_word_error  = get_option( 'kmcfmf_spam_word_error', false ) ? get_option( 'kmcfmf_spam_word_error' ) : __( "One or more fields have an error. Please check and try again.", 'contact-form-7' );
-			$this->spam_email_error = get_option( 'kmcfmf_spam_email_error', false ) ? get_option( 'kmcfmf_spam_email_error' ) : __( 'The e-mail address entered is invalid.', KMCF7MS_TEXT_DOMAIN );
-		} else {
-			$this->spam_word_error  = __( "One or more fields have an error. Please check and try again.", 'contact-form-7' );
-			$this->spam_email_error = __( 'The e-mail address entered is invalid.', KMCF7MS_TEXT_DOMAIN );
-		}
+		$this->spam_word_error  = get_option( 'kmcfmf_spam_word_error', false ) ? get_option( 'kmcfmf_spam_word_error' ) : __( "One or more fields have an error. Please check and try again.", 'contact-form-7' );
+		$this->spam_email_error = get_option( 'kmcfmf_spam_email_error', false ) ? get_option( 'kmcfmf_spam_email_error' ) : __( 'The e-mail address entered is invalid.', KMCF7MS_TEXT_DOMAIN );
 	}
 
 	/**
@@ -140,9 +135,7 @@ class ContactForm7Module extends Module {
 	 */
 	private function preventDefaultValidation() {
 		if ( $this->prevent_default_validation ) {
-			if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
-				$this->removeActions__premium_only();
-			}
+			$this->removeActions__premium_only();
 
 			return false;
 		}
@@ -155,10 +148,8 @@ class ContactForm7Module extends Module {
 	 * @since v1.3.6
 	 */
 	private function removeActions__premium_only() {
-		if ( KMCFMFs()->is_plan_or_trial( 'pro' ) ) {
-			remove_all_actions( 'wpcf7_mail_sent' );
-			remove_all_actions( 'wpcf7_before_send_mail' );
-		}
+		remove_all_actions( 'wpcf7_mail_sent' );
+		remove_all_actions( 'wpcf7_before_send_mail' );
 	}
 
 	/**
@@ -243,10 +234,8 @@ class ContactForm7Module extends Module {
 	 */
 	function skipMail__premium_only( $skip_mail, $contact_form ) {
 		global $kmcf7_spam_status;
-		if ( KMCFMFs()->is_plan_or_trial( 'pro' ) ) {
-			if ( $this->prevent_default_validation && $kmcf7_spam_status ) {
-				return true;
-			}
+		if ( $this->prevent_default_validation && $kmcf7_spam_status ) {
+			return true;
 		}
 
 		return $skip_mail;
@@ -280,8 +269,6 @@ class ContactForm7Module extends Module {
 	protected function addActions() {
 		parent::addActions();
 		// add_action('wpcf7_submit', array($this, 'onWpcf7Submit'),10, 2);
-		if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
-			add_filter( 'wpcf7_skip_mail', array( $this, 'skipMail__premium_only' ), 999, 2 );
-		}
+		add_filter( 'wpcf7_skip_mail', array( $this, 'skipMail__premium_only' ), 999, 2 );
 	}
 }

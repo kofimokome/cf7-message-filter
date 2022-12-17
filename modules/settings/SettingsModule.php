@@ -129,7 +129,6 @@ class SettingsModule extends Module {
 				'id'          => 'kmcfmf_spam_word_error',
 				'label'       => __( 'Error Message For Spam Words: ', KMCF7MS_TEXT_DOMAIN ),
 				'tip'         => '',
-				'read_only'   => ( ! KMCFMFs()->is_premium() || ! KMCFMFs()->is_plan_or_trial( 'pro' ) ),
 				'placeholder' => __( 'You have entered a word marked as spam', 'contact-form-7' )
 			)
 		);
@@ -139,7 +138,6 @@ class SettingsModule extends Module {
 				'id'          => 'kmcfmf_spam_email_error',
 				'label'       => __( 'Error Message For Spam Emails: ', KMCF7MS_TEXT_DOMAIN ),
 				'tip'         => '',
-				'read_only'   => ( ! KMCFMFs()->is_premium() || ! KMCFMFs()->is_plan_or_trial( 'pro' ) ),
 				'placeholder' => __( 'The e-mail address entered is invalid.', 'contact-form-7' ),
 			)
 		);
@@ -148,7 +146,6 @@ class SettingsModule extends Module {
 				'type'      => 'checkbox',
 				'id'        => 'kmcfmf_hide_error_message',
 				'label'     => __( 'Hide error messages: ', KMCF7MS_TEXT_DOMAIN ),
-				'read_only' => ( ! KMCFMFs()->is_premium() || ! KMCFMFs()->is_plan_or_trial( 'pro' ) ),
 				'tip'       => __( "Show a success message instead of an error message if a spam is found", KMCF7MS_TEXT_DOMAIN )
 			)
 		);
@@ -322,12 +319,7 @@ class SettingsModule extends Module {
 			$this,
 			'statusTabView'
 		), array( 'tab' => 'plugins' ) );
-		if ( ! KMCFMFs()->is_premium() ) {
-			$settings_page->add_tab( 'upgrade', __( 'How to Upgrade', KMCF7MS_TEXT_DOMAIN ), array(
-				$this,
-				'statusTabView'
-			), array( 'tab' => 'upgrade' ) );
-		}
+
 		$settings_page = apply_filters( 'kmcf7_settings_tab', $settings_page );
 
 
@@ -375,33 +367,11 @@ class SettingsModule extends Module {
 	}
 
 	/**
-	 * @since v1.4.2
-	 * Removes pro filters if the user is using the free plugin
-	 */
-	public function removeProFilters( $values ) {
-		if ( KMCFMFs()->is_plan_or_trial( 'pro' ) ) {
-			return $values;
-		} else {
-			$pro_filters = array( '[hiragana]', '[katakana]', '[kanji]', '[japanese]', '[emoji]' );
-			$values      = explode( ',', $values );
-			$filters     = array();
-			foreach ( $values as $value ) {
-				if ( ! in_array( $value, $pro_filters ) ) {
-					array_push( $filters, $value );
-				}
-			}
-
-			return implode( ',', $filters );
-		}
-	}
-
-	/**
 	 * @since v1.3.4
 	 */
 	protected function addFilters() {
 		parent::addFilters();
 		add_filter( 'kmcf7_sub_menu_pages_filter', [ $this, 'addSubMenuPage' ] );
-		add_filter( 'km_setting_kmcfmf_restricted_words', [ $this, 'removeProFilters' ], 10, 1 );
 		// add actions here
 	}
 

@@ -46,6 +46,16 @@ $ajax_url   = admin_url( "admin-ajax.php" );
                 </td>
             </tr>
 		<?php endforeach; ?>
+        <tr>
+            <td>
+                <b>
+					<?php _e( "Blocked at", KMCF7MS_TEXT_DOMAIN ) ?>
+                </b>
+            </td>
+            <td>
+				<?php echo $message_object->created_at ?>
+            </td>
+        </tr>
         </tbody>
     </table>
     <button class="btn btn-danger btn-sm" data-toggle="modal"

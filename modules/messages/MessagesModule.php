@@ -86,12 +86,11 @@ class MessagesModule extends Module {
 			// from <=v1.3.0 to >= v1.4.0
 			if ( get_option( 'kmcfmf_updated_to_1_4_0', 'no' ) == 'no' ) {
 				update_option( 'kmcfmf_contact_form_7_email_fields', '*' );
-				update_option( 'kmcfmf_contact_form_7_textarea_fields', '*' );
+				update_option( 'kmcfmf_tags_by_name', '*' );
 				update_option( 'kmcfmf_contact_form_7_textarea_fields', '*' );
 				update_option( 'kmcfmf_enable_contact_form_7_toggle', 'on' );
 				delete_option( 'kmcfmf_tags_by_name_filter_toggle' );
 				update_option( 'kmcfmf_updated_to_1_4_0', 'yes' );
-				update_option( 'kmcfmf_hide_error_message', 'off' );
 			}
 
 		} else {

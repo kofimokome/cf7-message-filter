@@ -52,59 +52,47 @@ class Filter {
 						$found = preg_match( '/[а-яА-Я]/miu', $value );
 						break;
 					case '[hiragana]':
-						if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
-							$character_sets = array(
-								'hiragana'
-							);
-							$found          = $this->checkJapanese__premium_only( $value, $character_sets );
-						}
+						$character_sets = array(
+							'hiragana'
+						);
+						$found          = $this->checkJapanese__premium_only( $value, $character_sets );
 						break;
 					case '[katakana]':
-						// implemented in the pro version
-						if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
-							$character_sets = array(
-								'katakana',
-								'katakana_punctuation',
-							);
-							$found          = $this->checkJapanese__premium_only( $value, $character_sets );
-						}
+						$character_sets = array(
+							'katakana',
+							'katakana_punctuation',
+						);
+						$found          = $this->checkJapanese__premium_only( $value, $character_sets );
 						break;
 					case '[kanji]':
-						// implemented in the pro version
-						if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
-							$character_sets = array(
-								'kanji',
-								'kanji_radicals',
-							);
-							$found          = $this->checkJapanese__premium_only( $value, $character_sets );
-						}
+						$character_sets = array(
+							'kanji',
+							'kanji_radicals',
+						);
+						$found          = $this->checkJapanese__premium_only( $value, $character_sets );
 						break;
 					case '[japanese]':
 						// implemented in the pro version
-						if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
-							// this blog post http://www.localizingjapan.com/blog/2012/01/20/regular-expressions-for-japanese-text/
-							// todo: add option to store messages in the database
-							$character_sets = array(
-								'hiragana',
-								'katakana',
-								'kanji',
-								'kanji_radicals',
-								'katakana_punctuation',
-								'symbols_punctuations',
-								'others'
-							);
-							$found          = $this->checkJapanese__premium_only( $value, $character_sets );
-						}
+						// this blog post http://www.localizingjapan.com/blog/2012/01/20/regular-expressions-for-japanese-text/
+						// todo: add option to store messages in the database
+						$character_sets = array(
+							'hiragana',
+							'katakana',
+							'kanji',
+							'kanji_radicals',
+							'katakana_punctuation',
+							'symbols_punctuations',
+							'others'
+						);
+						$found          = $this->checkJapanese__premium_only( $value, $character_sets );
+
 						break;
 					case '[link]':
 						$pattern = '/((ftp|http|https):\/\/\w+)|(www\.\w+\.\w+)/ium'; // filters http://google.com and http://www.google.com and www.google.com
 						$found   = preg_match( $pattern, $value );
 						break;
 					case '[emoji]':
-						// implemented in the pro version
-						if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
-							$found = $this->hasEmoji( $message );
-						}
+						$found = $this->hasEmoji( $message );
 						break;
 					default:
 

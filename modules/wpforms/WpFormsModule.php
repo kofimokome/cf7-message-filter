@@ -24,13 +24,8 @@ class WpFormsModule extends Module {
 	 * @since v1.4.0
 	 */
 	private function getErrorMessages() {
-		if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
-			$this->spam_word_error  = get_option( 'kmcfmf_spam_word_error', false ) ? get_option( 'kmcfmf_spam_word_error' ) : __( "One or more fields have an error. Please check and try again.", 'contact-form-7' );
-			$this->spam_email_error = get_option( 'kmcfmf_spam_email_error', false ) ? get_option( 'kmcfmf_spam_email_error' ) : __( 'The e-mail address entered is invalid.', KMCF7MS_TEXT_DOMAIN );
-		} else {
-			$this->spam_word_error  = __( "One or more fields have an error. Please check and try again.", 'contact-form-7' );
-			$this->spam_email_error = __( 'The e-mail address entered is invalid.', KMCF7MS_TEXT_DOMAIN );
-		}
+		$this->spam_word_error  = get_option( 'kmcfmf_spam_word_error', false ) ? get_option( 'kmcfmf_spam_word_error' ) : __( "One or more fields have an error. Please check and try again.", 'contact-form-7' );
+		$this->spam_email_error = get_option( 'kmcfmf_spam_email_error', false ) ? get_option( 'kmcfmf_spam_email_error' ) : __( 'The e-mail address entered is invalid.', KMCF7MS_TEXT_DOMAIN );
 	}
 
 	/**
@@ -165,9 +160,7 @@ class WpFormsModule extends Module {
 	 */
 	private function preventDefaultValidation() {
 		if ( $this->prevent_default_validation ) {
-			if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
-				$this->removeActions__premium_only();
-			}
+			$this->removeActions__premium_only();
 
 			return false;
 		}
@@ -180,10 +173,8 @@ class WpFormsModule extends Module {
 	 * @since v1.4.0
 	 */
 	private function removeActions__premium_only() {
-		if ( KMCFMFs()->is_plan_or_trial( 'pro' ) ) {
-			remove_all_actions( 'wpforms_process_entry_save' );
-			remove_all_actions( 'wpforms_process_entry_saved' );
-		}
+		remove_all_actions( 'wpforms_process_entry_save' );
+		remove_all_actions( 'wpforms_process_entry_saved' );
 	}
 
 	/**
@@ -330,10 +321,8 @@ class WpFormsModule extends Module {
 	 */
 	public function skipMail__premium_only( $value, $object ) {
 		global $km_wp_forms_spam_status;
-		if ( KMCFMFs()->is_plan_or_trial( 'pro' ) ) {
-			if ( $km_wp_forms_spam_status && $this->prevent_default_validation ) {
-				return true;
-			}
+		if ( $km_wp_forms_spam_status && $this->prevent_default_validation ) {
+			return true;
 		}
 
 		return $value;
@@ -346,10 +335,8 @@ class WpFormsModule extends Module {
 	 */
 	public function removeEmailAddress__premium_only( $email, $fields, $entry, $form_data, $notification_id ) {
 		global $km_wp_forms_spam_status;
-		if ( KMCFMFs()->is_plan_or_trial( 'pro' ) ) {
-			if ( $km_wp_forms_spam_status && $this->prevent_default_validation ) {
-				$email['address'] = array();
-			}
+		if ( $km_wp_forms_spam_status && $this->prevent_default_validation ) {
+			$email['address'] = array();
 		}
 
 		return $email;
@@ -376,10 +363,8 @@ class WpFormsModule extends Module {
 
 	protected function addActions() {
 		parent::addActions();
-		if ( KMCFMFs()->is_plan_or_trial__premium_only( 'pro' ) ) {
-			add_action( 'wpforms_disable_all_emails', array( $this, 'skipMail__premium_only' ), 999, 2 );
-			add_action( 'wpforms_entry_email_atts', array( $this, 'removeEmailAddress__premium_only' ), 999, 5 );
-		}
+		add_action( 'wpforms_disable_all_emails', array( $this, 'skipMail__premium_only' ), 999, 2 );
+		add_action( 'wpforms_entry_email_atts', array( $this, 'removeEmailAddress__premium_only' ), 999, 5 );
 	}
 
 }
