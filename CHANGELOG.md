@@ -1,5 +1,18 @@
 # Change Log
 
+## v1.4.3 Changes
+
+1. Fix disappearing fields on save
+2. Remove premium plugin
+
+## v1.4.2 Changes
+
+1. Upgrade guide updated
+
+## v1.4.1 Changes
+
+1. Fix migrations not running on upgrade
+
 ## v1.4.0 Changes
 
 1. Add support for WPForms
