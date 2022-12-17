@@ -118,7 +118,7 @@ $upgrade_guide_url = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-opti
                     </div>
                     <h5> Here are a few changes in this version:</h5>
                     <ol>
-                        <li>Upgrade guide updated</li>
+                        <li>Bug fixes</li>
                     </ol>
 					<?php esc_html_e( "Please help translate this plugin to your language", KMCF7MS_TEXT_DOMAIN ) ?> <a
                             href="https://translate.wordpress.org/projects/wp-plugins/cf7-message-filter/"

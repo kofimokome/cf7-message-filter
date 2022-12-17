@@ -172,7 +172,7 @@ class SettingsModule extends Module {
 				'id'          => 'kmcfmf_tags_by_name',
 				'input_class' => 'select2',
 				'label'       => __( 'Text fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
-				'tip'         => 'Eg: your-subject, your-address, your-lastname, etc.',
+				'tip'         => 'Only the fields with the [text] or [text*] tag on your form. Eg: your-subject, your-address, your-lastname, etc.',
 				'placeholder' => ''
 			)
 		);
@@ -183,7 +183,7 @@ class SettingsModule extends Module {
 				'id'          => 'kmcfmf_contact_form_7_textarea_fields',
 				'input_class' => 'select2',
 				'label'       => __( 'Text area fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
-				'tip'         => 'Eg: your-message, etc.',
+				'tip'         => 'Only the fields with the [textarea] or [textarea*] tag on your form. Eg: your-message, etc.',
 				'placeholder' => ''
 			)
 		);
@@ -193,7 +193,7 @@ class SettingsModule extends Module {
 				'id'          => 'kmcfmf_contact_form_7_email_fields',
 				'input_class' => 'select2',
 				'label'       => __( 'Email fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
-				'tip'         => 'Eg: your-email  etc.',
+				'tip'         => 'Only the fields with the [email] or [email*] tag on your form. eg: your-email  etc.',
 				'placeholder' => ''
 			)
 		);
