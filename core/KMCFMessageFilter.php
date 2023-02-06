@@ -185,7 +185,7 @@ class KMCFMessageFilter {
 			'capability' => 'read',
 			'menu_slug'  => 'kmcf7-message-filter',
 			'icon_url'   => 'dashicons-filter',
-			'position'   => null,
+			'position'   => 100,
 			'function'   => null
 		) );
 		$sub_menu_pages = apply_filters( 'kmcf7_sub_menu_pages_filter', [] );

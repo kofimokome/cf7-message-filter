@@ -49,7 +49,7 @@ $ajax_url   = admin_url( "admin-ajax.php" );
         <tr>
             <td>
                 <b>
-					<?php _e( "Blocked at", KMCF7MS_TEXT_DOMAIN ) ?>
+					<?php _e( "Date Blocked", KMCF7MS_TEXT_DOMAIN ) ?>
                 </b>
             </td>
             <td>
