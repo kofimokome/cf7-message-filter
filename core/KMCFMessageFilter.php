@@ -5,13 +5,53 @@ namespace km_message_filter;
 use KMMenuPage;
 
 class KMCFMessageFilter {
-	private $blocked;
 	private static $version;
+	private $blocked;
 
 	public function __construct() {
 		// do something here
 		self::$version = '1.4.3';
 		$this->blocked = get_option( "kmcfmf_messages_blocked_today" );
+	}
+
+	/**
+	 * @since v1.3.4
+	 * Returns the version number of the plugin
+	 */
+	public static function getVersion() {
+		return self::$version;
+	}
+
+	/**
+	 * @since v1.3.4
+	 * Starts the plugin
+	 */
+	public function run() {
+		// runs the plugin
+		$this->addActions();
+		$this->initModules();
+		$this->addOptions();
+		$this->addMenuPage();
+	}
+
+	/**
+	 * @since v1.3.4
+	 * Adds actions
+	 */
+	public function addActions() {
+		add_action( 'admin_enqueue_scripts', [ $this, 'addAdminScripts' ] );
+		add_action( 'wp_enqueue_scripts', [ $this, 'addScripts' ] );
+	}
+
+	/**
+	 * @since v1.3.4
+	 * Initialises class modules
+	 */
+	public function initModules() {
+		foreach ( Module::getModules( KMCF7MS_MODULE_DIR, false ) as $dir ) {
+			$module = 'km_message_filter\\' . rtrim( $dir, ".php " );
+			new $module();
+		}
 	}
 
 	/**
@@ -92,32 +132,28 @@ class KMCFMessageFilter {
 
 	/**
 	 * @since v1.3.4
-	 * Returns the version number of the plugin
+	 * Adds the admin menu page
 	 */
-	public static function getVersion() {
-		return self::$version;
-	}
+	public function addMenuPage() {
+		$menu_title = 'CF7 Form Filter';
+		if ( $this->blocked > 0 ) {
+			$menu_title .= " <span class='update-plugins count-1'><span class='update-count'>$this->blocked </span></span>";
+		}
 
-
-	/**
-	 * @since v1.3.4
-	 * Starts the plugin
-	 */
-	public function run() {
-		// runs the plugin
-		$this->addActions();
-		$this->initModules();
-		$this->addOptions();
-		$this->addMenuPage();
-	}
-
-	/**
-	 * @since v1.3.4
-	 * Adds actions
-	 */
-	public function addActions() {
-		add_action( 'admin_enqueue_scripts', [ $this, 'addAdminScripts' ] );
-		add_action( 'wp_enqueue_scripts', [ $this, 'addScripts' ] );
+		$menu_page      = new KMMenuPage( array(
+			'page_title' => 'CF7 Form Filter',
+			'menu_title' => $menu_title,
+			'capability' => 'read',
+			'menu_slug'  => 'kmcf7-message-filter',
+			'icon_url'   => 'dashicons-filter',
+			'position'   => 100,
+			'function'   => null
+		) );
+		$sub_menu_pages = apply_filters( 'kmcf7_sub_menu_pages_filter', array() );
+		foreach ( $sub_menu_pages as $sub_menu_page ) {
+			$menu_page->add_sub_menu_page( $sub_menu_page );
+		}
+		$menu_page->run();
 	}
 
 	/**
@@ -166,43 +202,6 @@ class KMCFMessageFilter {
 			wp_enqueue_style( 'bootstrap', plugins_url( '/assets/css/bootstrap.min.css', dirname( __FILE__ ) ), '', '4.3.1' );
 			wp_enqueue_style( 'app', plugins_url( '/assets/css/app.min.css', dirname( __FILE__ ) ), '', '4.3.1' );
 			wp_enqueue_style( 'icons', plugins_url( '/assets/css/icons.min.css', dirname( __FILE__ ) ), '', '4.3.1' );
-		}
-	}
-
-	/**
-	 * @since v1.3.4
-	 * Adds the admin menu page
-	 */
-	public function addMenuPage() {
-		$menu_title = 'CF7 Form Filter';
-		if ( $this->blocked > 0 ) {
-			$menu_title .= " <span class='update-plugins count-1'><span class='update-count'>$this->blocked </span></span>";
-		}
-
-		$menu_page      = new KMMenuPage( array(
-			'page_title' => 'CF7 Form Filter',
-			'menu_title' => $menu_title,
-			'capability' => 'read',
-			'menu_slug'  => 'kmcf7-message-filter',
-			'icon_url'   => 'dashicons-filter',
-			'position'   => 100,
-			'function'   => null
-		) );
-		$sub_menu_pages = apply_filters( 'kmcf7_sub_menu_pages_filter', [] );
-		foreach ( $sub_menu_pages as $sub_menu_page ) {
-			$menu_page->add_sub_menu_page( $sub_menu_page );
-		}
-		$menu_page->run();
-	}
-
-	/**
-	 * @since v1.3.4
-	 * Initialises class modules
-	 */
-	public function initModules() {
-		foreach ( Module::getModules( KMCF7MS_MODULE_DIR, false ) as $dir ) {
-			$module = 'km_message_filter\\' . rtrim( $dir, ".php " );
-			new $module();
 		}
 	}
 
