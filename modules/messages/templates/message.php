@@ -62,7 +62,7 @@ $ajax_url   = admin_url( "admin-ajax.php" );
 		<?php _e( "Delete", KMCF7MS_TEXT_DOMAIN ) ?>
     </button>
     <button class="btn btn-primary btn-sm" onclick="showResubmitModal()">
-		<?php _e( "Resubmit", KMCF7MS_TEXT_DOMAIN ) ?>
+		<?php _e( "Mark as not spam", KMCF7MS_TEXT_DOMAIN ) ?>
     </button>
 
 
@@ -85,7 +85,7 @@ $ajax_url   = admin_url( "admin-ajax.php" );
             formData.append("message_ids", message_id);
 
             bootstrapSwal().fire({
-                title: 'Delete message',
+                title: 'Delete Message',
                 text: '<?php _e( "Are you sure you want to delete this message?", KMCF7MS_TEXT_DOMAIN ) ?>',
                 icon: 'warning',
                 showCancelButton: true,
@@ -121,7 +121,7 @@ $ajax_url   = admin_url( "admin-ajax.php" );
             }).then((result) => {
                 if (result.isConfirmed) {
                     Swal.fire({
-                        title: `Delete message`,
+                        title: `Delete Message`,
                         icon: 'success',
                         text: '<?php  _e( "Message deleted successfully", KMCF7MS_TEXT_DOMAIN )?>',
                     }).then((result) => {
@@ -138,8 +138,8 @@ $ajax_url   = admin_url( "admin-ajax.php" );
             formData.append("message_id", message_id);
 
             bootstrapSwal().fire({
-                title: 'Resubmit message',
-                text: '<?php _e( "Resubmitting a message may not work if you have another spam filtering or captcha plugin installed.", KMCF7MS_TEXT_DOMAIN ) ?>',
+                title: 'Resubmit Message',
+                text: '<?php _e( "Resubmitting a message may not work if you have another spam filter or captcha plugin installed. We will not be able to bypass the verification process for these plugins.", KMCF7MS_TEXT_DOMAIN ) ?>',
                 icon: 'info',
                 showCancelButton: true,
                 confirmButtonText: 'OK, resubmit',

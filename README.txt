@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/kofimokome
 Tags: spam, filter, spam-filter, contact form 7, wp forms, wpforms, contact-form-7
 Requires at least: 5.9
 Tested up to: 6.1
-Stable tag: 1.4.3
+Stable tag: 1.4.4
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -34,6 +34,9 @@ Note: This is just an extension. This plugin is not affiliated with or endorsed 
 6. Save and wait for someone to submit
 
 == Changelog ==
+
+= 1.4.4 =
+* Add the ability to mark a message as not spam
 
 = 1.4.3 =
 * Fix disappearing fields on save

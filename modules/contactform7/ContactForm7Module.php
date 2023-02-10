@@ -76,12 +76,14 @@ class ContactForm7Module extends Module {
 	 */
 	function textValidationFilter( $result, $tag ) {
 
-		$name  = $tag->name;
-		$names = explode( ',', get_option( 'kmcfmf_tags_by_name' ) );
-		if ( in_array( '*', $names ) ) {
-			$result = $this->validateTextField( $result, $tag );
-		} else if ( in_array( $name, $names ) ) {
-			$result = $this->validateTextField( $result, $tag );
+		if ( ! KMCFMessageFilter::skipValidation() ) {
+			$name  = $tag->name;
+			$names = explode( ',', get_option( 'kmcfmf_tags_by_name' ) );
+			if ( in_array( '*', $names ) ) {
+				$result = $this->validateTextField( $result, $tag );
+			} else if ( in_array( $name, $names ) ) {
+				$result = $this->validateTextField( $result, $tag );
+			}
 		}
 
 		return $result;
@@ -94,11 +96,13 @@ class ContactForm7Module extends Module {
 	 */
 	private function validateTextField( $result, $tag ) {
 		global $kmcf7_spam_status;
+
 		$name = $tag->name;
 
 		$message   = isset( $_POST[ $name ] ) ? trim( (string) $_POST[ $name ] ) : '';
 		$filter    = new Filter();
 		$spam_word = $filter->validateTextField( $message );
+
 
 		// Spam word is recognized
 		if ( $spam_word ) {
@@ -135,7 +139,7 @@ class ContactForm7Module extends Module {
 	 */
 	private function preventDefaultValidation() {
 		if ( $this->prevent_default_validation ) {
-			$this->removeActions__premium_only();
+			$this->removeActions();
 
 			return false;
 		}
@@ -147,7 +151,7 @@ class ContactForm7Module extends Module {
 	 * Removes contact form 7 submit actions
 	 * @since v1.3.6
 	 */
-	private function removeActions__premium_only() {
+	private function removeActions() {
 		remove_all_actions( 'wpcf7_mail_sent' );
 		remove_all_actions( 'wpcf7_before_send_mail' );
 	}
@@ -157,14 +161,17 @@ class ContactForm7Module extends Module {
 	 * @since 1.0.0
 	 */
 	function textareaValidationFilter( $result, $tag ) {
-		$name = $tag->name;
 
-		$names = explode( ',', get_option( 'kmcfmf_contact_form_7_textarea_fields' ) );
-		if ( in_array( '*', $names ) ) {
-			$result = $this->validateTextField( $result, $tag );
+		if ( ! KMCFMessageFilter::skipValidation() ) {
+			$name = $tag->name;
 
-		} else if ( in_array( $name, $names ) ) {
-			$result = $this->validateTextField( $result, $tag );
+			$names = explode( ',', get_option( 'kmcfmf_contact_form_7_textarea_fields' ) );
+			if ( in_array( '*', $names ) ) {
+				$result = $this->validateTextField( $result, $tag );
+
+			} else if ( in_array( $name, $names ) ) {
+				$result = $this->validateTextField( $result, $tag );
+			}
 		}
 
 		return $result;
@@ -175,14 +182,17 @@ class ContactForm7Module extends Module {
 	 * @since 1.0.0
 	 */
 	function emailValidationFilter( $result, $tag ) {
-		$name = $tag->name;
 
-		$names = explode( ',', get_option( 'kmcfmf_contact_form_7_email_fields' ) );
-		if ( in_array( '*', $names ) ) {
-			$result = $this->validateEmailField( $result, $tag );
+		if ( ! KMCFMessageFilter::skipValidation() ) {
+			$name = $tag->name;
 
-		} else if ( in_array( $name, $names ) ) {
-			$result = $this->validateEmailField( $result, $tag );
+			$names = explode( ',', get_option( 'kmcfmf_contact_form_7_email_fields' ) );
+			if ( in_array( '*', $names ) ) {
+				$result = $this->validateEmailField( $result, $tag );
+
+			} else if ( in_array( $name, $names ) ) {
+				$result = $this->validateEmailField( $result, $tag );
+			}
 		}
 
 		return $result;

@@ -29,6 +29,7 @@ class DashboardModule extends Module {
 				'page_title' => $menu_title,
 				'menu_title' => $menu_title,
 				'capability' => 'manage_options',
+				'position' => 0,
 				'menu_slug'  => 'kmcf7-message-filter',
 				'function'   => array(
 					$this,

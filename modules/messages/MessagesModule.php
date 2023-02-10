@@ -303,6 +303,7 @@ class MessagesModule extends Module {
 				'page_title' => 'Blocked Messages',
 				'menu_title' => 'Blocked Messages',
 				'capability' => 'manage_options',
+				'position'   => 1,
 				'menu_slug'  => 'kmcf7-filtered-messages',
 				'function'   => array(
 					$this,
@@ -479,8 +480,17 @@ class MessagesModule extends Module {
 					foreach ( $decoded_message as $key => $value ) {
 						$_POST[ $key ] = $value;
 					}
+
+					KMCFMessageFilter::skipValidation( true );
+
 					$contact_form = WPCF7_ContactForm::get_instance( $message->form_id );
-					$submission   = WPCF7_Submission::get_instance( $contact_form );
+					$args         = array(
+						'skip_mail' =>
+							( $contact_form->in_demo_mode()
+							  || $contact_form->is_true( 'skip_mail' )
+							  || ! empty( $contact_form->skip_mail ) ),
+					);
+					$submission   = WPCF7_Submission::get_instance( $contact_form, $args );
 					$result       = $submission->get_result();
 //					$contact_form->submit();
 					if ( $result['status'] != 'mail_sent' ) {

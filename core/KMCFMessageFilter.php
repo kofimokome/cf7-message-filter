@@ -6,11 +6,12 @@ use KMMenuPage;
 
 class KMCFMessageFilter {
 	private static $version;
+	private static $skip_validation = false;
 	private $blocked;
 
 	public function __construct() {
 		// do something here
-		self::$version = '1.4.3';
+		self::$version = '1.4.4';
 		$this->blocked = get_option( "kmcfmf_messages_blocked_today" );
 	}
 
@@ -20,6 +21,31 @@ class KMCFMessageFilter {
 	 */
 	public static function getVersion() {
 		return self::$version;
+	}
+
+	/**
+	 *
+	 * @return KMCFMessageFilter
+	 * Returns this instance
+	 * @since v1.4.4
+	 */
+	public static function getInstance() {
+		return new static();
+	}
+
+	/**
+	 * @param null|boolean $value
+	 *
+	 * @return boolean
+	 * Skips the validation
+	 * @since v1.4.4
+	 */
+	public static function skipValidation( $value = null ) {
+		if ( ! is_null( $value ) ) {
+			self::$skip_validation = $value;
+		}
+
+		return self::$skip_validation;
 	}
 
 	/**

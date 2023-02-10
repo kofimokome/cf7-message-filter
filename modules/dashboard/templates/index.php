@@ -118,7 +118,7 @@ $upgrade_guide_url = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-opti
                     </div>
                     <h5> Here are a few changes in this version:</h5>
                     <ol>
-                        <li>Bug fixes</li>
+                        <li>You can now mark a blocked message as not spam (works only for Contact Form 7)</li>
                     </ol>
 					<?php esc_html_e( "Please help translate this plugin to your language", KMCF7MS_TEXT_DOMAIN ) ?> <a
                             href="https://translate.wordpress.org/projects/wp-plugins/cf7-message-filter/"
@@ -232,7 +232,7 @@ $words .= "]";
 
     var word_chart = new ApexCharts(document.querySelector("#words-chart"), word_options);
     word_chart.render();
-	<?php if(get_option( 'kmcfmf_version', '0' ) != KMCFMessageFilter::getVersion()):?>
+	<?php if(get_option( 'kmcfmf_version', '0' ) == KMCFMessageFilter::getVersion()):?>
     jQuery(document).ready(function ($) {
         $('#myModal').modal()
     });

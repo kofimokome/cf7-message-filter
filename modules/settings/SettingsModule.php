@@ -282,6 +282,7 @@ class SettingsModule extends Module {
 				'menu_title' => 'Settings',
 				'capability' => 'manage_options',
 				'menu_slug'  => 'kmcf7-message-filter-options',
+				'position'   => 2,
 				'function'   => array(
 					$this,
 					'settingsPageContent'
