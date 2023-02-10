@@ -58,72 +58,132 @@ $ajax_url   = admin_url( "admin-ajax.php" );
         </tr>
         </tbody>
     </table>
-    <button class="btn btn-danger btn-sm" data-toggle="modal"
-            data-target="#deleteModal"><?php _e( "Delete", KMCF7MS_TEXT_DOMAIN ) ?></button>
+    <button class="btn btn-danger btn-sm" onclick="showDeleteModal()">
+		<?php _e( "Delete", KMCF7MS_TEXT_DOMAIN ) ?>
+    </button>
+    <button class="btn btn-primary btn-sm" onclick="showResubmitModal()">
+		<?php _e( "Resubmit", KMCF7MS_TEXT_DOMAIN ) ?>
+    </button>
 
-    <!-- Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><?php _e( "Delete Message", KMCF7MS_TEXT_DOMAIN ) ?></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-					<?php _e( "Are you sure you want to delete this message?", KMCF7MS_TEXT_DOMAIN ) ?>
-                    <div class="alert alert-danger d-none" id="delete-error">
-                        something went wrong
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-sm modal-btn"
-                            data-dismiss="modal"><?php _e( "Cancel", KMCF7MS_TEXT_DOMAIN ) ?></button>
-                    <button type="button" id="delete-message"
-                            class="btn btn-danger btn-sm modal-btn"><?php _e( "Yes Delete", KMCF7MS_TEXT_DOMAIN ) ?></button>
-                    <button type="button" id="btn-loading"
-                            class="btn btn-primary btn-sm hidden d-none"><?php _e( "Please wait...", KMCF7MS_TEXT_DOMAIN ) ?></button>
-                </div>
-            </div>
-        </div>
-    </div>
+
     <script>
-        jQuery(function ($) {
-            $(document).ready(function () {
-                const message_id = <?php echo $message_id?>;
-                const loading_btn = $("#btn-loading")
-                const error_container = $("#delete-error")
-                const modal_btn = $(".modal-btn")
-                $("#delete-message").click(function (e) {
-                    e.preventDefault();
-                    modal_btn.hide()
-                    loading_btn.removeClass("d-none");
-                    error_container.addClass("d-none")
-                    let formData = new FormData();
-                    formData.append("action", 'kmcf7_delete_message');
-                    formData.append("message_ids", message_id);
+        const message_id = <?php echo $message_id?>;
 
-                    $.ajax({
-                        type: "POST",
-                        contentType: false,
-                        processData: false,
-                        url: "<?php echo $ajax_url?>",
-                        data: formData,
-                        success: function (e) {
-                            history.back()
-                            //window.location.href = "<?php //echo $link_to_messages?>//"
-                        },
-                        error: function (e) {
-                            loading_btn.addClass("d-none")
-                            modal_btn.show();
-                            error_container.removeClass("d-none")
-                        }
+        function bootstrapSwal() {
+            return Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mr-2',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            });
+        }
+
+        function showDeleteModal() {
+            let formData = new FormData();
+            formData.append("action", 'kmcf7_delete_message');
+            formData.append("message_ids", message_id);
+
+            bootstrapSwal().fire({
+                title: 'Delete message',
+                text: '<?php _e( "Are you sure you want to delete this message?", KMCF7MS_TEXT_DOMAIN ) ?>',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete',
+                showLoaderOnConfirm: true,
+                preConfirm: (login) => {
+                    return fetch("<?php echo $ajax_url?>", {
+                        method: 'POST',
+                        body: formData
                     })
-                })
+                        .then(async response => {
+                            if (!response.ok) {
+                                const e = await response.text();
+                                let message = "Something went wrong";
+                                try {
+                                    const response_json = JSON.parse(e)
+                                    if (response_json.data)
+                                        message = response_json.data.message ?? response_json.data.toString()
+                                } catch (e) {
+                                    // Silence is golden
+                                }
+                                throw new Error(message)
+                            } else
+                                return response.json()
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(
+                                `Request failed: ${error}`
+                            )
+                        })
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: `Delete message`,
+                        icon: 'success',
+                        text: '<?php  _e( "Message deleted successfully", KMCF7MS_TEXT_DOMAIN )?>',
+                    }).then((result) => {
+                        if (result.isConfirmed)
+                            history.back()
+                    })
+                }
             })
-        })
+        }
+
+        function showResubmitModal() {
+            let formData = new FormData();
+            formData.append("action", 'kmcf7_resubmit_message');
+            formData.append("message_id", message_id);
+
+            bootstrapSwal().fire({
+                title: 'Resubmit message',
+                text: '<?php _e( "Resubmitting a message may not work if you have another spam filtering or captcha plugin installed.", KMCF7MS_TEXT_DOMAIN ) ?>',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'OK, resubmit',
+                showLoaderOnConfirm: true,
+                preConfirm: (login) => {
+                    return fetch("<?php echo $ajax_url?>", {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(async response => {
+                            if (!response.ok) {
+                                const e = await response.text();
+                                let message = "Something went wrong";
+                                try {
+                                    const response_json = JSON.parse(e)
+                                    if (response_json.data)
+                                        message = response_json.data.message ?? response_json.data.toString()
+                                } catch (e) {
+                                    // Silence is golden
+                                }
+                                throw new Error(message)
+                            } else
+                                return response.json()
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(
+                                `Request failed: ${error}`
+                            )
+                        })
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: `Resubmit message`,
+                        icon: 'success',
+                        text: '<?php  _e( "Message resubmitted successfully", KMCF7MS_TEXT_DOMAIN )?>',
+                    }).then((result) => {
+                        if (result.isConfirmed)
+                            history.back()
+                    })
+                }
+            })
+        }
     </script>
 	<?php
 

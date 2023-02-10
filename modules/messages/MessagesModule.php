@@ -447,13 +447,56 @@ class MessagesModule extends Module {
 				$message_id = intval( $message_id );
 				$message    = Message::find( $message_id );
 				if ( $message->delete() ) {
-					echo "message deleted";
+					wp_send_json_success( __( "Message deleted", KMCF7MS_TEXT_DOMAIN ) );
 				} else {
 					wp_send_json_error( __( "We could not find this message", KMCF7MS_TEXT_DOMAIN ), 400 );
 				}
 			}
 		} else {
 			wp_send_json_error( __( "An error occurred. Please try again", KMCF7MS_TEXT_DOMAIN ), 400 );
+		}
+	}
+
+	/**
+	 * @since v1.4.4
+	 * Resubmits a blocked message
+	 */
+	public function resubmitMessage() {
+		$validator = Validator::make(
+			array(
+				'message_id' => 'required'
+			),
+			$_POST
+		);
+
+		if ( $validator->validate() ) {
+			$message_id = sanitize_text_field( $_POST['message_id'] );
+			$message    = Message::find( $message_id );
+			if ( $message ) {
+				$contact_form = $message->contact_form;
+				if ( $contact_form == 'cf7' ) {
+					$decoded_message = json_decode( $message->message );
+					foreach ( $decoded_message as $key => $value ) {
+						$_POST[ $key ] = $value;
+					}
+					$contact_form = WPCF7_ContactForm::get_instance( $message->form_id );
+					$submission   = WPCF7_Submission::get_instance( $contact_form );
+					$result       = $submission->get_result();
+//					$contact_form->submit();
+					if ( $result['status'] != 'mail_sent' ) {
+						wp_send_json_error( __( $result, KMCF7MS_TEXT_DOMAIN ), 400 );
+					}
+					$message_id = intval( $message_id );
+					$message    = Message::find( $message_id );
+					$message->delete();
+
+					wp_send_json_success( __( "Message resubmitted successfully", KMCF7MS_TEXT_DOMAIN ), 200 );
+				} else {
+					wp_send_json_error( __( "Feature only available for Contact Form 7", KMCF7MS_TEXT_DOMAIN ), 400 );
+				}
+			} else {
+				wp_send_json_error( __( "We could not find this message", KMCF7MS_TEXT_DOMAIN ), 400 );
+			}
 		}
 	}
 
@@ -470,6 +513,7 @@ class MessagesModule extends Module {
 		parent::addActions();
 		add_action( 'wp_ajax_kmcf7_messages', [ $this, 'serverMessages' ] );
 		add_action( 'wp_ajax_kmcf7_delete_message', [ $this, 'deleteMessage' ] );
+		add_action( 'wp_ajax_kmcf7_resubmit_message', [ $this, 'resubmitMessage' ] );
 	}
 
 }
