@@ -139,7 +139,7 @@ $ajax_url   = admin_url( "admin-ajax.php" );
 
             bootstrapSwal().fire({
                 title: 'Resubmit Message',
-                text: '<?php _e( "Resubmitting a message may not work if you have another spam filter or captcha plugin installed. We will not be able to bypass the verification process for these plugins.", KMCF7MS_TEXT_DOMAIN ) ?>',
+                text: '<?php _e( "Resubmitting a message may not work if you have another spam filter or captcha plugin installed. We will not be able to bypass the verification process of these plugins.", KMCF7MS_TEXT_DOMAIN ) ?>',
                 icon: 'info',
                 showCancelButton: true,
                 confirmButtonText: 'OK, resubmit',
