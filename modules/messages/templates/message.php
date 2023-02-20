@@ -65,7 +65,14 @@ $ajax_url   = admin_url( "admin-ajax.php" );
 		<?php _e( "Mark as not spam", KMCF7MS_TEXT_DOMAIN ) ?>
     </button>
 
-
+    <div class="mt-3">
+        <form action="https://ko-fi.com/kofimokome" method="post" target="_blank">
+            <input type="hidden" name="hosted_button_id" value="B3JAV39H95RFG"/>
+            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit"
+                   title="Ko-fi is the easiest way for you to start making an income directly from your fans" alt="Donate with PayPal button"/>
+            <img alt="" border="0" src="https://www.paypal.com/en_CM/i/scr/pixel.gif" width="1" height="1"/>
+        </form>
+    </div>
     <script>
         const message_id = <?php echo $message_id?>;
 

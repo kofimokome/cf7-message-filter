@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.4.4 Changes
+
+1. Add ability to mark a message as spam
+
 ## v1.4.3 Changes
 
 1. Fix disappearing fields on save

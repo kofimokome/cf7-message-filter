@@ -31,7 +31,14 @@ $upgrade_guide_url = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-opti
                             v.<?php echo KMCFMessageFilter::getVersion() ?>
                         </h4>
                     </div>
-
+                </div>
+                <div class="row">
+                    <form action="https://ko-fi.com/kofimokome" method="post" target="_blank">
+                        <input type="hidden" name="hosted_button_id" value="B3JAV39H95RFG"/>
+                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit"
+                               title="Ko-fi is the easiest way for you to start making an income directly from your fans" alt="Donate with PayPal button"/>
+                        <img alt="" border="0" src="https://www.paypal.com/en_CM/i/scr/pixel.gif" width="1" height="1"/>
+                    </form>
                 </div>
 
                 <!-- stats + charts -->
@@ -232,7 +239,7 @@ $words .= "]";
 
     var word_chart = new ApexCharts(document.querySelector("#words-chart"), word_options);
     word_chart.render();
-	<?php if(get_option( 'kmcfmf_version', '0' ) == KMCFMessageFilter::getVersion()):?>
+	<?php if(get_option( 'kmcfmf_version', '0' ) != KMCFMessageFilter::getVersion()):?>
     jQuery(document).ready(function ($) {
         $('#myModal').modal()
     });
