@@ -354,7 +354,7 @@ class MessagesModule extends Module {
 			$decoded_message = json_decode( $result->message );
 			$message         = array(
 				"",
-				"<a href='{$link_to_messages}&message_id={$result->id}' class='btn btn-sm btn-primary'>View</a>",
+				"<a href='{$link_to_messages}&message_id={$result->id}' class='btn btn-sm btn-primary'>View</a> <button class='btn btn-sm btn-primary' onclick='showResubmitModal({$result->id})'>Restore</button>",
 				intval( $result->id )
 			);
 			foreach ( $rows as $row ) {
@@ -447,12 +447,12 @@ class MessagesModule extends Module {
 			foreach ( $message_ids as $message_id ) {
 				$message_id = intval( $message_id );
 				$message    = Message::find( $message_id );
-				if ( $message->delete() ) {
-					wp_send_json_success( __( "Message deleted", KMCF7MS_TEXT_DOMAIN ) );
-				} else {
+				if ( ! $message->delete() ) {
 					wp_send_json_error( __( "We could not find this message", KMCF7MS_TEXT_DOMAIN ), 400 );
 				}
 			}
+			wp_send_json_success( __( "Message deleted", KMCF7MS_TEXT_DOMAIN ) );
+
 		} else {
 			wp_send_json_error( __( "An error occurred. Please try again", KMCF7MS_TEXT_DOMAIN ), 400 );
 		}

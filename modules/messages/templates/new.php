@@ -10,11 +10,11 @@ $ajax_url             = admin_url( "admin-ajax.php" );
 $selected_form = isset( $_GET['form'] ) ? sanitize_text_field( $_GET['form'] ) : '';
 $data          = explode( '-', $selected_form );
 $form_id       = - 1;
-$contact_form     = '';
+$contact_form  = '';
 if ( sizeof( $data ) > 1 ) {
 	$contact_form = trim( $data[0] );
-	$form_id   = $data[1];
-	$form_id   = $form_id == '' ? - 1 : intval( $form_id );
+	$form_id      = $data[1];
+	$form_id      = $form_id == '' ? - 1 : intval( $form_id );
 }
 
 ?>
@@ -25,6 +25,14 @@ if ( sizeof( $data ) > 1 ) {
 </style>
 
 <!--<button class="btn btn-primary">Export to CSV</button>-->
+<div class="row mt-5">
+    <form action="https://ko-fi.com/kofimokome" method="post" target="_blank">
+        <input type="hidden" name="hosted_button_id" value="B3JAV39H95RFG"/>
+        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit"
+               title="Ko-fi is the easiest way for you to start making an income directly from your fans" alt="Donate with PayPal button"/>
+        <img alt="" border="0" src="https://www.paypal.com/en_CM/i/scr/pixel.gif" width="1" height="1"/>
+    </form>
+</div>
 <?php if ( $form_id > 0 && $contact_form != '' ) {
 	$rows = MessagesModule::getRows2( $form_id, $contact_form );
 	?>
@@ -42,8 +50,7 @@ if ( sizeof( $data ) > 1 ) {
         <div class="alert alert-info">
 			<?php _e( "Hint: Press and hold <kbd>CMD</kbd> or <kbd>CRTL</kbd> while clicking on any cell to select it", KMCF7MS_TEXT_DOMAIN ) ?>
         </div>
-        <button class="btn btn-danger btn-sm km-delete-btn" style="display: none" data-toggle="modal"
-                data-target="#deleteModal">
+        <button class="btn btn-danger btn-sm km-delete-btn" style="display: none" onclick="showDeleteModal()">
 			<?php _e( "Delete selected", KMCF7MS_TEXT_DOMAIN ) ?>
         </button>
     </div>
@@ -64,42 +71,13 @@ if ( sizeof( $data ) > 1 ) {
 
         </tbody>
     </table>
-    <button class="btn btn-danger btn-sm km-delete-btn" style="display: none" data-toggle="modal"
-            data-target="#deleteModal">
+    <button class="btn btn-danger btn-sm km-delete-btn" style="display: none" onclick="showDeleteModal()">
 		<?php _e( "Delete selected", KMCF7MS_TEXT_DOMAIN ) ?>
     </button>    <br>
-    <!-- Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><?php _e( "Delete Message", KMCF7MS_TEXT_DOMAIN ) ?></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-					<?php _e( "Are you sure you want to delete the selected messages?", KMCF7MS_TEXT_DOMAIN ) ?>
-                    <div class="alert alert-danger d-none" id="delete-error">
-                        something went wrong
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-sm modal-btn"
-                            data-dismiss="modal"><?php _e( "Cancel", KMCF7MS_TEXT_DOMAIN ) ?></button>
-                    <button type="button" id="delete-message"
-                            class="btn btn-danger btn-sm modal-btn"><?php _e( "Yes Delete", KMCF7MS_TEXT_DOMAIN ) ?></button>
-                    <button type="button" id="btn-loading"
-                            class="btn btn-primary btn-sm hidden d-none"><?php _e( "Please wait...", KMCF7MS_TEXT_DOMAIN ) ?></button>
-                </div>
-            </div>
-        </div>
-    </div>
 	<?php
 
 } else { ?>
-    <div class="jumbotron mt-5">
+    <div class="jumbotron">
 		<?php if ( is_file( MessagesModule::getLogFile() ) ): ?>
             <div class="mb-2 border-info">
                 <h5><?php _e( "Note: Message storage location has changed.", KMCF7MS_TEXT_DOMAIN ) ?>
@@ -136,14 +114,16 @@ if ( sizeof( $data ) > 1 ) {
     <form action="https://ko-fi.com/kofimokome" method="post" target="_blank">
         <input type="hidden" name="hosted_button_id" value="B3JAV39H95RFG"/>
         <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit"
-               title="Ko-fi is the easiest way for you to start making an income directly from your fans" alt="Donate with PayPal button"/>
+               title="Ko-fi is the easiest way for you to start making an income directly from your fans"
+               alt="Donate with PayPal button"/>
         <img alt="" border="0" src="https://www.paypal.com/en_CM/i/scr/pixel.gif" width="1" height="1"/>
     </form>
 </div>
 <script>
+    let table = '';
     jQuery(function ($) {
         $(document).ready(function () {
-            const table = $("#km-table").DataTable({
+             table = $("#km-table").DataTable({
                     dom: 'lBfrtip',
                     ordering: false,
                     processing: true,
@@ -175,44 +155,131 @@ if ( sizeof( $data ) > 1 ) {
                     $(".km-delete-btn").hide()
                 }
             });
-
-            const loading_btn = $("#btn-loading")
-            const error_container = $("#delete-error")
-            const modal_btn = $(".modal-btn")
-
-            $("#delete-message").click(function (e) {
-                e.preventDefault();
-                let message_ids = []
-                const data = table.rows('.selected').data()
-                for (let i = 0; i < data.length; i++) {
-                    message_ids.push(data[i][2])
-                }
-                modal_btn.hide()
-                loading_btn.removeClass("d-none");
-                error_container.addClass("d-none")
-                let formData = new FormData();
-                formData.append("action", 'kmcf7_delete_message');
-                formData.append("message_ids", message_ids.join(','));
-
-                $.ajax({
-                    type: "POST",
-                    contentType: false,
-                    processData: false,
-                    url: "<?php echo $ajax_url?>",
-                    data: formData,
-                    success: function (e) {
-                        window.location.reload()
-                        //window.location.href = "<?php //echo $link_to_messages?>//"
-                    },
-                    error: function (e) {
-                        loading_btn.addClass("d-none")
-                        modal_btn.show();
-                        error_container.removeClass("d-none")
-                    }
-                })
-            })
         })
 
     })
+
+    function bootstrapSwal() {
+        return Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success mr-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        });
+    }
+
+    function showResubmitModal(message_id) {
+        let formData = new FormData();
+        formData.append("action", 'kmcf7_resubmit_message');
+        formData.append("message_id", message_id);
+
+        bootstrapSwal().fire({
+            title: 'Resubmit Message',
+            text: '<?php _e( "Resubmitting a message may not work if you have another spam filter or captcha plugin installed. We will not be able to bypass the verification process of these plugins.", KMCF7MS_TEXT_DOMAIN ) ?>',
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'OK, resubmit',
+            showLoaderOnConfirm: true,
+            preConfirm: (login) => {
+                return fetch("<?php echo $ajax_url?>", {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(async response => {
+                        if (!response.ok) {
+                            const e = await response.text();
+                            let message = "Something went wrong";
+                            try {
+                                const response_json = JSON.parse(e)
+                                if (response_json.data)
+                                    message = response_json.data.message ?? response_json.data.toString()
+                            } catch (e) {
+                                // Silence is golden
+                            }
+                            throw new Error(message)
+                        } else
+                            return response.json()
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(
+                            `Request failed: ${error}`
+                        )
+                    })
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: `Resubmit message`,
+                    icon: 'success',
+                    text: '<?php  _e( "Message resubmitted successfully", KMCF7MS_TEXT_DOMAIN )?>',
+                }).then((result) => {
+                    if (result.isConfirmed)
+                        history.back()
+                })
+            }
+        })
+    }
+
+    function showDeleteModal() {
+        let message_ids = []
+        const data = table.rows('.selected').data()
+        for (let i = 0; i < data.length; i++) {
+            message_ids.push(data[i][2])
+        }
+
+        let formData = new FormData();
+        formData.append("action", 'kmcf7_delete_message');
+        formData.append("message_ids", message_ids);
+
+        bootstrapSwal().fire({
+            title: 'Delete Message',
+            text: '<?php _e( "Are you sure you want to delete the selected messages?", KMCF7MS_TEXT_DOMAIN ) ?>',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete',
+            showLoaderOnConfirm: true,
+            preConfirm: (login) => {
+                return fetch("<?php echo $ajax_url?>", {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(async response => {
+                        if (!response.ok) {
+                            const e = await response.text();
+                            let message = "Something went wrong";
+                            try {
+                                const response_json = JSON.parse(e)
+                                if (response_json.data)
+                                    message = response_json.data.message ?? response_json.data.toString()
+                            } catch (e) {
+                                // Silence is golden
+                            }
+                            throw new Error(message)
+                        } else
+                            return response.json()
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(
+                            `Request failed: ${error}`
+                        )
+                    })
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: `Delete Message`,
+                    icon: 'success',
+                    text: '<?php  _e( "Message deleted successfully", KMCF7MS_TEXT_DOMAIN )?>',
+                }).then((result) => {
+                    if (result.isConfirmed)
+                        window.location.reload()
+                })
+            }
+        })
+    }
+
 
 </script>

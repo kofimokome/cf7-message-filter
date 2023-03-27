@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.4.5 Changes
+
+1. Fix bug when deleting multiple messages
+
 ## v1.4.4 Changes
 
 1. Add ability to mark a message as spam
