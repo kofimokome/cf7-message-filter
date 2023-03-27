@@ -29,7 +29,8 @@ if ( sizeof( $data ) > 1 ) {
     <form action="https://ko-fi.com/kofimokome" method="post" target="_blank">
         <input type="hidden" name="hosted_button_id" value="B3JAV39H95RFG"/>
         <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit"
-               title="Ko-fi is the easiest way for you to start making an income directly from your fans" alt="Donate with PayPal button"/>
+               title="Ko-fi is the easiest way for you to start making an income directly from your fans"
+               alt="Donate with PayPal button"/>
         <img alt="" border="0" src="https://www.paypal.com/en_CM/i/scr/pixel.gif" width="1" height="1"/>
     </form>
 </div>
@@ -54,6 +55,15 @@ if ( sizeof( $data ) > 1 ) {
 			<?php _e( "Delete selected", KMCF7MS_TEXT_DOMAIN ) ?>
         </button>
     </div>
+    <div class="mb-3">
+        <b><?php _e( "Visible Columns", KMCF7MS_TEXT_DOMAIN ) ?>:</b> <br>
+        <input id="input-ID" name="ID" type="checkbox" value="2" class="table-column"
+               checked/> ID
+		<?php foreach ( $rows as $index => $row ):if ( strlen( trim( $row ) ) > 0 ): ?>
+            <input id="input-<?php echo $row?>" name="<?php echo $row ?>" type="checkbox" value="<?php echo $index + 3 ?>" class="table-column"
+                   checked/> <?php echo $row ?>
+		<?php endif; endforeach; ?>
+    </div>
     <table id="km-table" class="kmcfmf_table table table-striped" style="overflow-x: scroll">
         <thead>
         <tr>
@@ -61,9 +71,9 @@ if ( sizeof( $data ) > 1 ) {
             <th><?php _e( "Actions", KMCF7MS_TEXT_DOMAIN ) ?></th>
             <th><b>ID</b></th>
 			<?php foreach ( $rows as $row ): ?>
-                <td>
+                <th>
                     <b><?php echo $row ?></b>
-                </td>
+                </th>
 			<?php endforeach; ?>
         </tr>
         </thead>
@@ -88,7 +98,7 @@ if ( sizeof( $data ) > 1 ) {
             </div>
 		<?php endif; ?>
         <h2 class="display-5d"><?php _e( "Blocked Messages Area", KMCF7MS_TEXT_DOMAIN ) ?></h2>
-        <p class="lead"><?php _e( "Messages are now grouped per form. Select a form below to view all messages blocked for that
+        <p class="lead"><?php _e( "Messages are now grouped per form. Select a form below to view all the messages blocked for that
             form.", KMCF7MS_TEXT_DOMAIN ) ?></p>
         <p class="lead"><?php _e( "If you upgraded from a previous version, all old messages blocked are stored under
             uncategorized.", KMCF7MS_TEXT_DOMAIN ) ?></p>
@@ -123,7 +133,7 @@ if ( sizeof( $data ) > 1 ) {
     let table = '';
     jQuery(function ($) {
         $(document).ready(function () {
-             table = $("#km-table").DataTable({
+            table = $("#km-table").DataTable({
                     dom: 'lBfrtip',
                     ordering: false,
                     processing: true,
@@ -135,7 +145,7 @@ if ( sizeof( $data ) > 1 ) {
                         targets: 0
                     }],
                     buttons: [
-                        'colvis',
+                        // 'colvis',
                         {
                             extend: 'csv',
                             text: 'Download CSV'
@@ -146,6 +156,17 @@ if ( sizeof( $data ) > 1 ) {
 
                 }
             );
+            // column.visible(!column.visible());
+            let cachedColumns = localStorage.getItem("<?php echo $selected_form?>")
+            if (cachedColumns !== undefined && cachedColumns !== null) {
+                cachedColumns = JSON.parse(cachedColumns)
+                Object.entries(cachedColumns).forEach((a) => {
+                    $("#input-"+a[0]).prop('checked',a[1].visible)
+                    const column = table.column(a[1].id);
+                    column.visible(a[1].visible);
+                })
+            }
+
             $('#km-table tbody').on('click', 'tr', function () {
                 const delete_count = table.rows({selected: true}).count()
                 // const delete_count = table.rows('.selected').data().length
@@ -155,6 +176,23 @@ if ( sizeof( $data ) > 1 ) {
                     $(".km-delete-btn").hide()
                 }
             });
+
+            $(".table-column").on('click', function () {
+                const value = $(this).attr('value');
+                const name = $(this).attr('name');
+                const column = table.column(value);
+
+                // Toggle the visibility
+                column.visible(!column.visible());
+                let cachedColumns = localStorage.getItem("<?php echo $selected_form?>");
+                if (cachedColumns == undefined) {
+                    cachedColumns = {}
+                } else {
+                    cachedColumns = JSON.parse(cachedColumns)
+                }
+                cachedColumns[name] = {"id": value, visible: column.visible()}
+                localStorage.setItem("<?php echo $selected_form?>", JSON.stringify(cachedColumns))
+            })
         })
 
     })
