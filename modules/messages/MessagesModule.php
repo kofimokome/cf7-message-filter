@@ -465,48 +465,51 @@ class MessagesModule extends Module {
 	public function resubmitMessage() {
 		$validator = Validator::make(
 			array(
-				'message_id' => 'required'
+				'message_ids' => 'required'
 			),
 			$_POST
 		);
 
 		if ( $validator->validate() ) {
-			$message_id = sanitize_text_field( $_POST['message_id'] );
-			$message    = Message::find( $message_id );
-			if ( $message ) {
-				$contact_form = $message->contact_form;
-				if ( $contact_form == 'cf7' ) {
-					$decoded_message = json_decode( $message->message );
-					foreach ( $decoded_message as $key => $value ) {
-						$_POST[ $key ] = $value;
-					}
+			$message_ids = sanitize_text_field( $_POST['message_ids'] );
+			$message_ids = explode( ',', $message_ids );
+			KMCFMessageFilter::skipValidation( true );
 
-					KMCFMessageFilter::skipValidation( true );
+			foreach ( $message_ids as $message_id ) {
+				$message = Message::find( $message_id );
+				if ( $message ) {
+					$contact_form = $message->contact_form;
+					if ( $contact_form == 'cf7' ) {
+						$decoded_message = json_decode( $message->message );
+						foreach ( $decoded_message as $key => $value ) {
+							$_POST[ $key ] = $value;
+						}
 
-					$contact_form = WPCF7_ContactForm::get_instance( $message->form_id );
-					$args         = array(
-						'skip_mail' =>
-							( $contact_form->in_demo_mode()
-							  || $contact_form->is_true( 'skip_mail' )
-							  || ! empty( $contact_form->skip_mail ) ),
-					);
-					$submission   = WPCF7_Submission::get_instance( $contact_form, $args );
-					$result       = $submission->get_result();
+						$contact_form = WPCF7_ContactForm::get_instance( $message->form_id );
+						$args         = array(
+							'skip_mail' =>
+								( $contact_form->in_demo_mode()
+								  || $contact_form->is_true( 'skip_mail' )
+								  || ! empty( $contact_form->skip_mail ) ),
+						);
+						$submission   = WPCF7_Submission::get_instance( $contact_form, $args );
+						$result       = $submission->get_result();
 //					$contact_form->submit();
-					if ( $result['status'] != 'mail_sent' ) {
-						wp_send_json_error( __( $result, KMCF7MS_TEXT_DOMAIN ), 400 );
-					}
-					$message_id = intval( $message_id );
-					$message    = Message::find( $message_id );
-					$message->delete();
+						if ( $result['status'] != 'mail_sent' ) {
+							wp_send_json_error( __( $result, KMCF7MS_TEXT_DOMAIN ), 400 );
+						}
+						$message_id = intval( $message_id );
+						$message    = Message::find( $message_id );
+						$message->delete();
 
-					wp_send_json_success( __( "Message resubmitted successfully", KMCF7MS_TEXT_DOMAIN ), 200 );
+					} else {
+						wp_send_json_error( __( "Feature only available for Contact Form 7", KMCF7MS_TEXT_DOMAIN ), 400 );
+					}
 				} else {
-					wp_send_json_error( __( "Feature only available for Contact Form 7", KMCF7MS_TEXT_DOMAIN ), 400 );
+					wp_send_json_error( __( "We could not find this message", KMCF7MS_TEXT_DOMAIN ), 400 );
 				}
-			} else {
-				wp_send_json_error( __( "We could not find this message", KMCF7MS_TEXT_DOMAIN ), 400 );
 			}
+			wp_send_json_success( __( "Message(s) resubmitted successfully", KMCF7MS_TEXT_DOMAIN ), 200 );
 		}
 	}
 

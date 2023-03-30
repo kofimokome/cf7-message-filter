@@ -54,15 +54,21 @@ if ( sizeof( $data ) > 1 ) {
         <button class="btn btn-danger btn-sm km-delete-btn" style="display: none" onclick="showDeleteModal()">
 			<?php _e( "Delete selected", KMCF7MS_TEXT_DOMAIN ) ?>
         </button>
+        <!--<button class="btn btn-primary btn-sm km-delete-btn" style="display: none" onclick="showResubmitModal()">
+			<?php /*_e( "Restore selected", KMCF7MS_TEXT_DOMAIN ) */?>
+        </button>-->
     </div>
     <div class="mb-3">
-        <b><?php _e( "Visible Columns", KMCF7MS_TEXT_DOMAIN ) ?>:</b> <br>
-        <input id="input-ID" name="ID" type="checkbox" value="2" class="table-column"
-               checked/> ID
-		<?php foreach ( $rows as $index => $row ):if ( strlen( trim( $row ) ) > 0 ): ?>
-            <input id="input-<?php echo $row?>" name="<?php echo $row ?>" type="checkbox" value="<?php echo $index + 3 ?>" class="table-column"
-                   checked/> <?php echo $row ?>
-		<?php endif; endforeach; ?>
+        <b><?php _e( "Visible Columns", KMCF7MS_TEXT_DOMAIN ) ?>: <a href="#" id="toggle-visible-columns-container">Show/Hide</a>
+            <div id="visible-columns-container" class="mt-2">
+                <input id="input-ID" name="ID" type="checkbox" value="2" class="table-column"
+                       checked/> <span class="mr-2">ID</span>
+				<?php foreach ( $rows as $index => $row ):if ( strlen( trim( $row ) ) > 0 ): ?>
+                    <input id="input-<?php echo $row ?>" name="<?php echo $row ?>" type="checkbox"
+                           value="<?php echo $index + 3 ?>" class="table-column"
+                           checked/> <span class="mr-2"> <?php echo $row ?></span>
+				<?php endif; endforeach; ?>
+            </div>
     </div>
     <table id="km-table" class="kmcfmf_table table table-striped" style="overflow-x: scroll">
         <thead>
@@ -83,7 +89,11 @@ if ( sizeof( $data ) > 1 ) {
     </table>
     <button class="btn btn-danger btn-sm km-delete-btn" style="display: none" onclick="showDeleteModal()">
 		<?php _e( "Delete selected", KMCF7MS_TEXT_DOMAIN ) ?>
-    </button>    <br>
+    </button>
+    <!--<button class="btn btn-primary btn-sm km-delete-btn" style="display: none" onclick="showResubmitModal()">
+		<?php /*_e( "Restore selected", KMCF7MS_TEXT_DOMAIN ) */?>
+    </button> -->
+    <br>
 	<?php
 
 } else { ?>
@@ -161,7 +171,7 @@ if ( sizeof( $data ) > 1 ) {
             if (cachedColumns !== undefined && cachedColumns !== null) {
                 cachedColumns = JSON.parse(cachedColumns)
                 Object.entries(cachedColumns).forEach((a) => {
-                    $("#input-"+a[0]).prop('checked',a[1].visible)
+                    $("#input-" + a[0]).prop('checked', a[1].visible)
                     const column = table.column(a[1].id);
                     column.visible(a[1].visible);
                 })
@@ -193,6 +203,11 @@ if ( sizeof( $data ) > 1 ) {
                 cachedColumns[name] = {"id": value, visible: column.visible()}
                 localStorage.setItem("<?php echo $selected_form?>", JSON.stringify(cachedColumns))
             })
+
+            $("#toggle-visible-columns-container").click(function (e) {
+                e.preventDefault();
+                $("#visible-columns-container").toggle(300)
+            });
         })
 
     })
@@ -207,13 +222,16 @@ if ( sizeof( $data ) > 1 ) {
         });
     }
 
-    function showResubmitModal(message_id) {
+    function showResubmitModal(message_id = null) {
         let formData = new FormData();
         formData.append("action", 'kmcf7_resubmit_message');
-        formData.append("message_id", message_id);
+        if (message_id == null)
+            formData.append("message_ids", table.rows({selected: true}).data().toArray().map(a => a[2]).join(","));
+        else
+            formData.append("message_ids", message_id);
 
         bootstrapSwal().fire({
-            title: 'Resubmit Message',
+            title: 'Resubmit Message(s)',
             text: '<?php _e( "Resubmitting a message may not work if you have another spam filter or captcha plugin installed. We will not be able to bypass the verification process of these plugins.", KMCF7MS_TEXT_DOMAIN ) ?>',
             icon: 'info',
             showCancelButton: true,
@@ -251,10 +269,10 @@ if ( sizeof( $data ) > 1 ) {
                 Swal.fire({
                     title: `Resubmit message`,
                     icon: 'success',
-                    text: '<?php  _e( "Message resubmitted successfully", KMCF7MS_TEXT_DOMAIN )?>',
+                    text: '<?php  _e( "Message(s) resubmitted successfully", KMCF7MS_TEXT_DOMAIN )?>',
                 }).then((result) => {
                     if (result.isConfirmed)
-                        history.back()
+                        window.location.reload()
                 })
             }
         })

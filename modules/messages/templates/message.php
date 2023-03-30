@@ -62,7 +62,7 @@ $ajax_url   = admin_url( "admin-ajax.php" );
 		<?php _e( "Delete", KMCF7MS_TEXT_DOMAIN ) ?>
     </button>
     <button class="btn btn-primary btn-sm" onclick="showResubmitModal()">
-		<?php _e( "Mark as not spam", KMCF7MS_TEXT_DOMAIN ) ?>
+		<?php _e( "Resubmit", KMCF7MS_TEXT_DOMAIN ) ?>
     </button>
 
     <div class="mt-3">
@@ -142,7 +142,7 @@ $ajax_url   = admin_url( "admin-ajax.php" );
         function showResubmitModal() {
             let formData = new FormData();
             formData.append("action", 'kmcf7_resubmit_message');
-            formData.append("message_id", message_id);
+            formData.append("message_ids", message_id);
 
             bootstrapSwal().fire({
                 title: 'Resubmit Message',
