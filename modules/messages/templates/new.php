@@ -290,8 +290,8 @@ if ( sizeof( $data ) > 1 ) {
         formData.append("message_ids", message_ids);
 
         bootstrapSwal().fire({
-            title: 'Delete Message',
-            text: '<?php _e( "Are you sure you want to delete the selected messages?", KMCF7MS_TEXT_DOMAIN ) ?>',
+            title: 'Delete Message(s)',
+            text: '<?php _e( "Are you sure you want to delete the selected message(s)?", KMCF7MS_TEXT_DOMAIN ) ?>',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes, delete',
@@ -326,9 +326,9 @@ if ( sizeof( $data ) > 1 ) {
         }).then((result) => {
             if (result.isConfirmed) {
                 Swal.fire({
-                    title: `Delete Message`,
+                    title: `Delete Message(s)`,
                     icon: 'success',
-                    text: '<?php  _e( "Message deleted successfully", KMCF7MS_TEXT_DOMAIN )?>',
+                    text: '<?php  _e( "Message(s) deleted successfully", KMCF7MS_TEXT_DOMAIN )?>',
                 }).then((result) => {
                     if (result.isConfirmed)
                         window.location.reload()
