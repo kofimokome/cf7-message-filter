@@ -451,7 +451,7 @@ class MessagesModule extends Module {
 					wp_send_json_error( __( "We could not find this message", KMCF7MS_TEXT_DOMAIN ), 400 );
 				}
 			}
-			wp_send_json_success( __( "Message deleted", KMCF7MS_TEXT_DOMAIN ) );
+			wp_send_json_success( __( "Message(s) deleted", KMCF7MS_TEXT_DOMAIN ) );
 
 		} else {
 			wp_send_json_error( __( "An error occurred. Please try again", KMCF7MS_TEXT_DOMAIN ), 400 );

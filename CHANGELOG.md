@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.4.6 Changes
+
+1. Fix bug when selecting multiple messages. Sometimes the delete button would not show up.
+
 ## v1.4.5 Changes
 
 1. Fix bug when deleting multiple messages

@@ -55,7 +55,7 @@ if ( sizeof( $data ) > 1 ) {
 			<?php _e( "Delete selected", KMCF7MS_TEXT_DOMAIN ) ?>
         </button>
         <!--<button class="btn btn-primary btn-sm km-delete-btn" style="display: none" onclick="showResubmitModal()">
-			<?php /*_e( "Restore selected", KMCF7MS_TEXT_DOMAIN ) */?>
+			<?php /*_e( "Restore selected", KMCF7MS_TEXT_DOMAIN ) */ ?>
         </button>-->
     </div>
     <div class="mb-3">
@@ -91,7 +91,7 @@ if ( sizeof( $data ) > 1 ) {
 		<?php _e( "Delete selected", KMCF7MS_TEXT_DOMAIN ) ?>
     </button>
     <!--<button class="btn btn-primary btn-sm km-delete-btn" style="display: none" onclick="showResubmitModal()">
-		<?php /*_e( "Restore selected", KMCF7MS_TEXT_DOMAIN ) */?>
+		<?php /*_e( "Restore selected", KMCF7MS_TEXT_DOMAIN ) */ ?>
     </button> -->
     <br>
 	<?php
@@ -166,6 +166,14 @@ if ( sizeof( $data ) > 1 ) {
 
                 }
             );
+
+            table.on('select', function () {
+                $(".km-delete-btn").show()
+            });
+            table.on('deselect', function () {
+                toggleDeleteBtn()
+            });
+
             // column.visible(!column.visible());
             let cachedColumns = localStorage.getItem("<?php echo $selected_form?>")
             if (cachedColumns !== undefined && cachedColumns !== null) {
@@ -177,15 +185,14 @@ if ( sizeof( $data ) > 1 ) {
                 })
             }
 
-            $('#km-table tbody').on('click', 'tr', function () {
-                const delete_count = table.rows({selected: true}).count()
-                // const delete_count = table.rows('.selected').data().length
-                if (delete_count > 0) {
+            function toggleDeleteBtn() {
+                const selected_cells = table.rows({selected: true}).count()
+                if (selected_cells > 0) {
                     $(".km-delete-btn").show()
                 } else {
                     $(".km-delete-btn").hide()
                 }
-            });
+            }
 
             $(".table-column").on('click', function () {
                 const value = $(this).attr('value');
@@ -288,7 +295,6 @@ if ( sizeof( $data ) > 1 ) {
         let formData = new FormData();
         formData.append("action", 'kmcf7_delete_message');
         formData.append("message_ids", message_ids);
-
         bootstrapSwal().fire({
             title: 'Delete Message(s)',
             text: '<?php _e( "Are you sure you want to delete the selected message(s)?", KMCF7MS_TEXT_DOMAIN ) ?>',

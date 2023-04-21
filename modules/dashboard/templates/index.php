@@ -35,8 +35,10 @@ $upgrade_guide_url = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-opti
                 <div class="row">
                     <form action="https://ko-fi.com/kofimokome" method="post" target="_blank">
                         <input type="hidden" name="hosted_button_id" value="B3JAV39H95RFG"/>
-                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit"
-                               title="Ko-fi is the easiest way for you to start making an income directly from your fans" alt="Donate with PayPal button"/>
+                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
+                               border="0" name="submit"
+                               title="Ko-fi is the easiest way for you to start making an income directly from your fans"
+                               alt="Donate with PayPal button"/>
                         <img alt="" border="0" src="https://www.paypal.com/en_CM/i/scr/pixel.gif" width="1" height="1"/>
                     </form>
                 </div>
@@ -125,8 +127,8 @@ $upgrade_guide_url = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-opti
                     </div>
                     <h5> Here are a few changes in this version:</h5>
                     <ol>
-                        <li>Fix bug when deleting multiple messages</li>
-                        <li>Add restore button to the messages page</li>
+                        <li>Fix bug when selecting multiple messages. Sometimes the delete button disappears when multiple messages are selected</li>
+                        <li>Tested up to WordPress 6.2</li>
                     </ol>
 					<?php esc_html_e( "Please help translate this plugin to your language", KMCF7MS_TEXT_DOMAIN ) ?> <a
                             href="https://translate.wordpress.org/projects/wp-plugins/cf7-message-filter/"
@@ -148,8 +150,10 @@ $upgrade_guide_url = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-opti
     <div class="row">
         <form action="https://ko-fi.com/kofimokome" method="post" target="_blank">
             <input type="hidden" name="hosted_button_id" value="B3JAV39H95RFG"/>
-            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit"
-                   title="Ko-fi is the easiest way for you to start making an income directly from your fans" alt="Donate with PayPal button"/>
+            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0"
+                   name="submit"
+                   title="Ko-fi is the easiest way for you to start making an income directly from your fans"
+                   alt="Donate with PayPal button"/>
             <img alt="" border="0" src="https://www.paypal.com/en_CM/i/scr/pixel.gif" width="1" height="1"/>
         </form>
     </div>
