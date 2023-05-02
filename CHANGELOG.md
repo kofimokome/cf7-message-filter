@@ -1,5 +1,10 @@
 # Change Log
 
+## v1.4.7 Changes
+
+1. Fix bug when adding a custom field on the WPForm settings page.
+2. Fix text fields not checked for spam.
+
 ## v1.4.6 Changes
 
 1. Fix bug when selecting multiple messages. Sometimes the delete button would not show up.

@@ -127,14 +127,14 @@ $upgrade_guide_url = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-opti
                     </div>
                     <h5> Here are a few changes in this version:</h5>
                     <ol>
-                        <li>Fix bug when selecting multiple messages. Sometimes the delete button disappears when multiple messages are selected</li>
-                        <li>Tested up to WordPress 6.2</li>
+                        <li>Fix bug when adding a custom field on the WPForm settings page.</li>
+                        <li>Fix WPForm text fields not checked for spam.</li>
                     </ol>
-					<?php esc_html_e( "Please help translate this plugin to your language", KMCF7MS_TEXT_DOMAIN ) ?> <a
+					<?php /*esc_html_e( "Please help translate this plugin to your language", KMCF7MS_TEXT_DOMAIN ) */?><!-- <a
                             href="https://translate.wordpress.org/projects/wp-plugins/cf7-message-filter/"
                             target="_blank"
-                            class="btn btn-sm btn-primary"><?php esc_html_e( "Translate Now", KMCF7MS_TEXT_DOMAIN ) ?></a>
-                    <br>
+                            class="btn btn-sm btn-primary"><?php /*esc_html_e( "Translate Now", KMCF7MS_TEXT_DOMAIN ) */?></a>-->
+<!--                    <br>-->
 					<?php _e( 'If you find an issue, please <a href="https://wordpress.org/support/plugin/cf7-message-filter/"
                                                     target="_blank">create a support ticket here</a> and I will do my
                     best to fix as soon as possible', KMCF7MS_TEXT_DOMAIN ) ?>

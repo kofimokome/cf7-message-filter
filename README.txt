@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/kofimokome
 Tags: spam, filter, spam-filter, contact form 7, wp forms, wpforms, contact-form-7
 Requires at least: 5.9
 Tested up to: 6.2
-Stable tag: 1.4.6
+Stable tag: 1.4.7
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -34,6 +34,10 @@ Note: This is just an extension. This plugin is not affiliated with or endorsed 
 6. Save and wait for someone to submit
 
 == Changelog ==
+
+= 1.4.7 =
+* Fix bug when adding a custom field on the WPForm settings page.
+* Fix text fields not checked for spam.
 
 = 1.4.6 =
 * Fix bug when selecting multiple messages. Sometimes the delete button disappears when selecting multiple messages.
