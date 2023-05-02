@@ -3,6 +3,32 @@
 namespace km_message_filter;
 
 $tags = WpFormsModule::getTags();
+
+$text_fields          = $tags['text'];
+$selected_text_fields = get_option( 'kmcfmf_wp_forms_text_fields' );
+$selected_text_fields = explode( ',', $selected_text_fields );
+$selected_text_fields = array_map( function ( $e ) {
+	return array( 'text' => $e, 'value' => $e );
+}, $selected_text_fields );
+$text_fields          = array_merge( $text_fields, $selected_text_fields );
+
+$textarea_fields          = $tags['textarea'];
+$selected_textarea_fields = get_option( 'kmcfmf_wp_forms_textarea_fields' );
+$selected_textarea_fields = explode( ',', $selected_textarea_fields );
+$selected_textarea_fields = array_map( function ( $e ) {
+	return array( 'text' => $e, 'value' => $e );
+}, $selected_textarea_fields );
+$textarea_fields          = array_merge( $textarea_fields, $selected_textarea_fields );
+
+$email_fields          = $tags['email'];
+$selected_email_fields = get_option( 'kmcfmf_wp_forms_email_fields' );
+$selected_email_fields = explode( ',', $selected_email_fields );
+$selected_email_fields = array_map( function ( $e ) {
+	return array( 'text' => $e, 'value' => $e );
+}, $selected_email_fields );
+$email_fields          = array_merge( $email_fields, $selected_email_fields );
+
+
 ?>
     <h1><?php esc_html_e( "WP Forms Settings ", KMCF7MS_TEXT_DOMAIN ) ?></h1>
 	<?php /*if ( ! is_plugin_active( 'wpforms-lite/wpforms.php' ) && ! is_plugin_active( 'wpforms/wpforms.php' ) ): */?><!--
@@ -26,8 +52,8 @@ $tags = WpFormsModule::getTags();
         jQuery(document).ready(function ($) {
             $('#kmcfmf_wp_forms_text_fields').selectize({
                 delimiter: ',',
-                persist: false,
-                options: <?php echo json_encode( $tags['text'] )?>,
+                persist: true,
+                options: <?php echo json_encode( $text_fields )?>,
                 create: function (input) {
                     return {
                         value: input,
@@ -37,8 +63,8 @@ $tags = WpFormsModule::getTags();
             });
             $('#kmcfmf_wp_forms_textarea_fields').selectize({
                 delimiter: ',',
-                persist: false,
-                options: <?php echo json_encode( $tags['textarea'] )?>,
+                persist: true,
+                options: <?php echo json_encode( $textarea_fields )?>,
                 create: function (input) {
                     return {
                         value: input,
@@ -48,8 +74,8 @@ $tags = WpFormsModule::getTags();
             });
             $('#kmcfmf_wp_forms_email_fields').selectize({
                 delimiter: ',',
-                persist: false,
-                options: <?php echo json_encode( $tags['email'] )?>,
+                persist: true,
+                options: <?php echo json_encode( $email_fields )?>,
                 create: function (input) {
                     return {
                         value: input,

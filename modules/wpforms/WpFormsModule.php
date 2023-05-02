@@ -51,6 +51,7 @@ class WpFormsModule extends Module {
 						case 'email':
 							array_push( $email, array( 'text' => $field['label'], 'value' => $field['label'] ) );
 							break;
+						case 'text':
 						case 'name':
 							array_push( $text, array( 'text' => $field['label'], 'value' => $field['label'] ) );
 							break;
@@ -89,7 +90,7 @@ class WpFormsModule extends Module {
 		if ( in_array( '*', $names ) ) {
 			foreach ( $form_fields as $field ) {
 
-				if ( $field['type'] == 'name' ) {
+				if ( $field['type'] == 'name' || $field['type'] == 'text' ) {
 					if ( $this->validateTextField( $fields[ $field['id'] ] ) ) {
 						$invalid_fields[ $field['id'] ]    = $this->spam_word_error;
 						$errors[ $_POST['wpforms']['id'] ] = $invalid_fields;
@@ -99,12 +100,12 @@ class WpFormsModule extends Module {
 			}
 		} else {
 			foreach ( $form_fields as $field ) {
-				if ( $field['type'] == 'name' && in_array( $field['label'], $names ) ) {
+				if ( ( $field['type'] == 'name' || $field['type'] == 'text' ) && in_array( $field['label'], $names ) ) {
 					if ( $this->validateTextField( $fields[ $field['id'] ] ) ) {
 						$invalid_fields[ $field['id'] ]    = $this->spam_word_error;
 						$errors[ $_POST['wpforms']['id'] ] = $invalid_fields;
 
-						return $errors;
+//						return $errors;
 					}
 				}
 			}
@@ -213,10 +214,10 @@ class WpFormsModule extends Module {
 			foreach ( $form_fields as $field ) {
 				if ( $field['type'] == 'textarea' ) {
 					if ( $this->validateTextField( $fields[ $field['id'] ] ) ) {
-						$invalid_fields[ $field['id'] ]    = $this->spam_email_error;
+						$invalid_fields[ $field['id'] ]    = $this->spam_word_error;
 						$errors[ $_POST['wpforms']['id'] ] = $invalid_fields;
 
-						return $errors;
+//						return $errors;
 					}
 				}
 			}
@@ -227,7 +228,7 @@ class WpFormsModule extends Module {
 						$invalid_fields[ $field['id'] ]    = $this->spam_word_error;
 						$errors[ $_POST['wpforms']['id'] ] = $invalid_fields;
 
-						return $errors;
+//						return $errors;
 					}
 				}
 			}
@@ -257,7 +258,7 @@ class WpFormsModule extends Module {
 						$invalid_fields[ $field['id'] ]    = $this->spam_email_error;
 						$errors[ $_POST['wpforms']['id'] ] = $invalid_fields;
 
-						return $errors;
+//						return $errors;
 					}
 				}
 			}
@@ -268,7 +269,7 @@ class WpFormsModule extends Module {
 						$invalid_fields[ $field['id'] ]    = $this->spam_email_error;
 						$errors[ $_POST['wpforms']['id'] ] = $invalid_fields;
 
-						return $errors;
+//						return $errors;
 					}
 				}
 			}
@@ -319,7 +320,7 @@ class WpFormsModule extends Module {
 	 * @return bool
 	 * @since v1.4.0
 	 */
-	public function skipMail__premium_only( $value, $object ) {
+	public function skipMail( $value, $object ) {
 		global $km_wp_forms_spam_status;
 		if ( $km_wp_forms_spam_status && $this->prevent_default_validation ) {
 			return true;
@@ -333,7 +334,7 @@ class WpFormsModule extends Module {
 	 * @return array
 	 * @since v1.4.0
 	 */
-	public function removeEmailAddress__premium_only( $email, $fields, $entry, $form_data, $notification_id ) {
+	public function removeEmailAddress( $email, $fields, $entry, $form_data, $notification_id ) {
 		global $km_wp_forms_spam_status;
 		if ( $km_wp_forms_spam_status && $this->prevent_default_validation ) {
 			$email['address'] = array();
@@ -363,8 +364,8 @@ class WpFormsModule extends Module {
 
 	protected function addActions() {
 		parent::addActions();
-		add_action( 'wpforms_disable_all_emails', array( $this, 'skipMail__premium_only' ), 999, 2 );
-		add_action( 'wpforms_entry_email_atts', array( $this, 'removeEmailAddress__premium_only' ), 999, 5 );
+		add_action( 'wpforms_disable_all_emails', array( $this, 'skipMail' ), 999, 2 );
+		add_action( 'wpforms_entry_email_atts', array( $this, 'removeEmailAddress' ), 999, 5 );
 	}
 
 }
