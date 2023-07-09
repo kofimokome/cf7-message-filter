@@ -11,7 +11,7 @@ class KMCFMessageFilter {
 
 	public function __construct() {
 		// do something here
-		self::$version = '1.4.7';
+		self::$version = '1.4.8';
 		$this->blocked = get_option( "kmcfmf_messages_blocked_today" );
 	}
 

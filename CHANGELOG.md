@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.4.8 Changes
+1. Fix bug with the CF7 Conditional Fields Plugin.
+2. Add Ability to select the forms to validate or not to validate (Blacklist/Whitelist).
+
 ## v1.4.7 Changes
 
 1. Fix bug when adding a custom field on the WPForm settings page.

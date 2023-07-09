@@ -143,10 +143,10 @@ class SettingsModule extends Module {
 		);
 		$settings->add_field(
 			array(
-				'type'      => 'checkbox',
-				'id'        => 'kmcfmf_hide_error_message',
-				'label'     => __( 'Hide error messages: ', KMCF7MS_TEXT_DOMAIN ),
-				'tip'       => __( "Show a success message instead of an error message if a spam is found", KMCF7MS_TEXT_DOMAIN )
+				'type'  => 'checkbox',
+				'id'    => 'kmcfmf_hide_error_message',
+				'label' => __( 'Hide error messages: ', KMCF7MS_TEXT_DOMAIN ),
+				'tip'   => __( "Show a success message instead of an error message if a spam is found", KMCF7MS_TEXT_DOMAIN )
 			)
 		);
 
@@ -198,6 +198,32 @@ class SettingsModule extends Module {
 			)
 		);
 
+		$settings->add_field(
+			array(
+				'type'    => 'select',
+				'id'      => 'kmcfmf_contact_form_7_filter_type',
+				'label'   => __( 'Apply filter to: ', KMCF7MS_TEXT_DOMAIN ),
+				'options' => array(
+					__( 'All forms', KMCF7MS_TEXT_DOMAIN )        => '',
+					__( 'All forms except', KMCF7MS_TEXT_DOMAIN ) => 'all_forms_except',
+					__( 'Only these forms', KMCF7MS_TEXT_DOMAIN ) => 'only_these_forms',
+				),
+				// 'default_option' => ''
+			)
+		);
+
+		$settings->add_field(
+			array(
+				'type'        => 'textarea',
+				'id'          => 'kmcfmf_contact_form_7_filter_forms',
+				'input_class' => 'select2',
+				'label'       => __( 'Select forms: ', KMCF7MS_TEXT_DOMAIN ),
+				'tip'         => "This will not apply if the 'Apply filter to' field is set to '<b>All Forms</b>'",
+				'placeholder' => ''
+			)
+		);
+
+
 		$settings = apply_filters( 'kmcfmf_contact_form_7_settings', $settings );
 		$settings->save();
 
@@ -241,6 +267,30 @@ class SettingsModule extends Module {
 				'input_class' => 'select2',
 				'label'       => __( 'Email fields to analyse: ', KMCF7MS_TEXT_DOMAIN ),
 				'tip'         => 'Eg: Email  etc.',
+				'placeholder' => ''
+			)
+		);
+		$settings->add_field(
+			array(
+				'type'    => 'select',
+				'id'      => 'kmcfmf_wp_forms_filter_type',
+				'label'   => __( 'Apply filter to: ', KMCF7MS_TEXT_DOMAIN ),
+				'options' => array(
+					__( 'All forms', KMCF7MS_TEXT_DOMAIN )        => '',
+					__( 'All forms except', KMCF7MS_TEXT_DOMAIN ) => 'all_forms_except',
+					__( 'Only these forms', KMCF7MS_TEXT_DOMAIN ) => 'only_these_forms',
+				),
+				// 'default_option' => ''
+			)
+		);
+
+		$settings->add_field(
+			array(
+				'type'        => 'textarea',
+				'id'          => 'kmcfmf_wp_forms_filter_forms',
+				'input_class' => 'select2',
+				'label'       => __( 'Select forms: ', KMCF7MS_TEXT_DOMAIN ),
+				'tip'         => "This will not apply if the 'Apply filter to' field is set to '<b>All Forms</b>'",
 				'placeholder' => ''
 			)
 		);

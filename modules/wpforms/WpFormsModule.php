@@ -74,6 +74,26 @@ class WpFormsModule extends Module {
 	}
 
 	/**
+	 * @since v1.4.8
+	 * Gets all registered WP forms
+	 * @returns  array
+	 */
+	public static function getForms() {
+
+		$forms = array();
+
+		if ( function_exists( 'wpforms' ) ) {
+			$args['post_status'] = 'publish';
+			$wp_forms               = wpforms()->get( 'form' )->get( '', $args );
+			foreach ( $wp_forms as $form ) {
+				array_push( $forms, array( 'text' => $form->post_title, 'value' => $form->ID ) );
+			}
+		}
+
+		return $forms;
+	}
+
+	/**
 	 * Filters text from form text elements from elems_names List
 	 * @since 1.4.0
 	 */
@@ -87,25 +107,28 @@ class WpFormsModule extends Module {
 		$names             = explode( ',', get_option( 'kmcfmf_wp_forms_text_fields' ) );
 		$invalid_fields    = empty( $errors[ $_POST['wpforms']['id'] ] ) ? array() : $errors[ $_POST['wpforms']['id'] ];
 
-		if ( in_array( '*', $names ) ) {
-			foreach ( $form_fields as $field ) {
+		$is_exempted = $this->isFormExempted( $this->form_id );
+		if ( ! $is_exempted ) {
+			if ( in_array( '*', $names ) ) {
+				foreach ( $form_fields as $field ) {
 
-				if ( $field['type'] == 'name' || $field['type'] == 'text' ) {
-					if ( $this->validateTextField( $fields[ $field['id'] ] ) ) {
-						$invalid_fields[ $field['id'] ]    = $this->spam_word_error;
-						$errors[ $_POST['wpforms']['id'] ] = $invalid_fields;
+					if ( $field['type'] == 'name' || $field['type'] == 'text' ) {
+						if ( $this->validateTextField( $fields[ $field['id'] ] ) ) {
+							$invalid_fields[ $field['id'] ]    = $this->spam_word_error;
+							$errors[ $_POST['wpforms']['id'] ] = $invalid_fields;
 //						return $errors;
+						}
 					}
 				}
-			}
-		} else {
-			foreach ( $form_fields as $field ) {
-				if ( ( $field['type'] == 'name' || $field['type'] == 'text' ) && in_array( $field['label'], $names ) ) {
-					if ( $this->validateTextField( $fields[ $field['id'] ] ) ) {
-						$invalid_fields[ $field['id'] ]    = $this->spam_word_error;
-						$errors[ $_POST['wpforms']['id'] ] = $invalid_fields;
+			} else {
+				foreach ( $form_fields as $field ) {
+					if ( ( $field['type'] == 'name' || $field['type'] == 'text' ) && in_array( $field['label'], $names ) ) {
+						if ( $this->validateTextField( $fields[ $field['id'] ] ) ) {
+							$invalid_fields[ $field['id'] ]    = $this->spam_word_error;
+							$errors[ $_POST['wpforms']['id'] ] = $invalid_fields;
 
 //						return $errors;
+						}
 					}
 				}
 			}
@@ -113,6 +136,33 @@ class WpFormsModule extends Module {
 
 		return $errors;
 
+	}
+
+	/**
+	 * @since 1.4.8
+	 * Checks if the form is exempted from validation
+	 */
+	private function isFormExempted( $id ) {
+		// 1 Check if a white list or black has been activated
+		$filter_type  = get_option( 'kmcfmf_wp_forms_filter_type', '' );
+		$filter_forms = get_option( 'kmcfmf_wp_forms_filter_forms', '' );
+		$filter_forms = explode( ',', $filter_forms );
+		switch ( $filter_type ) {
+			case 'all_forms_except':
+				// we have a white list
+				if ( in_array( $id, $filter_forms ) ) {
+					return true;
+				}
+				break;
+			case 'only_these_forms':
+				// we have a black list
+				if ( ! in_array( $id, $filter_forms ) ) {
+					return true;
+				}
+				break;
+		}
+
+		return false;
 	}
 
 	/**
@@ -210,25 +260,28 @@ class WpFormsModule extends Module {
 		$names             = explode( ',', get_option( 'kmcfmf_wp_forms_textarea_fields' ) );
 		$invalid_fields    = empty( $errors[ $_POST['wpforms']['id'] ] ) ? array() : $errors[ $_POST['wpforms']['id'] ];
 
-		if ( in_array( '*', $names ) ) {
-			foreach ( $form_fields as $field ) {
-				if ( $field['type'] == 'textarea' ) {
-					if ( $this->validateTextField( $fields[ $field['id'] ] ) ) {
-						$invalid_fields[ $field['id'] ]    = $this->spam_word_error;
-						$errors[ $_POST['wpforms']['id'] ] = $invalid_fields;
+		$is_exempted = $this->isFormExempted( $this->form_id );
+		if ( ! $is_exempted ) {
+			if ( in_array( '*', $names ) ) {
+				foreach ( $form_fields as $field ) {
+					if ( $field['type'] == 'textarea' ) {
+						if ( $this->validateTextField( $fields[ $field['id'] ] ) ) {
+							$invalid_fields[ $field['id'] ]    = $this->spam_word_error;
+							$errors[ $_POST['wpforms']['id'] ] = $invalid_fields;
 
 //						return $errors;
+						}
 					}
 				}
-			}
-		} else {
-			foreach ( $form_fields as $field ) {
-				if ( $field['type'] == 'textarea' && in_array( $field['label'], $names ) ) {
-					if ( $this->validateTextField( $fields[ $field['id'] ] ) ) {
-						$invalid_fields[ $field['id'] ]    = $this->spam_word_error;
-						$errors[ $_POST['wpforms']['id'] ] = $invalid_fields;
+			} else {
+				foreach ( $form_fields as $field ) {
+					if ( $field['type'] == 'textarea' && in_array( $field['label'], $names ) ) {
+						if ( $this->validateTextField( $fields[ $field['id'] ] ) ) {
+							$invalid_fields[ $field['id'] ]    = $this->spam_word_error;
+							$errors[ $_POST['wpforms']['id'] ] = $invalid_fields;
 
 //						return $errors;
+						}
 					}
 				}
 			}
@@ -251,25 +304,28 @@ class WpFormsModule extends Module {
 		$names             = explode( ',', get_option( 'kmcfmf_wp_forms_email_fields' ) );
 		$invalid_fields    = empty( $errors[ $_POST['wpforms']['id'] ] ) ? array() : $errors[ $_POST['wpforms']['id'] ];
 
-		if ( in_array( '*', $names ) ) {
-			foreach ( $form_fields as $field ) {
-				if ( $field['type'] == 'email' ) {
-					if ( $this->validateEmailField( $fields[ $field['id'] ] ) ) {
-						$invalid_fields[ $field['id'] ]    = $this->spam_email_error;
-						$errors[ $_POST['wpforms']['id'] ] = $invalid_fields;
+		$is_exempted = $this->isFormExempted( $this->form_id );
+		if ( ! $is_exempted ) {
+			if ( in_array( '*', $names ) ) {
+				foreach ( $form_fields as $field ) {
+					if ( $field['type'] == 'email' ) {
+						if ( $this->validateEmailField( $fields[ $field['id'] ] ) ) {
+							$invalid_fields[ $field['id'] ]    = $this->spam_email_error;
+							$errors[ $_POST['wpforms']['id'] ] = $invalid_fields;
 
 //						return $errors;
+						}
 					}
 				}
-			}
-		} else {
-			foreach ( $form_fields as $field ) {
-				if ( $field['type'] == 'email' && in_array( $field['label'], $names ) ) {
-					if ( $this->validateEmailField( $fields[ $field['id'] ] ) ) {
-						$invalid_fields[ $field['id'] ]    = $this->spam_email_error;
-						$errors[ $_POST['wpforms']['id'] ] = $invalid_fields;
+			} else {
+				foreach ( $form_fields as $field ) {
+					if ( $field['type'] == 'email' && in_array( $field['label'], $names ) ) {
+						if ( $this->validateEmailField( $fields[ $field['id'] ] ) ) {
+							$invalid_fields[ $field['id'] ]    = $this->spam_email_error;
+							$errors[ $_POST['wpforms']['id'] ] = $invalid_fields;
 
 //						return $errors;
+						}
 					}
 				}
 			}

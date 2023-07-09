@@ -70,13 +70,46 @@ class ContactForm7Module extends Module {
 
 
 	/**
+	 * @since v1.4.8
+	 * Gets all registered contact form 7 forms
+	 * @returns  array
+	 */
+	public static function getForms() {
+		$forms = array();
+
+		if ( class_exists( 'WPCF7_ContactForm' ) ) {
+			$cf7_forms = WPCF7_ContactForm::find();
+			foreach ( $cf7_forms as $form ) {
+				$contact_form = WPCF7_ContactForm::get_instance( $form->id() );
+				array_push( $forms, array( 'text' => $contact_form->title(), 'value' => $contact_form->id() ) );
+			}
+		}
+
+		return $forms;
+	}
+
+
+	/**
 	 * Filters text from form text elements from elems_names List
 	 * @author: UnderWordPressure
 	 * @since 1.2.3
 	 */
 	function textValidationFilter( $result, $tag ) {
 
-		if ( ! KMCFMessageFilter::skipValidation() ) {
+		$submission = WPCF7_Submission::get_instance();
+
+		// fixes for cf7-conditional-fields plugin
+		if ( is_null( $submission ) ) {
+			if ( isset( $_POST['_wpcf7'] ) ) {
+				$id           = (int) $_POST['_wpcf7'];
+				$contact_form = wpcf7_contact_form( $id );
+			}
+		} else {
+			$contact_form = $submission->get_contact_form();
+		}
+		$is_exempted = $this->isFormExempted( $contact_form );
+
+		if ( ! KMCFMessageFilter::skipValidation() && ! $is_exempted ) {
 			$name  = $tag->name;
 			$names = explode( ',', get_option( 'kmcfmf_tags_by_name' ) );
 			if ( in_array( '*', $names ) ) {
@@ -88,6 +121,34 @@ class ContactForm7Module extends Module {
 
 		return $result;
 
+	}
+
+	/**
+	 * @since 1.4.8
+	 * Checks if the form is exempted from validation
+	 */
+	private function isFormExempted( $contact_form ) {
+		// 1 Check if a white list or black has been activated
+		$filter_type  = get_option( 'kmcfmf_contact_form_7_filter_type', '' );
+		$filter_forms = get_option( 'kmcfmf_contact_form_7_filter_forms', '' );
+		$filter_forms = explode( ',', $filter_forms );
+		$id           = $contact_form->id();
+		switch ( $filter_type ) {
+			case 'all_forms_except':
+				// we have a white list
+				if ( in_array( $id, $filter_forms ) ) {
+					return true;
+				}
+				break;
+			case 'only_these_forms':
+				// we have a black list
+				if ( ! in_array( $id, $filter_forms ) ) {
+					return true;
+				}
+				break;
+		}
+
+		return false;
 	}
 
 	/**
@@ -113,9 +174,21 @@ class ContactForm7Module extends Module {
 				$kmcf7_spam_status = true;
 			}
 			if ( ! $this->count_updated ) {
-				$submission   = WPCF7_Submission::get_instance();
-				$contact_form = $submission->get_contact_form();
-				$data         = array(
+				$submission = WPCF7_Submission::get_instance();
+
+				// fixes for cf7-conditional-fields plugin
+				if ( is_null( $submission ) ) {
+					if ( isset( $_POST['_wpcf7'] ) ) {
+						$id = (int) $_POST['_wpcf7'];
+
+						$contact_form = wpcf7_contact_form( $id );
+						$submission   = WPCF7_Submission::get_instance( $contact_form );
+					}
+				} else {
+					$contact_form = $submission->get_contact_form();
+				}
+
+				$data = array(
 					'spam'    => $spam_word,
 					'form'    => 'cf7',
 					'message' => json_encode( $submission->get_posted_data() ),
@@ -137,7 +210,8 @@ class ContactForm7Module extends Module {
 	 *
 	 * @since v1.3.6
 	 */
-	private function preventDefaultValidation() {
+	private
+	function preventDefaultValidation() {
 		if ( $this->prevent_default_validation ) {
 			$this->removeActions();
 
@@ -151,7 +225,8 @@ class ContactForm7Module extends Module {
 	 * Removes contact form 7 submit actions
 	 * @since v1.3.6
 	 */
-	private function removeActions() {
+	private
+	function removeActions() {
 		remove_all_actions( 'wpcf7_mail_sent' );
 		remove_all_actions( 'wpcf7_before_send_mail' );
 	}
@@ -161,8 +236,21 @@ class ContactForm7Module extends Module {
 	 * @since 1.0.0
 	 */
 	function textareaValidationFilter( $result, $tag ) {
+		$submission = WPCF7_Submission::get_instance();
 
-		if ( ! KMCFMessageFilter::skipValidation() ) {
+		// fixes for cf7-conditional-fields plugin
+		if ( is_null( $submission ) ) {
+			if ( isset( $_POST['_wpcf7'] ) ) {
+				$id           = (int) $_POST['_wpcf7'];
+				$contact_form = wpcf7_contact_form( $id );
+			}
+		} else {
+			$contact_form = $submission->get_contact_form();
+		}
+
+		$is_exempted = $this->isFormExempted( $contact_form );
+
+		if ( ! KMCFMessageFilter::skipValidation() && ! $is_exempted ) {
 			$name = $tag->name;
 
 			$names = explode( ',', get_option( 'kmcfmf_contact_form_7_textarea_fields' ) );
@@ -182,8 +270,21 @@ class ContactForm7Module extends Module {
 	 * @since 1.0.0
 	 */
 	function emailValidationFilter( $result, $tag ) {
+		$submission = WPCF7_Submission::get_instance();
 
-		if ( ! KMCFMessageFilter::skipValidation() ) {
+		// fixes for cf7-conditional-fields plugin
+		if ( is_null( $submission ) ) {
+			if ( isset( $_POST['_wpcf7'] ) ) {
+				$id           = (int) $_POST['_wpcf7'];
+				$contact_form = wpcf7_contact_form( $id );
+			}
+		} else {
+			$contact_form = $submission->get_contact_form();
+		}
+
+		$is_exempted = $this->isFormExempted( $contact_form );
+
+		if ( ! KMCFMessageFilter::skipValidation() && ! $is_exempted ) {
 			$name = $tag->name;
 
 			$names = explode( ',', get_option( 'kmcfmf_contact_form_7_email_fields' ) );
@@ -202,7 +303,10 @@ class ContactForm7Module extends Module {
 	 * Runs spam filter on email fields
 	 * @since v1.4.0
 	 */
-	private function validateEmailField( $result, $tag ) {
+	private
+	function validateEmailField(
+		$result, $tag
+	) {
 		global $kmcf7_spam_status;
 		$name = $tag->name;
 
@@ -242,7 +346,7 @@ class ContactForm7Module extends Module {
 	 * Skips sending of contact form mail
 	 * @since v1.3.6
 	 */
-	function skipMail__premium_only( $skip_mail, $contact_form ) {
+	function skipMail( $skip_mail, $contact_form ) {
 		global $kmcf7_spam_status;
 		if ( $this->prevent_default_validation && $kmcf7_spam_status ) {
 			return true;
@@ -251,8 +355,42 @@ class ContactForm7Module extends Module {
 		return $skip_mail;
 	}
 
-	protected function addFilters() {
+	/**
+	 * @since 1.4.8
+	 * Called when a contact form is submitted
+	 */
+	/*public function onSubmit( $contact_form, $result ) {
+		if ( $contact_form->in_demo_mode() ) {
+			return;
+		}
+
+		// 1 Check if a white list or black has been activated
+		$filter_type  = get_option( 'kmcfmf_contact_form_7_filter_type', '' );
+		$filter_forms = get_option( 'kmcfmf_contact_form_7_filter_forms', '' );
+		$filter_forms = explode( ',', $filter_forms );
+		switch ( $filter_type ) {
+			case 'all_forms_except':
+				// we have a white list
+				$id = $contact_form->id();
+				if ( in_array( $id, $filter_forms ) ) {
+					KMCFMessageFilter::skipValidation( true );
+					echo 'submit '.(KMCFMessageFilter::skipValidation()? 'true' : 'false');
+
+				}
+				break;
+			case 'only_these_forms':
+				// we have a black list
+				$id = $contact_form->id();
+				if ( ! in_array( $id, $filter_forms ) ) {
+					KMCFMessageFilter::skipValidation( true );
+				}
+				break;
+		}
+	}*/
+	protected
+	function addFilters() {
 		parent::addFilters();
+		add_filter( 'wpcf7_skip_mail', array( $this, 'skipMail' ), 999, 2 );
 
 		$enable_message_filter        = get_option( 'kmcfmf_message_filter_toggle' ) == 'on' ? true : false;
 		$enable_email_filter          = get_option( 'kmcfmf_email_filter_toggle' ) == 'on' ? true : false;
@@ -276,9 +414,9 @@ class ContactForm7Module extends Module {
 		}
 	}
 
+
 	protected function addActions() {
 		parent::addActions();
-		// add_action('wpcf7_submit', array($this, 'onWpcf7Submit'),10, 2);
-		add_filter( 'wpcf7_skip_mail', array( $this, 'skipMail__premium_only' ), 999, 2 );
+//		add_action( 'wpcf7_submit', array( $this, 'onSubmit' ), 99, 2 );
 	}
 }

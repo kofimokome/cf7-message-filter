@@ -28,6 +28,7 @@ $selected_email_fields = array_map( function ( $e ) {
 }, $selected_email_fields );
 $email_fields          = array_merge( $email_fields, $selected_email_fields );
 
+$contact_forms = WpFormsModule::getForms();
 
 ?>
     <h1><?php esc_html_e( "WP Forms Settings ", KMCF7MS_TEXT_DOMAIN ) ?></h1>
@@ -82,6 +83,13 @@ $email_fields          = array_merge( $email_fields, $selected_email_fields );
                         text: input
                     }
                 }
+            });
+
+            const filter_forms = $('#kmcfmf_wp_forms_filter_forms');
+            filter_forms.selectize({
+                delimiter: ',',
+                persist: true,
+                options: <?php echo json_encode( $contact_forms )?>,
             });
 
         })
