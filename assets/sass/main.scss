@@ -1,0 +1,23 @@
+.sticky-col {
+  position: -webkit-sticky;
+  position: sticky;
+  background-color: white;
+  right: 0;
+  width: 200px;
+}
+
+.km-upload {
+  &__dragover {
+    background: #ccc;
+    border-color: white;
+  }
+
+  margin-top: 20px;
+  border: dashed 5px #ccc;
+  cursor: pointer;
+  text-align: center;
+  font-size: 16px;
+  background: white;
+  padding: 40px 20px;
+  border-radius: 10px;
+}

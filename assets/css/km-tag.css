@@ -1,0 +1,68 @@
+.km-tags {
+    display: flex;
+    background: white;
+    /*border: solid red 2px;*/
+    padding: 5px;
+    border-radius: 5px;
+    flex-wrap: wrap;
+}
+
+.km-tag-container__with_custom_filter {
+    background: green !important;
+}
+
+.km-tag-container__with_modifier {
+    background: purple !important;
+}
+
+.km-tag-container {
+    display: flex;
+    /*width: min-content;*/
+    width: auto;
+    justify-content: space-between;
+    align-items: center;
+    background: DodgerBlue;
+    /*border: solid white 2px;*/
+    margin: 2px;
+    border-radius: 16px;
+    padding: 0 10px;
+    height: 26px;
+}
+
+.km-tag-container__input {
+    background: transparent !important;
+    border: none !important;
+    color: white !important;
+    text-wrap: nowrap;
+    /*   width: 100%; */
+    /*   flex:1; */
+    margin-right: 10px;
+    font-size: 13px;
+}
+
+.km-tag-container__select {
+    border-radius: 20px !important;
+    background: transparent url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") no-repeat right 5px top 55% !important;
+    color: white !important;
+    border: none;
+}
+
+.km-tag-container__action {
+    font-size: 13px;
+    color: white;
+    cursor: pointer;
+}
+
+.km-new-tag-input {
+    border: none !important;
+    background: transparent !important;
+    flex: 1;
+}
+
+.km-new-tag-input:focus {
+    /*outline: none !important;*/
+    outline-style: none !important;
+    border-color: inherit !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}

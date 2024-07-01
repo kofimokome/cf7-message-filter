@@ -1,0 +1,799 @@
+# Copyright (C) 2024 Message Filter For Contact Form 7
+# This file is distributed under the same license as the Message Filter For Contact Form 7 package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Message Filter For Contact Form 7\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-04-25 04:09+0000\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../cf7-message-filter.php:131, ../cf7-message-filter.php:150
+msgid "Error locating <b>%s</b> for inclusion"
+msgstr ""
+
+#: ../modules/contactform7/ContactForm7Module.php:31, ../modules/wpforms/WpFormsModule.php:29
+msgid "One or more fields have an error. Please check and try again."
+msgstr ""
+
+#: ../modules/contactform7/ContactForm7Module.php:32, ../modules/settings/SettingsModule.php:220, ../modules/wpforms/WpFormsModule.php:30
+msgid "The e-mail address entered is invalid."
+msgstr ""
+
+#: ../modules/filters/FiltersModule.php:68, ../modules/filters/FiltersModule.php:169
+msgid "We could not find this filter"
+msgstr ""
+
+#: ../modules/filters/FiltersModule.php:70
+msgid "Filter deleted"
+msgstr ""
+
+#: ../modules/filters/FiltersModule.php:98, ../modules/filters/FiltersModule.php:155
+msgid "The filter name  already exists"
+msgstr ""
+
+#: ../modules/filters/FiltersModule.php:103, ../modules/filters/FiltersModule.php:159
+msgid "A filter with this name  already exists"
+msgstr ""
+
+#: ../modules/filters/FiltersModule.php:112, ../modules/filters/FiltersModule.php:173
+msgid "Filter saved"
+msgstr ""
+
+#: ../modules/messages/MessagesModule.php:487
+msgid "An error occurred. Please try again"
+msgstr ""
+
+#: ../modules/messages/MessagesModule.php:481, ../modules/messages/MessagesModule.php:540
+msgid "We could not find this message"
+msgstr ""
+
+#: ../modules/messages/MessagesModule.php:478
+msgid "We could not delete this message"
+msgstr ""
+
+#: ../modules/messages/MessagesModule.php:484
+msgid "Message(s) deleted"
+msgstr ""
+
+#: ../modules/messages/MessagesModule.php:537
+msgid "Feature only available for Contact Form 7"
+msgstr ""
+
+#: ../modules/messages/MessagesModule.php:543, ../views/messages/new.php:308
+msgid "Message(s) resubmitted successfully"
+msgstr ""
+
+#: ../modules/messages/MessagesModule.php:566
+msgid "Visible columns saved"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:39
+msgid "Note: You can add up of 40 words in the free version. Upgrade to add unlimited words."
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:57
+msgid "Tag UI: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:59
+msgid "New UI"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:60
+msgid "Old UI"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:61
+msgid "None"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:71
+msgid "Enable spam words filter?: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:80
+msgid "Spam words: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:81
+msgid "Click here to insert my filters"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:89
+msgid "Enable spam email filter?: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:97
+msgid "Spam emails: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:107
+msgid "Auto delete messages: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:116
+msgid "Number of days: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:118
+msgid "1 Month"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:119
+msgid "1 Day"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:120
+msgid "3 Days"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:121
+msgid "1 Week"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:122
+msgid "2 Weeks"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:131
+msgid "Number of messages to delete: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:133
+msgid "10 Messages"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:134
+msgid "20 Messages"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:135
+msgid "40 Messages"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:136
+msgid "80 Messages"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:146
+msgid "Delete my data when uninstalling this plugin: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:173
+msgid "Enable data collection: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:181, ../modules/settings/SettingsModule.php:192, ../modules/settings/SettingsModule.php:283, ../modules/settings/SettingsModule.php:305, ../modules/settings/SettingsModule.php:361, ../modules/settings/SettingsModule.php:381
+msgid "This feature is only available in the premium version"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:181
+msgid "Email reports are processed and sent from your website"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:184
+msgid "Enable email reports: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:184
+msgid "Disable email reports: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:195
+msgid "Send Email Report To: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:209
+msgid "Error Message For Spam Words: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:211
+msgid "You have entered a word marked as spam"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:218
+msgid "Error Message For Spam Emails: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:227
+msgid "Hide error messages: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:228
+msgid "Show a success message instead of an error message if a spam is found"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:244
+msgid "Enable Contact Form 7 filter: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:253, ../modules/settings/SettingsModule.php:330
+msgid "Text fields to analyse: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:264, ../modules/settings/SettingsModule.php:341
+msgid "Text area fields to analyse: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:274, ../modules/settings/SettingsModule.php:351
+msgid "Email fields to analyse: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:286, ../modules/settings/SettingsModule.php:363
+msgid "Apply filter to: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:288, ../modules/settings/SettingsModule.php:365
+msgid "All forms"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:289, ../modules/settings/SettingsModule.php:366
+msgid "All forms except"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:290, ../modules/settings/SettingsModule.php:367
+msgid "Only these forms"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:304, ../modules/settings/SettingsModule.php:380
+msgid "Select forms: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:305, ../modules/settings/SettingsModule.php:381
+msgid "This will not apply if the 'Apply filter to' field is set to '<b>All Forms</b>'"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:321
+msgid "Enable WP Forms filter: "
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:431
+msgid "Settings"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:436
+msgid "Error Messages"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:442
+msgid "Contact Form 7"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:447
+msgid "WP Forms"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:457
+msgid "My Filters"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:462
+msgid "Email & Data Collection"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:468
+msgid "Upgrade"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:474
+msgid "Debug Info"
+msgstr ""
+
+#: ../modules/settings/SettingsModule.php:479
+msgid "More Plugins"
+msgstr ""
+
+#: ../views/dashboard/index.php:109
+msgid "Total Messages Blocked"
+msgstr ""
+
+#: ../views/dashboard/index.php:123
+msgid "Messages Blocked Today"
+msgstr ""
+
+#: ../views/dashboard/index.php:137
+msgid "Spam Words & Emails"
+msgstr ""
+
+#: ../views/dashboard/index.php:166
+msgid "Plan"
+msgstr ""
+
+#: ../views/dashboard/index.php:187
+msgid "Statistics"
+msgstr ""
+
+#: ../views/dashboard/index.php:212
+msgid "Word Frequency"
+msgstr ""
+
+#: ../views/dashboard/index.php:221
+msgid "Email Frequency"
+msgstr ""
+
+#: ../views/dashboard/index.php:240
+msgid "Thank You For Choosing Contact Form 7 Filter"
+msgstr ""
+
+#: ../views/dashboard/index.php:247
+msgid ""
+" It will be great if you can take just 5 minutes of your\n"
+"                        time to leave a review, if this plugin has been useful to you"
+msgstr ""
+
+#: ../views/dashboard/index.php:251
+msgid "Submit Review"
+msgstr ""
+
+#: ../views/dashboard/index.php:273
+msgid ""
+"If you find an issue, please <a href=\"https://wordpress.org/support/plugin/cf7-message-filter/\"\n"
+"                                                    target=\"_blank\">create a support ticket here</a> and I will do my\n"
+"                    best to fix as soon as possible"
+msgstr ""
+
+#: ../views/dashboard/index.php:279
+msgid "Close"
+msgstr ""
+
+#: ../views/messages/message.php:16
+msgid "Go back"
+msgstr ""
+
+#: ../views/messages/message.php:17
+msgid "Message Details"
+msgstr ""
+
+#: ../views/messages/message.php:31
+msgid "Field"
+msgstr ""
+
+#: ../views/messages/message.php:32
+msgid "Value"
+msgstr ""
+
+#: ../views/messages/message.php:53
+msgid "Date Blocked"
+msgstr ""
+
+#: ../views/messages/message.php:63, ../views/settings/my_filters.php:158
+msgid "Delete"
+msgstr ""
+
+#: ../views/messages/message.php:66
+msgid "Resubmit"
+msgstr ""
+
+#: ../views/messages/message.php:97
+msgid "Are you sure you want to delete this message?"
+msgstr ""
+
+#: ../views/messages/message.php:134
+msgid "Message deleted successfully"
+msgstr ""
+
+#: ../views/messages/message.php:150, ../views/messages/new.php:271
+msgid "Resubmitting a message may not work if you have another spam filter or captcha plugin installed. We will not be able to bypass the verification process of these plugins."
+msgstr ""
+
+#: ../views/messages/message.php:187
+msgid "Message resubmitted successfully"
+msgstr ""
+
+#: ../views/messages/new.php:109
+msgid "Note: Message storage location has changed."
+msgstr ""
+
+#: ../views/messages/new.php:111
+msgid "Click here to view your old messages"
+msgstr ""
+
+#: ../views/messages/new.php:116, ../views/messages/old.php:102
+msgid "Blocked Messages Area"
+msgstr ""
+
+#: ../views/messages/new.php:117
+msgid ""
+"Messages are now grouped per form. Select a form below to view all the messages blocked for that\n"
+"            form."
+msgstr ""
+
+#: ../views/messages/new.php:119, ../views/messages/old.php:105
+msgid ""
+"If you upgraded from a previous version, all old messages blocked are stored under\n"
+"            uncategorized."
+msgstr ""
+
+#: ../views/messages/new.php:126, ../views/messages/new.php:49, ../views/messages/old.php:37
+msgid "Select a form"
+msgstr ""
+
+#: ../views/messages/new.php:131, ../views/messages/new.php:54, ../views/messages/old.php:44
+msgid "Show Blocked Messages"
+msgstr ""
+
+#: ../views/messages/new.php:58
+msgid "Hint: Press and hold <kbd>CMD</kbd> or <kbd>CRTL</kbd> while clicking on any cell to select it"
+msgstr ""
+
+#: ../views/messages/new.php:61, ../views/messages/new.php:97
+msgid "Delete selected"
+msgstr ""
+
+#: ../views/messages/new.php:68
+msgid "Visible Columns"
+msgstr ""
+
+#: ../views/messages/new.php:83, ../views/settings/my_filters.php:46
+msgid "Actions"
+msgstr ""
+
+#: ../views/messages/new.php:329
+msgid "Are you sure you want to delete the selected message(s)?"
+msgstr ""
+
+#: ../views/messages/new.php:366
+msgid "Message(s) deleted successfully"
+msgstr ""
+
+#: ../views/messages/old.php:33
+msgid "messages have been blocked"
+msgstr ""
+
+#: ../views/messages/old.php:103
+msgid ""
+"Messages are now grouped per form. Select a form above to view all messages blocked for that\n"
+"            form."
+msgstr ""
+
+#: ../views/settings/contactform7.php:34
+msgid "Contact Form 7 Settings "
+msgstr ""
+
+#: ../views/settings/contactform7.php:42, ../views/settings/wpforms.php:47
+msgid "Use <code>*</code> to analyse all fields for each category below:"
+msgstr ""
+
+#: ../views/settings/contactform7.php:37
+msgid "Please Install & Activate Contact Form 7 Plugin First!"
+msgstr ""
+
+#: ../views/settings/data_collection.php:5
+msgid "Data Collection Settings "
+msgstr ""
+
+#: ../views/settings/data_collection.php:8
+msgid "To improve this plugin, we collect data on words in your spam list and spam messages blocked by the plugin. You can enable/disable this data collection here."
+msgstr ""
+
+#: ../views/settings/data_collection.php:11
+msgid "Note: We do not collect your private information"
+msgstr ""
+
+#: ../views/settings/debug.php:54
+msgid "Debug Settings "
+msgstr ""
+
+#: ../views/settings/debug.php:57
+msgid "Please copy the information below and send to the support team if asked."
+msgstr ""
+
+#: ../views/settings/debug.php:60, ../views/settings/debug.php:72
+msgid "Copy text"
+msgstr ""
+
+#: ../views/settings/debug.php:86
+msgid "Text copied"
+msgstr ""
+
+#: ../views/settings/extensions.php:8
+msgid "Extensions"
+msgstr ""
+
+#: ../views/settings/extensions.php:10
+msgid "The following extensions are available:"
+msgstr ""
+
+#: ../views/settings/extensions.php:15
+msgid "Hide Error Messages (Free Trial)"
+msgstr ""
+
+#: ../views/settings/extensions.php:16
+msgid "This extension hides the error message and shows a success message if a spam is found in the submitted form"
+msgstr ""
+
+#: ../views/settings/extensions.php:25
+msgid "Add Extension"
+msgstr ""
+
+#: ../views/settings/extensions.php:21
+msgid "Configure"
+msgstr ""
+
+#: ../views/settings/filters.php:6
+msgid "List of filters"
+msgstr ""
+
+#: ../views/settings/filters.php:12, ../views/settings/my_filters.php:31
+msgid "Name"
+msgstr ""
+
+#: ../views/settings/filters.php:13, ../views/settings/my_filters.php:34
+msgid "Description"
+msgstr ""
+
+#: ../views/settings/filters.php:18, ../views/settings/my_filters.php:55
+msgid "Filters messages having links"
+msgstr ""
+
+#: ../views/settings/filters.php:23, ../views/settings/my_filters.php:64
+msgid "Filters messages having russian (cyrillic) characters"
+msgstr ""
+
+#: ../views/settings/filters.php:31, ../views/settings/my_filters.php:73
+msgid "Filters messages having japanese (hiragana) characters"
+msgstr ""
+
+#: ../views/settings/filters.php:39, ../views/settings/my_filters.php:82
+msgid "Filters messages having japanese (katakana) characters"
+msgstr ""
+
+#: ../views/settings/filters.php:47, ../views/settings/my_filters.php:93
+msgid "Filters messages having japanese (kanji) characters"
+msgstr ""
+
+#: ../views/settings/filters.php:55, ../views/settings/my_filters.php:104
+msgid ""
+"Filter messages having japanese characters. Calls the following filters: <code>[hiragana]</code>,<code>[katakana]</code>\n"
+"                and <code>[kanji]</code>"
+msgstr ""
+
+#: ../views/settings/filters.php:64, ../views/settings/my_filters.php:117
+msgid "Filters messages having emojis"
+msgstr ""
+
+#: ../views/settings/filters.php:79
+msgid "Cancel"
+msgstr ""
+
+#: ../views/settings/filters.php:80
+msgid "Add"
+msgstr ""
+
+#: ../views/settings/messages.php:5
+msgid "Error Messages Settings"
+msgstr ""
+
+#: ../views/settings/my_filters.php:9
+msgid "My Filters "
+msgstr ""
+
+#: ../views/settings/my_filters.php:12
+msgid "Here, you can create your own custom spam filter"
+msgstr ""
+
+#: ../views/settings/my_filters.php:16
+msgid "Creating a custom filter requires knowledge of <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions' target='_blank'>Regular Expressions</a>. You can contact us (Pro users only) to write a custom filter for you."
+msgstr ""
+
+#: ../views/settings/my_filters.php:19
+msgid "A Filter can take variables in the form of<code>{{variable}}</code>. For example, if you want to filter multiple words with the same custom filter, you can add a variable, say  'name'  in the regular expression. <code>\S+{{name}}\S+</code>.<br/> You can pass the variable when calling the filter as shown below: <code>[my-filter-name name=John Doe]</code>"
+msgstr ""
+
+#: ../views/settings/my_filters.php:23
+msgid "Note: As a free user, you can add up to 1 custom filter."
+msgstr ""
+
+#: ../views/settings/my_filters.php:37
+msgid "Short Code"
+msgstr ""
+
+#: ../views/settings/my_filters.php:40
+msgid "Expression"
+msgstr ""
+
+#: ../views/settings/my_filters.php:43
+msgid "Created At"
+msgstr ""
+
+#: ../views/settings/my_filters.php:136, ../views/settings/my_filters.php:169
+msgid "Name of filter"
+msgstr ""
+
+#: ../views/settings/my_filters.php:141, ../views/settings/my_filters.php:173
+msgid "Filter description (optional)"
+msgstr ""
+
+#: ../views/settings/my_filters.php:155
+msgid "Update"
+msgstr ""
+
+#: ../views/settings/my_filters.php:192
+msgid "You can add only 1 custom filter. Upgrade to Pro to add more custom filters"
+msgstr ""
+
+#: ../views/settings/my_filters.php:186
+msgid "Save"
+msgstr ""
+
+#: ../views/settings/my_filters.php:224
+msgid "Are you sure you want to delete this filter?"
+msgstr ""
+
+#: ../views/settings/plugins.php:5
+msgid "Here is a list of other plugins I am currently working on"
+msgstr ""
+
+#: ../views/settings/plugins.php:18
+msgid "I will be grateful if you can buy me a cup of coffee"
+msgstr ""
+
+#: ../views/settings/settings.php:29
+msgid "Plugin Settings"
+msgstr ""
+
+#: ../views/settings/settings.php:33
+msgid "Do you have a CSV file?"
+msgstr ""
+
+#: ../views/settings/settings.php:36
+msgid "DRAG it here or CLICK here to upload it."
+msgstr ""
+
+#: ../views/settings/settings.php:61
+msgid "Suggested Words"
+msgstr ""
+
+#: ../views/settings/settings.php:62
+msgid ""
+"We have some suggested words and emails for you. 80% of our clients saw a 75% reduction in spam comments\n"
+"            within\n"
+"            a month by using these strategic word choices."
+msgstr ""
+
+#: ../views/settings/settings.php:68
+msgid "Words"
+msgstr ""
+
+#: ../views/settings/settings.php:75
+msgid "Emails"
+msgstr ""
+
+#: ../views/settings/settings.php:83
+msgid "Add Suggested Words & Emails"
+msgstr ""
+
+#: ../views/settings/settings.php:85
+msgid "Ignore"
+msgstr ""
+
+#: ../views/settings/settings.php:89
+msgid "Please wait..."
+msgstr ""
+
+#: ../views/settings/settings.php:96
+msgid "We have added 8 new filters"
+msgstr ""
+
+#: ../views/settings/settings.php:101
+msgid ""
+"Searches only for words ending with “ing” eg. eating,\n"
+"                walking, talking\n"
+"                etc…, including the word “ing”."
+msgstr ""
+
+#: ../views/settings/settings.php:106
+msgid ""
+"Searches only for words ending with “ing” eg.\n"
+"                eating, walking,\n"
+"                talking etc…, excluding the word “ing”."
+msgstr ""
+
+#: ../views/settings/settings.php:111
+msgid ""
+"Searches only for words starting with “app”. eg\n"
+"                application, apple,\n"
+"                including the word “app”"
+msgstr ""
+
+#: ../views/settings/settings.php:116
+msgid ""
+"Searches only for words starting with “app”. eg\n"
+"                application,\n"
+"                apple, excluding the word “app”"
+msgstr ""
+
+#: ../views/settings/settings.php:121
+msgid ""
+"Searches only for words containing “ver”. eg every, Elvera,\n"
+"                neverland,\n"
+"                including the word “ver”, words starting with “ver” and words ending with “ver”"
+msgstr ""
+
+#: ../views/settings/settings.php:127
+msgid ""
+"Searches only for words containing “ver”. eg every,\n"
+"                Elvera,\n"
+"                neverland, excluding the word “ver”, words starting with “ver” and words ending with “ver”"
+msgstr ""
+
+#: ../views/settings/settings.php:132
+msgid ""
+" Searches only for words containing “ver”. eg\n"
+"                every, Elvera,\n"
+"                neverland, excluding the word “ver” and words ending with “ver”"
+msgstr ""
+
+#: ../views/settings/settings.php:137
+msgid ""
+"Searches only for words containing “ver”. eg\n"
+"                every, Elvera,\n"
+"                neverland, excluding words starting with “ver” and the word “ver”"
+msgstr ""
+
+#: ../views/settings/settings.php:358, ../views/settings/settings.php:403
+msgid "File Import"
+msgstr ""
+
+#: ../views/settings/settings.php:404
+msgid "You are about to import ${words.length} words. Where would you like to place these words?"
+msgstr ""
+
+#: ../views/settings/settings.php:460
+msgid "Your file has been imported. Please review the changes and click on the Save Changes button"
+msgstr ""
+
+#: ../views/settings/upgrade.php:5
+msgid "How to Upgrade"
+msgstr ""
+
+#: ../views/settings/upgrade.php:9
+msgid "Download the pro version"
+msgstr ""
+
+#: ../views/settings/upgrade.php:16
+msgid "Click on the <kbd>Plugins</kbd> menu item"
+msgstr ""
+
+#: ../views/settings/upgrade.php:19
+msgid "Click on the<kbd>Add New</kbd> button"
+msgstr ""
+
+#: ../views/settings/upgrade.php:26
+msgid "Click on the <kbd>Upload Plugin</kbd> button"
+msgstr ""
+
+#: ../views/settings/upgrade.php:29
+msgid "Click on the <kbd>Choose File</kbd> and select the downloaded file"
+msgstr ""
+
+#: ../views/settings/upgrade.php:32
+msgid "Click on the <kbd>Install Now</kbd> button"
+msgstr ""
+
+#: ../views/settings/upgrade.php:39
+msgid "Click on the <kbd>Go to Plugin Installer</kbd> link"
+msgstr ""
+
+#: ../views/settings/upgrade.php:46
+msgid "Deactivate the  <kbd>Message Filter for Contact Form 7</kbd> plugin"
+msgstr ""
+
+#: ../views/settings/upgrade.php:52
+msgid "Activate the  <kbd>Message Filter for Contact Form 7 Pro</kbd> plugin"
+msgstr ""
+
+#: ../views/settings/upgrade.php:58
+msgid "You can delete the free plugin if you wish. Do not do this if you have enabled the 'delete my data on uninstall' option"
+msgstr ""
+
+#: ../views/settings/wpforms.php:36
+msgid "WP Forms Settings "
+msgstr ""
