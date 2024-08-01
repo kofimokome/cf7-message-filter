@@ -10,6 +10,12 @@ Contact Form 7 must be installed and activated before you can use this plugin
 
 <b>Note: This is just an extension. This plugin is not affiliated with or endorsed by Contact Form 7.</b>
 
+# Security Policy
+## Reporting Security Bugs
+
+You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/cf7-message-filter)
+
+
 ## Contribution
 
 The latest codes are found in the `develop` branch. If you would like to contribute, you should use the `develop`

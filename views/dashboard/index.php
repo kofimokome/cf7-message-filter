@@ -258,8 +258,8 @@ $frequent_emails = StatisticsModule::getInstance()->frequentEmails();
                     <h5> Here are a few changes in this version:</h5>
                     <ol>
                         <!--                        <li>Pro users can now receive suggested spam words and emails every month.</li>-->
-                        <li>Fix values from checkboxes and select fields not showing when viewing a blocked message.</li>
-                        <li>Fixes to the new tag UI</li>
+                        <li>Fix Security loophole</li>
+                        <li>Fix filters with apostrophes not working as expected</li>
                     </ol>
 					<?php /*esc_html_e( "Please help translate this plugin to your language", KMCF7MS_TEXT_DOMAIN ) */
 					?><!-- <a

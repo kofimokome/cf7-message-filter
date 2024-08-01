@@ -1,5 +1,10 @@
 # Change Log
 
+
+## 1.6.2 Changes
+1. Fix XXS issue on old messages page
+2. Fix filters with apostrophes not working as expected
+
 ## v1.6.1 Changes
 
 1. Fix values from checkboxes and select fields not showing when viewing a blocked messages.

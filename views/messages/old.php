@@ -12,10 +12,11 @@ $start           = 0;
 $end             = - 1;
 $number_per_page = 10; // per page
 
-$selected_form = isset( $_GET['form'] ) ? sanitize_text_field( $_GET['form'] ) : '';
-$data          = explode( '-', $selected_form );
-$form_id       = - 1;
-$contact_form  = '';
+$selected_form = esc_html( isset( $_GET['form'] ) ? sanitize_text_field( $_GET['form'] ) : '' );
+
+$data         = explode( '-', $selected_form );
+$form_id      = - 1;
+$contact_form = '';
 if ( sizeof( $data ) > 1 ) {
 	$contact_form = trim( $data[0] );
 	$form_id      = $data[1];
@@ -44,7 +45,9 @@ if ( sizeof( $data ) > 1 ) {
         <button class="btn btn-primary btn-inline ml-1 btn-sm"><?php _e( "Show Blocked Messages", KMCF7MS_TEXT_DOMAIN ) ?></button>
 
     </form>
-    <a class="btn btn-sm btn-primary mt-2" href="<?php echo $site_url.'/wp-content/uploads/kmcf7mf_logs/messages.txt'?>" download="messages.json">Download blocked messages</a>
+    <a class="btn btn-sm btn-primary mt-2"
+       href="<?php echo $site_url . '/wp-content/uploads/kmcf7mf_logs/messages.txt' ?>" download="messages.json">Download
+        blocked messages</a>
     <!--<button class="btn btn-primary">Export to CSV</button>-->
 	<?php if ( $form_id >= 0 && $contact_form == 'cf7' ) {
 	$rows = MessagesModule::getInstance()->getRows( $form_id ) ?>

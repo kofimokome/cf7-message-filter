@@ -12,7 +12,7 @@ class KMCFMessageFilter {
 
 	public function __construct() {
 		// do something here
-		$this->version  = '1.6.1.1';
+		$this->version  = '1.6.2';
 		$this->blocked  = get_option( "kmcfmf_messages_blocked_today_tmp", 0 );
 		self::$instance = $this;
 	}
@@ -141,10 +141,13 @@ class KMCFMessageFilter {
 			$statistics->messages_blocked = get_option( "kmcfmf_messages_blocked_today" );
 			$statistics->emails_blocked   = get_option( "kmcfmf_emails_blocked_today" );
 			$statistics->save();
+
 			update_option( "kmcfmf_date_of_today", $now );
 			update_option( "kmcfmf_messages_blocked_today", 0 );
 			update_option( "kmcfmf_messages_blocked_today_tmp", 0 );
 			update_option( "kmcfmf_emails_blocked_today", 0 );
+
+			$this->blocked = 0;
 		}
 
 		if ( get_option( 'kmcfmf_message_storage_toggle' ) === 'on' ) {

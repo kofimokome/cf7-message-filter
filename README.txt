@@ -2,9 +2,9 @@
 Contributors: kofimokome
 Donate link: https://ko-fi.com/kofimokome
 Tags: spam, filter, spam-filter, contact form 7, wpforms
-Requires at least: 6.2
-Tested up to: 6.5
-Stable tag: 1.6.1.1
+Requires at least: 6.3
+Tested up to: 6.6
+Stable tag: 1.6.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -50,10 +50,24 @@ This is used solely for the purpose of making improvements to the plugin.
 
 In addition to the above, Freemius, a third party plugin used to manage plugin licences may also collect additional information, if the site administrator accepts.
 
+
+
+
+== Frequently Asked Questions ==
+= Where do I report security bugs found in this plugin? =
+How can I report security bugs?
+
+You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/cf7-message-filter)
+
 == Changelog ==
+
+= 1.6.2=
+* Fix XXS issue on old messages page
+* Fix filters with apostrophes not working as expected
 
 = 1.6.1.1 =
 * Add ability to enable or disable filter modifiers in the new tag UI
+* Update Freemius
 
 = 1.6.1 =
 * Fix values from checkboxes and select fields not showing when viewing a blocked message

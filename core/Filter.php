@@ -275,69 +275,72 @@ class Filter {
 	private function validateFilterModifiers( $spam_word_to_check, $word ) {
 		// UnderWordPressue: make all lowercase - safe is safe
 		$word = strtolower( $word );
-
-		$advanced_filter = explode( ":", $spam_word_to_check );
-		if ( sizeof( $advanced_filter ) > 1 ) {
-			switch ( $advanced_filter[0] ) {
+//		$word               = str_replace( "\'", "'", $word );
+//		$word               = str_replace( '\"', '"', $word );
+		$word      = stripslashes( $word );
+		$modifiers = explode( ":", $spam_word_to_check );
+		if ( sizeof( $modifiers ) > 1 ) {
+			switch ( $modifiers[0] ) {
 				case 'startsWith':
 					// check for the word that starts with the spam word
-					$spam_word_to_check = strtolower( trim( $advanced_filter[1] ) );
+					$spam_word_to_check = strtolower( trim( $modifiers[1] ) );
 					//todo: revise this to use word boundaries
 					$match = preg_match( "/^" . $spam_word_to_check . "/mui", $word );
 
 					break;
 				case 'startsWithExcluding':
 					// check for the word that starts with the spam word, excluding the spam word
-					$spam_word_to_check = strtolower( trim( $advanced_filter[1] ) );
+					$spam_word_to_check = strtolower( trim( $modifiers[1] ) );
 					// todo: revise this to use word bondaries
 					$match = preg_match( "/^" . $spam_word_to_check . "\S+/mui", $word );
 
 					break;
 				case 'endsWith':
 					// check for the word that ends with the spam word
-					$spam_word_to_check = strtolower( trim( $advanced_filter[1] ) );
+					$spam_word_to_check = strtolower( trim( $modifiers[1] ) );
 					// todo: Revise this to use word boundaries
 					$match = preg_match( "/" . $spam_word_to_check . "$/miu", $word );
 
 					break;
 				case 'endsWithExcluding':
 					// check for the word that ends with the spam word, excluding the spam word
-					$spam_word_to_check = strtolower( trim( $advanced_filter[1] ) );
+					$spam_word_to_check = strtolower( trim( $modifiers[1] ) );
 					$match              = preg_match( "/\S+" . $spam_word_to_check . "$/miu", $word );
 
 					break;
 				case 'contains':
 					// check for the word that contains the spam word
-					$spam_word_to_check = strtolower( trim( $advanced_filter[1] ) );
+					$spam_word_to_check = strtolower( trim( $modifiers[1] ) );
 					$match              = preg_match( "/" . $spam_word_to_check . "/miu", $word );
 					// $match              = preg_match( "/\b\w*" . $spam_word_to_check . "\w*\b/miu", $word );
 					break;
 				case 'containsExcluding':
 					// check for the word that contains the spam word, excluding the spam word
-					$spam_word_to_check = strtolower( trim( $advanced_filter[1] ) );
+					$spam_word_to_check = strtolower( trim( $modifiers[1] ) );
 					$match              = preg_match( "/(\b\w*" . $spam_word_to_check . "\w+\b)|(\b\w+" . $spam_word_to_check . "\w*\b)/miu", $word );
 					break;
 				case 'containsExcludingEnd':
 					// check for the word that contains the spam word, excluding cases where the word ends with the spam word
-					$spam_word_to_check = strtolower( trim( $advanced_filter[1] ) );
+					$spam_word_to_check = strtolower( trim( $modifiers[1] ) );
 					$match              = preg_match( "/\b\w*" . $spam_word_to_check . "\w+\b/miu", $word );
 
 					break;
 				case 'containsExcludingStart':
 					// check for the word that contains the spam word, excluding cases where the word starts with the spam word
-					$spam_word_to_check = strtolower( trim( $advanced_filter[1] ) );
+					$spam_word_to_check = strtolower( trim( $modifiers[1] ) );
 					$match              = preg_match( "/\b\w+" . $spam_word_to_check . "\w*\b/miu", $word );
 					break;
 				default:
 					// no advanced filter used, check spam word as is
-					$spam_word_to_check = strtolower( trim( $spam_word_to_check ) );
+					$spam_word_to_check = preg_quote( strtolower( trim( $spam_word_to_check ) ) );
 					$match              = preg_match( "/\b" . $spam_word_to_check . "\b/mui", $word );
 					break;
 			}
 		} else {
-			$spam_word_to_check = strtolower( trim( $spam_word_to_check ) );
+			$spam_word_to_check = preg_quote( strtolower( trim( $spam_word_to_check ) ) );
 			$match              = preg_match( "/\b" . $spam_word_to_check . "\b/mui", $word );
 		}
+
 
 		return $match;
 
