@@ -17,13 +17,21 @@ $can_sync = get_option( 'kmcfmf_enable_collection', '' ) == 'on'; // for users w
 
 
 $debug_info = [
-	'version'                => $plugin_instance->getVersion(),
-	'spam_words'             => sanitize_text_field( get_option( 'kmcfmf_restricted_words', '' ) ),
-	'spam_emails'            => sanitize_text_field( get_option( 'kmcfmf_restricted_emails', '' ) ),
+	'spam_words'  => sanitize_text_field( get_option( 'kmcfmf_restricted_words', '' ) ),
+	'spam_emails' => sanitize_text_field( get_option( 'kmcfmf_restricted_emails', '' ) ),
+
+	'is_contact_form_7_filter_enabled' => get_option( 'kmcfmf_enable_contact_form_7_toggle' ) == 'on' ? 'Yes' : "No",
+	'is_spam_filter_enabled'           => get_option( 'kmcfmf_email_filter_toggle' ) == 'on' ? 'Yes' : "No",
+	'is_message_filter_enabled'        => get_option( 'kmcfmf_message_filter_toggle' ) == 'on' ? 'Yes' : "No",
+	'is_wp_forms_filter_enabled'       => get_option( 'kmcfmf_enable_wp_forms_toggle' ) == 'on' ? 'Yes' : "No",
+	'is_sync_allowed'                  => $can_sync ? 'Yes' : 'No',
+
+	'plugin_version'                => $plugin_instance->getVersion(),
 	'contact_form_7_version' => defined( 'WPCF7_VERSION' ) ? WPCF7_VERSION : '',
+	'wp_forms_version'       => defined( 'WPFORMS_VERSION' ) ? WPFORMS_VERSION : '',
 	'wordpress_version'      => $wp_version,
 	'php_version'            => phpversion(),
-	'is_sync_allowed'        => $can_sync ? 'Yes' : 'No',
+
 ];
 
 if ( $can_sync ) {

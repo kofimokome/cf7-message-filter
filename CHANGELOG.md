@@ -1,6 +1,10 @@
 # Change Log
 
 
+## 1.6.2.1 Changes
+1. Fix Ukrainian anthem playing on Russian sites
+2. Update Freemius
+
 ## 1.6.2 Changes
 1. Fix XXS issue on old messages page
 2. Fix filters with apostrophes not working as expected
