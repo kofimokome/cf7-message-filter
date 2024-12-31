@@ -9,9 +9,9 @@
  * Plugin Name: Message Filter for Contact Form 7
  * Plugin URI: https://github.com/kofimokome/cf7-message-filter
  * Description: Filters messages submitted from contact form 7 if it has words or email marked as spam by the user
- * Version: 1.6.2.1
+ * Version: 1.6.3.1
  * Author: Kofi Mokome
- * Author URI: www.kofimokome.stream
+ * Author URI: https://www.kofimokome.stream
  * License: GPL-2.0+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain: cf7-message-filter
@@ -61,9 +61,9 @@ if ( function_exists( 'kmcf7ms_fs' ) ) {
         do_action( 'kmcf7ms_fs_loaded' );
     }
     require 'constants.php';
-    require KMCF7MS_CORE_DIR . '/KMCFMessageFilter.php';
-    require KMCF7MS_CORE_DIR . '/Module.php';
-    require KMCF7MS_CORE_DIR . '/Filter.php';
+    require KMCFMF_CORE_DIR . '/KMCFMessageFilter.php';
+    require KMCFMF_CORE_DIR . '/Module.php';
+    require KMCFMF_CORE_DIR . '/Filter.php';
     kmcf7ms_fs()->add_action( 'after_uninstall', 'km_message_filter\\KMCF7Uninstall' );
     function add_collectspam_permission(  $permissions  ) {
         $permissions['collectspam'] = array(
@@ -115,7 +115,7 @@ if ( function_exists( 'kmcf7ms_fs' ) ) {
         $requires = apply_filters( 'kmcf7_requires_filter', [] );
         foreach ( $requires as $file ) {
             if ( !($filepath = file_exists( $file )) ) {
-                KMCF7ErrorNotice( sprintf( __( 'Error locating <b>%s</b> for inclusion', KMCF7MS_TEXT_DOMAIN ), $file ) );
+                KMCF7ErrorNotice( sprintf( __( 'Error locating <b>%s</b> for inclusion', KMCFMF_TEXT_DOMAIN ), $file ) );
                 $error = true;
             } else {
                 require_once $file;
@@ -130,7 +130,7 @@ if ( function_exists( 'kmcf7ms_fs' ) ) {
         $includes = apply_filters( 'kmcf7_includes_filter', [] );
         foreach ( $includes as $file ) {
             if ( !($filepath = file_exists( $file )) ) {
-                KMCF7ErrorNotice( sprintf( __( 'Error locating <b>%s</b> for inclusion', KMCF7MS_TEXT_DOMAIN ), $file ) );
+                KMCF7ErrorNotice( sprintf( __( 'Error locating <b>%s</b> for inclusion', KMCFMF_TEXT_DOMAIN ), $file ) );
                 $error = true;
             } else {
                 include_once $file;
@@ -173,13 +173,12 @@ if ( function_exists( 'kmcf7ms_fs' ) ) {
             $instance = WordPressTools::getInstance( __FILE__ );
             $instance->migration_manager->dropAll();
             //query the wp options table and delete all options that start with kmcfmf_
-            $query = $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'kmcfmf_%'" );
-            $wpdb->query( $query );
+            $pattern = 'kmcfmf_%';
+            $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $pattern ) );
             // todo; drop migrations table
             $env = ( new KMEnv(__FILE__) )->getEnv();
             $table_name = $wpdb->prefix . trim( $env['TABLE_PREFIX'] ) . 'migrations';
-            $query = $wpdb->prepare( "DROP TABLE IF EXISTS {$table_name}" );
-            $wpdb->query( $query );
+            $wpdb->query( $wpdb->prepare( "DROP TABLE IF EXISTS %s", $table_name ) );
         }
     }
 
@@ -193,5 +192,5 @@ if ( function_exists( 'kmcf7ms_fs' ) ) {
     }
 
     // todo: for future use
-    load_plugin_textdomain( KMCF7MS_TEXT_DOMAIN, false, basename( dirname( __FILE__ ) ) . '/languages' );
+    load_plugin_textdomain( KMCFMF_TEXT_DOMAIN, false, basename( dirname( __FILE__ ) ) . '/languages' );
 }

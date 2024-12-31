@@ -7,7 +7,7 @@ namespace km_message_filter;
  */
 
 add_filter( 'kmcf7_includes_filter', function ( $includes ) {
-	$modules  = Module::getModules( KMCF7MS_MODULE_DIR );
+	$modules  = Module::getModules( KMCFMF_MODULE_DIR );
 
 	return array_merge( $includes, $modules );
 } );

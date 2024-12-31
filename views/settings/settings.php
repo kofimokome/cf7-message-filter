@@ -24,18 +24,18 @@ update_option( "kmcfmf_messages_blocked_today_tmp", 0 );
 	 </div>-->
 
     <h1><?php 
-esc_html_e( "Plugin Settings", KMCF7MS_TEXT_DOMAIN );
+esc_html_e( "Plugin Settings", KMCFMF_TEXT_DOMAIN );
 ?></h1>
 
     <div id="km-upload" class="km-upload">
         <div>
 			<?php 
-_e( "Do you have a CSV file?", KMCF7MS_TEXT_DOMAIN );
+_e( "Do you have a CSV file?", KMCFMF_TEXT_DOMAIN );
 ?>
         </div>
         <div>
 			<?php 
-_e( "DRAG it here or CLICK here to upload it.", KMCF7MS_TEXT_DOMAIN );
+_e( "DRAG it here or CLICK here to upload it.", KMCFMF_TEXT_DOMAIN );
 ?>
         </div>
         <div style="margin-top:20px">
@@ -47,18 +47,18 @@ _e( "DRAG it here or CLICK here to upload it.", KMCF7MS_TEXT_DOMAIN );
 ?>
     <div style="margin-top: 20px">
         <h2><?php 
-/*_e( "Suggested Words", KMCF7MS_TEXT_DOMAIN ) */
+/*_e( "Suggested Words", KMCFMF_TEXT_DOMAIN ) */
 ?></h2>
 		<?php 
 /*_e( "Upgrade to premium and unlock powerful new suggestions every month. Majority of our clients saw a reduction in spam
-  with these suggestions", KMCF7MS_TEXT_DOMAIN ) */
+  with these suggestions", KMCFMF_TEXT_DOMAIN ) */
 ?>
     </div>
     <a href="<?php 
 /*echo $upgrade_url */
 ?>">
         <img src="<?php 
-/*echo KMCF7MS_IMAGES_URL . '/suggestions.png' */
+/*echo KMCFMF_IMAGES_URL . '/suggestions.png' */
 ?>" alt=""
              class="img-fluid" style=" width: 100%; margin-top: 20px;"/>
     </a>
@@ -70,10 +70,10 @@ if ( $suggested_words != '{}' ) {
     ?>
     <div id="km-suggestions-container">
         <h2><?php 
-    _e( "Suggested Words", KMCF7MS_TEXT_DOMAIN );
+    _e( "Suggested Words", KMCFMF_TEXT_DOMAIN );
     ?></h2>
         <div><?php 
-    _e( "We have some suggested words and emails for you. 80% of our clients saw a 75% reduction in spam comments\n            within\n            a month by using these strategic word choices.", KMCF7MS_TEXT_DOMAIN );
+    _e( "We have some suggested words and emails for you. 80% of our clients saw a 75% reduction in spam comments\n            within\n            a month by using these strategic word choices.", KMCFMF_TEXT_DOMAIN );
     ?>
         </div>
 		<?php 
@@ -81,7 +81,7 @@ if ( $suggested_words != '{}' ) {
         ?>
             <div style="margin-top: 20px">
                 <b><?php 
-        _e( "Words", KMCF7MS_TEXT_DOMAIN );
+        _e( "Words", KMCFMF_TEXT_DOMAIN );
         ?>: </b> <br/><textarea type="text"
                                                                                     id="kmcfmf_suggested_words"
                                                                                     class="select2"><?php 
@@ -96,7 +96,7 @@ if ( $suggested_words != '{}' ) {
         ?>
             <div style="margin-top: 20px">
                 <b><?php 
-        _e( "Emails", KMCF7MS_TEXT_DOMAIN );
+        _e( "Emails", KMCFMF_TEXT_DOMAIN );
         ?></b> <br/><textarea type="text"
                                                                                    id="kmcfmf_suggested_emails"
                                                                                    class="select2"><?php 
@@ -112,17 +112,17 @@ if ( $suggested_words != '{}' ) {
             <div style="margin-top: 10px" id="km-suggestions-loaded">
                 <button class="button button-primary"
                         id="km-accept-suggestions"><?php 
-        _e( "Add Suggested Words & Emails", KMCF7MS_TEXT_DOMAIN );
+        _e( "Add Suggested Words & Emails", KMCFMF_TEXT_DOMAIN );
         ?></button>
                 <button class="button button-delete"
                         id="km-ignore-suggestions"><?php 
-        _e( "Ignore", KMCF7MS_TEXT_DOMAIN );
+        _e( "Ignore", KMCFMF_TEXT_DOMAIN );
         ?></button>
             </div>
             <div style="margin-top: 10px; display:none" id="km-suggestions-loading">
                 <button class="button button-primary"
                         disabled><?php 
-        _e( "Please wait...", KMCF7MS_TEXT_DOMAIN );
+        _e( "Please wait...", KMCFMF_TEXT_DOMAIN );
         ?></button>
             </div>
 		<?php 
@@ -135,7 +135,7 @@ if ( $suggested_words != '{}' ) {
 
     <div style="font-size:15px; margin-top: 20px">
 		<?php 
-_e( "We have added 8 new filter modifiers", KMCF7MS_TEXT_DOMAIN );
+_e( "We have added 8 new filter modifiers", KMCFMF_TEXT_DOMAIN );
 ?>: <strong>endsWith, endsWithExcluding,
             startsWith, startsWithExcluding, contains,
             containsExcluding, containsExcludingEnd </strong> and <strong>containsExcludingStart.</strong>
@@ -144,35 +144,35 @@ _e( "We have added 8 new filter modifiers", KMCF7MS_TEXT_DOMAIN );
                 <strong>endsWith:ing</strong> => <?php 
 _e( 'Searches only for words ending with “ing” eg. eating,
                 walking, talking
-                etc…, including the word “ing”.', KMCF7MS_TEXT_DOMAIN );
+                etc…, including the word “ing”.', KMCFMF_TEXT_DOMAIN );
 ?>
             </li>
             <li>
                 <strong>endsWithExcluding:ing</strong> => <?php 
 _e( 'Searches only for words ending with “ing” eg.
                 eating, walking,
-                talking etc…, excluding the word “ing”.', KMCF7MS_TEXT_DOMAIN );
+                talking etc…, excluding the word “ing”.', KMCFMF_TEXT_DOMAIN );
 ?>
             </li>
             <li>
                 <strong>startsWith:app</strong> => <?php 
 _e( 'Searches only for words starting with “app”. eg
                 application, apple,
-                including the word “app”', KMCF7MS_TEXT_DOMAIN );
+                including the word “app”', KMCFMF_TEXT_DOMAIN );
 ?>
             </li>
             <li>
                 <strong>startsWithExcluding:app</strong> => <?php 
 _e( 'Searches only for words starting with “app”. eg
                 application,
-                apple, excluding the word “app”', KMCF7MS_TEXT_DOMAIN );
+                apple, excluding the word “app”', KMCFMF_TEXT_DOMAIN );
 ?>
             </li>
             <li>
                 <strong> contains:ver</strong> => <?php 
 _e( 'Searches only for words containing “ver”. eg every, Elvera,
                 neverland,
-                including the word “ver”, words starting with “ver” and words ending with “ver”', KMCF7MS_TEXT_DOMAIN );
+                including the word “ver”, words starting with “ver” and words ending with “ver”', KMCFMF_TEXT_DOMAIN );
 ?>
             </li>
 
@@ -180,21 +180,21 @@ _e( 'Searches only for words containing “ver”. eg every, Elvera,
                 <strong>containsExcluding:ver</strong> => <?php 
 _e( 'Searches only for words containing “ver”. eg every,
                 Elvera,
-                neverland, excluding the word “ver”, words starting with “ver” and words ending with “ver”', KMCF7MS_TEXT_DOMAIN );
+                neverland, excluding the word “ver”, words starting with “ver” and words ending with “ver”', KMCFMF_TEXT_DOMAIN );
 ?>
             </li>
             <li>
                 <strong>containsExcludingEnd:ver</strong> =><?php 
 _e( ' Searches only for words containing “ver”. eg
                 every, Elvera,
-                neverland, excluding the word “ver” and words ending with “ver”', KMCF7MS_TEXT_DOMAIN );
+                neverland, excluding the word “ver” and words ending with “ver”', KMCFMF_TEXT_DOMAIN );
 ?>
             </li>
             <li>
                 <strong>containsExcludingStart:ver</strong> => <?php 
 _e( 'Searches only for words containing “ver”. eg
                 every, Elvera,
-                neverland, excluding words starting with “ver” and the word “ver”', KMCF7MS_TEXT_DOMAIN );
+                neverland, excluding words starting with “ver” and the word “ver”', KMCFMF_TEXT_DOMAIN );
 ?>
             </li>
         </ol>
@@ -479,7 +479,7 @@ if ( kmcf7ms_fs()->is_free_plan() || !kmcf7ms_fs()->is_premium() ) {
     ?>
                     Swal.fire({
                         title: '<?php 
-    _e( "File Import", KMCF7MS_TEXT_DOMAIN );
+    _e( "File Import", KMCFMF_TEXT_DOMAIN );
     ?>',
                         text: "Import is only available in the pro plan",
                         icon: 'danger',

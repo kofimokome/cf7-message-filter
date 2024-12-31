@@ -33,7 +33,7 @@ class WpFormsModule extends Module {
      */
     private function getErrorMessages() {
         $this->spam_word_error = ( get_option( 'kmcfmf_spam_word_error', false ) ? get_option( 'kmcfmf_spam_word_error' ) : __( "One or more fields have an error. Please check and try again.", 'contact-form-7' ) );
-        $this->spam_email_error = ( get_option( 'kmcfmf_spam_email_error', false ) ? get_option( 'kmcfmf_spam_email_error' ) : __( 'The e-mail address entered is invalid.', KMCF7MS_TEXT_DOMAIN ) );
+        $this->spam_email_error = ( get_option( 'kmcfmf_spam_email_error', false ) ? get_option( 'kmcfmf_spam_email_error' ) : __( 'The e-mail address entered is invalid.', KMCFMF_TEXT_DOMAIN ) );
     }
 
     /**
@@ -118,13 +118,16 @@ class WpFormsModule extends Module {
      * @since 1.4.0
      */
     function textValidationFilter( $errors, $form_data ) {
-        $fields = $_POST['wpforms']['fields'];
+        if ( !isset( $_POST['wpforms'] ) || !isset( $_POST['wpforms']['fields'] ) || !isset( $_POST['wpforms']['id'] ) ) {
+            return $errors;
+        }
+        $fields = sanitize_text_field( wp_unslash( $_POST['wpforms']['fields'] ) );
         $form_fields = $form_data['fields'];
         $this->form_fields = $form_fields;
         $this->fields = $fields;
-        $this->form_id = sanitize_text_field( $_POST['wpforms']['id'] );
+        $this->form_id = sanitize_text_field( wp_unslash( $_POST['wpforms']['id'] ) );
         $names = explode( ',', get_option( 'kmcfmf_wp_forms_text_fields' ) );
-        $invalid_fields = ( empty( $errors[$_POST['wpforms']['id']] ) ? array() : $errors[$_POST['wpforms']['id']] );
+        $invalid_fields = ( empty( $errors[$this->form_id] ) ? array() : $errors[$this->form_id] );
         $is_exempted = $this->isFormExempted( $this->form_id );
         if ( !$is_exempted ) {
             if ( in_array( '*', $names ) ) {
@@ -132,7 +135,7 @@ class WpFormsModule extends Module {
                     if ( $field['type'] == 'name' || $field['type'] == 'text' ) {
                         if ( $this->validateTextField( $fields[$field['id']] ) ) {
                             $invalid_fields[$field['id']] = $this->spam_word_error;
-                            $errors[$_POST['wpforms']['id']] = $invalid_fields;
+                            $errors[$this->form_id] = $invalid_fields;
                             //						return $errors;
                         }
                     }
@@ -142,7 +145,7 @@ class WpFormsModule extends Module {
                     if ( ($field['type'] == 'name' || $field['type'] == 'text') && in_array( $field['label'], $names ) ) {
                         if ( $this->validateTextField( $fields[$field['id']] ) ) {
                             $invalid_fields[$field['id']] = $this->spam_word_error;
-                            $errors[$_POST['wpforms']['id']] = $invalid_fields;
+                            $errors[$this->form_id] = $invalid_fields;
                             //						return $errors;
                         }
                     }
@@ -184,7 +187,7 @@ class WpFormsModule extends Module {
                 $data = array(
                     'word'    => $spam_word,
                     'form'    => 'wpforms',
-                    'message' => json_encode( $this->getPostedData() ),
+                    'message' => wp_json_encode( $this->getPostedData() ),
                     'form_id' => $this->form_id,
                 );
                 MessagesModule::getInstance()->updateDatabase( $data );
@@ -240,11 +243,14 @@ class WpFormsModule extends Module {
      * @since 1.4.0
      */
     function textareaValidationFilter( $errors, $form_data ) {
-        $fields = $_POST['wpforms']['fields'];
+        if ( !isset( $_POST['wpforms'] ) || !isset( $_POST['wpforms']['fields'] ) || !isset( $_POST['wpforms']['id'] ) ) {
+            return $errors;
+        }
+        $fields = sanitize_text_field( wp_unslash( $_POST['wpforms']['fields'] ) );
         $form_fields = $form_data['fields'];
         $this->form_fields = $form_fields;
         $this->fields = $fields;
-        $this->form_id = sanitize_text_field( $_POST['wpforms']['id'] );
+        $this->form_id = sanitize_text_field( wp_unslash( $_POST['wpforms']['id'] ) );
         $names = explode( ',', get_option( 'kmcfmf_wp_forms_textarea_fields' ) );
         $invalid_fields = ( empty( $errors[$_POST['wpforms']['id']] ) ? array() : $errors[$_POST['wpforms']['id']] );
         $is_exempted = $this->isFormExempted( $this->form_id );
@@ -279,11 +285,14 @@ class WpFormsModule extends Module {
      * @since 1.4.0
      */
     function emailValidationFilter( $errors, $form_data ) {
-        $fields = $_POST['wpforms']['fields'];
+        if ( !isset( $_POST['wpforms'] ) || !isset( $_POST['wpforms']['fields'] ) || !isset( $_POST['wpforms']['id'] ) ) {
+            return $errors;
+        }
+        $fields = sanitize_text_field( wp_unslash( $_POST['wpforms']['fields'] ) );
         $form_fields = $form_data['fields'];
         $this->form_fields = $form_fields;
         $this->fields = $fields;
-        $this->form_id = sanitize_text_field( $_POST['wpforms']['id'] );
+        $this->form_id = sanitize_text_field( wp_unslash( $_POST['wpforms']['id'] ) );
         $names = explode( ',', get_option( 'kmcfmf_wp_forms_email_fields' ) );
         $invalid_fields = ( empty( $errors[$_POST['wpforms']['id']] ) ? array() : $errors[$_POST['wpforms']['id']] );
         $is_exempted = $this->isFormExempted( $this->form_id );
@@ -337,7 +346,7 @@ class WpFormsModule extends Module {
                 $data = array(
                     'email'   => $spam,
                     'form'    => 'wpforms',
-                    'message' => json_encode( $this->getPostedData() ),
+                    'message' => wp_json_encode( $this->getPostedData() ),
                     'form_id' => $this->form_id,
                 );
                 MessagesModule::getInstance()->updateDatabase( $data );

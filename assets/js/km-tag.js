@@ -165,7 +165,13 @@ class KmTag {
         // access the parent element
         const parent = e.target.parentNode;
         // remove the value from the values array
-        this.#removeValue(parent.children[0].innerText);
+        let dataValue = parent.children[1].getAttribute("data-value");
+        let valueToRemove = parent.children[1].innerText;
+        dataValue = dataValue.split(":");
+        if (dataValue.length > 1) {
+            valueToRemove = dataValue[0] + ':' + valueToRemove
+        }
+        this.#removeValue(valueToRemove);
         // remove the parent element
         parent.remove();
         this.#updateValues()
@@ -279,10 +285,23 @@ class KmTag {
      */
     #addActions() {
         this.#new_tag_input.addEventListener('input', (e) => {
+            e.preventDefault();
             this.#parseInput(e);
         });
 
+        this.#new_tag_input.addEventListener('keypress', (e) => {
+            const keyCode = e.keyCode;
+
+            // check if the enter key was pressed
+            if (keyCode === 13) {
+                e.preventDefault();
+                this.#parseInput(e, true);
+
+            }
+        });
+
         this.#new_tag_input.addEventListener('keyup', (e) => {
+            e.preventDefault()
             const keyCode = e.keyCode;
             // check if the enter key was pressed
             if (keyCode === 13) {

@@ -7,21 +7,23 @@ $link_to_old_messages = $link_to_messages . '&old';
 $ajax_url             = admin_url( "admin-ajax.php" );
 
 
-$selected_form = isset( $_GET['form'] ) ? sanitize_text_field( $_GET['form'] ) : '';
-$columns       = '{}';
-$data          = explode( '-', $selected_form );
-$form_id       = - 1;
-$contact_form  = '';
-if ( sizeof( $data ) > 1 ) {
-	$contact_form = trim( $data[0] );
-	$form_id      = $data[1];
-	$form_id      = $form_id == '' ? - 1 : intval( $form_id );
+$columns               = '{}';
+$form_id               = isset( $_GET['form-id'] ) ? sanitize_text_field( $_GET['form-id'] ) : 'all';
+$selected_contact_form = isset( $_GET['contact-form'] ) ? sanitize_text_field( $_GET['contact-form'] ) : 'all';
+if ( $selected_contact_form == 'all' ) {
+	if ( class_exists( 'WPCF7_ContactForm' ) ) {
+		$selected_contact_form = 'cf7';
+	} else if ( function_exists( 'wpforms' ) ) {
+		$selected_contact_form = 'wpforms';
+	}
 }
+$selected_form = $selected_contact_form . '-' . $form_id;
 
 if ( $selected_form != '' ) {
 	$columns = get_option( 'kmcfmf_visible_columns_' . $selected_form, '{}' );
 }
 update_option( "kmcfmf_messages_blocked_today_tmp", 0 );
+$forms = MessagesModule::getInstance()->getForms();
 
 ?>
 <style>
@@ -40,100 +42,80 @@ update_option( "kmcfmf_messages_blocked_today_tmp", 0 );
         <img alt="" border="0" src="https://www.paypal.com/en_CM/i/scr/pixel.gif" width="1" height="1"/>
     </form>
 </div>-->
-<?php if ( $form_id > 0 && $contact_form != '' ) {
-	$rows = MessagesModule::getInstance()->getRows2( $form_id, $contact_form );
-	?>
-    <form action="" class="form-inline mb-4 mt-4">
-        <input type="hidden" name="page" value="kmcf7-filtered-messages">
-        <select name="form" id="" class="py-0 form-control">
-            <option value=""><?php _e( "Select a form", KMCF7MS_TEXT_DOMAIN ) ?></option>
-			<?php foreach ( MessagesModule::getInstance()->getForms() as $form ): ?>
-                <option value="<?php echo $form[1] ?>" <?php echo $selected_form == $form[1] ? 'selected' : '' ?>><?php echo $form[0] ?></option>
-			<?php endforeach; ?>
-        </select>
-        <button class="btn btn-primary btn-inline ml-1"><?php _e( "Show Blocked Messages", KMCF7MS_TEXT_DOMAIN ) ?></button>
-    </form>
-    <div class="mb-2">
-        <div class="alert alert-info">
-			<?php _e( "Hint: Press and hold <kbd>CMD</kbd> or <kbd>CRTL</kbd> while clicking on any cell to select it", KMCF7MS_TEXT_DOMAIN ) ?>
-        </div>
-        <button class="btn btn-danger btn-sm km-delete-btn" style="display: none" onclick="showDeleteModal()">
-			<?php _e( "Delete selected", KMCF7MS_TEXT_DOMAIN ) ?>
-        </button>
-        <!--<button class="btn btn-primary btn-sm km-delete-btn" style="display: none" onclick="showResubmitModal()">
-			<?php /*_e( "Restore selected", KMCF7MS_TEXT_DOMAIN ) */ ?>
-        </button>-->
-    </div>
-    <div class="mb-3">
-        <b><?php _e( "Visible Columns", KMCF7MS_TEXT_DOMAIN ) ?>: <a href="#" id="toggle-visible-columns-container">Show/Hide</a>
-            <div id="visible-columns-container" class="mt-2">
-                <input id="input-ID" name="ID" type="checkbox" value="2" class="table-column"
-                       checked/> <span class="mr-2">ID</span>
-				<?php foreach ( $rows as $index => $row ):if ( strlen( trim( $row ) ) > 0 ): ?>
-                    <input id="input-<?php echo $row ?>" name="<?php echo $row ?>" type="checkbox"
-                           value="<?php echo $index + 3 ?>" class="table-column"
-                           checked/> <span class="mr-2"> <?php echo $row ?></span>
-				<?php endif; endforeach; ?>
-            </div>
-    </div>
-    <table id="km-table" class="kmcfmf_table table table-striped" style="overflow-x: scroll">
-        <thead>
-        <tr>
-            <th></th>
-            <th><?php _e( "Actions", KMCF7MS_TEXT_DOMAIN ) ?></th>
-            <th><b>ID</b></th>
-			<?php foreach ( $rows as $row ): ?>
-                <th>
-                    <b><?php echo $row ?></b>
-                </th>
-			<?php endforeach; ?>
-        </tr>
-        </thead>
-        <tbody>
+<?php
+$rows = MessagesModule::getInstance()->getRows2( $form_id, $selected_contact_form );
 
-        </tbody>
-    </table>
+?>
+<form action="" class="form-inline mb-4 mt-4">
+    <input type="hidden" name="page" value="kmcf7-filtered-messages">
+    <select name="contact-form" id="km-contact-forms" class="py-0 form-control mr-1">
+        <!--        <option value="all">--><?php //_e( "All Contact Forms", KMCF7MS_TEXT_DOMAIN )
+		?><!--</option>-->
+		<?php foreach ( $forms as $key => $form ): ?>
+            <option value="<?php echo $key ?>" <?php echo $selected_contact_form == $key ? 'selected' : '' ?>><?php echo $form['name'] ?></option>
+		<?php endforeach; ?>
+    </select>
+    <select name="form-id" id="km-registered-forms" class="py-0 form-control">
+        <option value="all"><?php _e( "All Registered Forms", KMCF7MS_TEXT_DOMAIN ) ?></option>
+		<?php foreach ( $forms as $key => $contact_form ): ?>
+			<?php if ( $key == $selected_contact_form || $selected_contact_form == 'all' ): ?>
+				<?php foreach ( $contact_form['forms'] as $form ): ?>
+                    <option value="<?php echo $form['id'] ?>" <?php echo $form_id == $form['id'] ? 'selected' : '' ?>><?php echo $form['name'] ?></option>
+				<?php endforeach; ?>
+			<?php endif; ?>
+
+		<?php endforeach; ?>
+    </select>
+    <button class="btn btn-primary btn-inline ml-1"><?php _e( "Show Blocked Messages", KMCF7MS_TEXT_DOMAIN ) ?></button>
+</form>
+<div class="mb-2">
+    <div class="alert alert-info">
+		<?php _e( "Hint: Press and hold <kbd>CMD</kbd> or <kbd>CRTL</kbd> while clicking on any cell to select it", KMCF7MS_TEXT_DOMAIN ) ?>
+    </div>
     <button class="btn btn-danger btn-sm km-delete-btn" style="display: none" onclick="showDeleteModal()">
 		<?php _e( "Delete selected", KMCF7MS_TEXT_DOMAIN ) ?>
     </button>
     <!--<button class="btn btn-primary btn-sm km-delete-btn" style="display: none" onclick="showResubmitModal()">
+			<?php /*_e( "Restore selected", KMCF7MS_TEXT_DOMAIN ) */ ?>
+        </button>-->
+</div>
+<div class="mb-3">
+    <b><?php _e( "Visible Columns", KMCF7MS_TEXT_DOMAIN ) ?>: <a href="#" id="toggle-visible-columns-container">Show/Hide</a>
+        <div id="visible-columns-container" class="mt-2">
+            <input id="input-ID" name="ID" type="checkbox" value="2" class="table-column"
+                   checked/> <span class="mr-2">ID</span>
+			<?php foreach ( $rows as $index => $row ):if ( strlen( trim( $row ) ) > 0 ): ?>
+                <input id="input-<?php echo $row ?>" name="<?php echo $row ?>" type="checkbox"
+                       value="<?php echo $index + 3 ?>" class="table-column"
+                       checked/> <span class="mr-2"> <?php echo $row ?></span>
+			<?php endif; endforeach; ?>
+        </div>
+</div>
+<table id="km-table" class="kmcfmf_table table table-striped" style="overflow-x: scroll">
+    <thead>
+    <tr>
+        <th></th>
+        <th><?php _e( "Actions", KMCF7MS_TEXT_DOMAIN ) ?></th>
+        <th><b>ID</b></th>
+		<?php foreach ( $rows as $row ): ?>
+            <th>
+                <b><?php echo $row ?></b>
+            </th>
+		<?php endforeach; ?>
+    </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
+<button class="btn btn-danger btn-sm km-delete-btn" style="display: none" onclick="showDeleteModal()">
+	<?php _e( "Delete selected", KMCF7MS_TEXT_DOMAIN ) ?>
+</button>
+<!--<button class="btn btn-primary btn-sm km-delete-btn" style="display: none" onclick="showResubmitModal()">
 		<?php /*_e( "Restore selected", KMCF7MS_TEXT_DOMAIN ) */ ?>
     </button> -->
-    <br>
-	<?php
-
-} else { ?>
-    <div class="jumbotron">
-		<?php if ( is_file( MessagesModule::getInstance()->getLogFile() ) ): ?>
-            <div class="mb-2 border-info">
-                <h5><?php _e( "Note: Message storage location has changed.", KMCF7MS_TEXT_DOMAIN ) ?>
-                    <a href="<?php echo $link_to_old_messages ?>" class="btn btn-primary btn-sm">
-						<?php _e( "Click here to view your old messages", KMCF7MS_TEXT_DOMAIN ) ?>
-                    </a>
-                </h5>
-            </div>
-		<?php endif; ?>
-        <h2 class="display-5d"><?php _e( "Blocked Messages Area", KMCF7MS_TEXT_DOMAIN ) ?></h2>
-        <p class="lead"><?php _e( "Messages are now grouped per form. Select a form below to view all the messages blocked for that
-            form.", KMCF7MS_TEXT_DOMAIN ) ?></p>
-        <p class="lead"><?php _e( "If you upgraded from a previous version, all old messages blocked are stored under
-            uncategorized.", KMCF7MS_TEXT_DOMAIN ) ?></p>
-
-        <hr class="my-4">
-        <form action="" class="form-inline mb-4 mt-4">
-            <input type="hidden" name="page" value="kmcf7-filtered-messages">
-            <select name="form" id="" class="py-0 form-control">
-                <option value=""><?php _e( "Select a form", KMCF7MS_TEXT_DOMAIN ) ?></option>
-				<?php foreach ( MessagesModule::getInstance()->getForms() as $form ): ?>
-                    <option value="<?php echo $form[1] ?>" <?php echo $form_id == $form[1] ? 'selected' : '' ?>><?php echo $form[0] ?></option>
-				<?php endforeach; ?>
-            </select>
-            <button class="btn btn-primary btn-inline ml-1"><?php _e( "Show Blocked Messages", KMCF7MS_TEXT_DOMAIN ) ?></button>
-
-        </form>
-    </div>
-	<?php
-}
+<br>
+<?php
 
 ?>
 <!--<div class="row">
@@ -147,15 +129,41 @@ update_option( "kmcfmf_messages_blocked_today_tmp", 0 );
 </div>-->
 <script>
     let table = '';
+    const GET_MESSAGES_NONCE = "<?php echo wp_create_nonce( 'get-blocked-messages' )?>";
+    const DELETE_MESSAGE_NONCE = "<?php echo wp_create_nonce( 'can-delete-messages' )?>";
+    const RESUBMIT_MESSAGE_NONCE = "<?php echo wp_create_nonce( 'can-resubmit-messages' )?>";
+    const forms = <?php echo json_encode( $forms )?>;
+    const all_registered_form_placeholder = "<?php _e( "All Registered Forms", KMCF7MS_TEXT_DOMAIN )?>"
+    console.log(forms['cf7']);
     jQuery(function ($) {
         $(document).ready(function () {
+            const registered_form_select = $("#km-registered-forms");
+            $("#km-contact-forms").change((e) => {
+                e.preventDefault();
+                registered_form_select.empty();
+                const selected_form = e.target.value;
+                registered_form_select.append(`<option value="all">${all_registered_form_placeholder}</option>`)
+                if (selected_form === 'all') {
+                    for (const form in forms) {
+                        for (const registered_form of forms[form]['forms']) {
+                            registered_form_select.append(`<option value="${registered_form['id']}">${registered_form['name']}</option>`)
+                        }
+                    }
+                } else {
+                    const registered_forms = forms[selected_form]['forms']
+                    console.log(registered_forms)
+                    for (const registered_form of registered_forms) {
+                        registered_form_select.append(`<option value="${registered_form['id']}">${registered_form['name']}</option>`)
+                    }
+                }
+            })
             table = $("#km-table").DataTable({
                     dom: 'lBfrtip',
                     ordering: false,
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        url: '<?php echo admin_url( "admin-ajax.php?action=kmcf7_messages&form_id={$form_id}&contact_form={$contact_form}" )?>',
+                        url: '<?php echo admin_url( "admin-ajax.php?action=kmcf7_messages&form_id={$form_id}&contact_form={$selected_contact_form}" )?>' + "&_wpnonce=" + GET_MESSAGES_NONCE,
                         error: function (jqXHR, textStatus, errorThrown) {
                             let error_message = '';
                             // check if responseJSON is not empty
@@ -274,7 +282,7 @@ update_option( "kmcfmf_messages_blocked_today_tmp", 0 );
             confirmButtonText: 'OK, resubmit',
             showLoaderOnConfirm: true,
             preConfirm: (login) => {
-                return fetch("<?php echo $ajax_url?>", {
+                return fetch("<?php echo $ajax_url?>" + "?_wpnonce=" + RESUBMIT_MESSAGE_NONCE, {
                     method: 'POST',
                     body: formData
                 })
@@ -332,7 +340,7 @@ update_option( "kmcfmf_messages_blocked_today_tmp", 0 );
             confirmButtonText: 'Yes, delete',
             showLoaderOnConfirm: true,
             preConfirm: (login) => {
-                return fetch("<?php echo $ajax_url?>", {
+                return fetch("<?php echo $ajax_url?>" + "?_wpnonce=" + DELETE_MESSAGE_NONCE, {
                     method: 'POST',
                     body: formData
                 })

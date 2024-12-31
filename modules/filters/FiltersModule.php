@@ -54,21 +54,30 @@ class FiltersModule extends Module {
 
 		$validator = KMValidator::make(
 			array(
-				'id' => 'required'
+				'id'       => 'required',
+				'_wpnonce' => 'required'
 			),
-			$_POST
+			$_REQUEST
 		);
+		if ( current_user_can( 'manage_options' ) ) {
+			if ( $validated_data = $validator->validate() ) {
+				$nonce = sanitize_text_field( wp_unslash( $validated_data['_wpnonce'] ) );
+				if ( wp_verify_nonce( $nonce, 'kmcfmf_can_delete_filter' ) ) {
+					$id        = sanitize_text_field( $validated_data['id'] );
+					$my_filter = MyFilter::find( $id );
+					if ( $my_filter ) {
+						$my_filter->delete();
+					} else {
+						wp_send_json_error( __( "We could not find this filter", KMCFMF_TEXT_DOMAIN ), 400 );
+					}
+					wp_send_json_success( __( "Filter deleted", KMCFMF_TEXT_DOMAIN ), 200 );
 
-		if ( $validator->validate() ) {
-			$id        = sanitize_text_field( $_POST['id'] );
-			$my_filter = MyFilter::find( $id );
-			if ( $my_filter ) {
-				$my_filter->delete();
-			} else {
-				wp_send_json_error( __( "We could not find this filter", KMCF7MS_TEXT_DOMAIN ), 400 );
+				} else {
+					wp_send_json_error( __( "Invalid nonce", KMCFMF_TEXT_DOMAIN ), 400 );
+				}
 			}
-			wp_send_json_success( __( "Filter deleted", KMCF7MS_TEXT_DOMAIN ), 200 );
-
+		} else {
+			wp_send_json_error( __( "You do not have permission to perform this action", KMCFMF_TEXT_DOMAIN ), 400 );
 		}
 		wp_die();
 	}
@@ -77,7 +86,8 @@ class FiltersModule extends Module {
 	 * @since v1.6.0
 	 * Saves a filter in the database
 	 */
-	public function saveFilter() {
+	public
+	function saveFilter() {
 		$validator = KMValidator::make(
 			array(
 				'name'       => 'required',
@@ -86,30 +96,39 @@ class FiltersModule extends Module {
 			$_POST
 		);
 
-		if ( $validator->validate() ) {
-			$name        = sanitize_text_field( $_POST['name'] );
-			$description = sanitize_text_field( $_POST['description'] );
-			$expression  = sanitize_text_field( $_POST['expression'] );
+		if ( current_user_can( 'manage_options' ) ) {
+			if ( $validated_data = $validator->validate() ) {
+				$nonce = sanitize_text_field( wp_unslash( $validated_data['_wpnonce'] ) );
+				if ( wp_verify_nonce( $nonce, 'kmcfmf_can_save_filter' ) ) {
+					$name        = sanitize_text_field( $validated_data['name'] );
+					$description = sanitize_text_field( $validated_data['description'] );
+					$expression  = sanitize_text_field( $validated_data['expression'] );
 
-			$short_code = trim( strtolower( $name ) );
-			$short_code = str_replace( " ", "-", $short_code );
+					$short_code = trim( strtolower( $name ) );
+					$short_code = str_replace( " ", "-", $short_code );
 
-			if ( in_array( $short_code, $this->default_filters ) ) {
-				wp_send_json_error( __( "The filter name  already exists", KMCF7MS_TEXT_DOMAIN ), 400 );
+					if ( in_array( $short_code, $this->default_filters ) ) {
+						wp_send_json_error( __( "The filter name  already exists", KMCFMF_TEXT_DOMAIN ), 400 );
+					}
+
+					$exists = MyFilter::where( 'short_code', '=', $short_code )->get();
+					if ( $exists ) {
+						wp_send_json_error( __( "A filter with this name  already exists", KMCFMF_TEXT_DOMAIN ), 400 );
+					}
+					$new_filter              = new MyFilter();
+					$new_filter->name        = $name;
+					$new_filter->description = $description;
+					$new_filter->expression  = $this->removeRegexStartAndEnd( $expression );
+					$new_filter->short_code  = $short_code;
+					$new_filter->save();
+
+					wp_send_json_success( __( "Filter saved", KMCFMF_TEXT_DOMAIN ), 200 );
+				} else {
+					wp_send_json_error( __( "Invalid nonce", KMCFMF_TEXT_DOMAIN ), 400 );
+				}
 			}
-
-			$exists = MyFilter::where( 'short_code', '=', $short_code )->get();
-			if ( $exists ) {
-				wp_send_json_error( __( "A filter with this name  already exists", KMCF7MS_TEXT_DOMAIN ), 400 );
-			}
-			$new_filter              = new MyFilter();
-			$new_filter->name        = $name;
-			$new_filter->description = $description;
-			$new_filter->expression  = $this->removeRegexStartAndEnd( $expression );
-			$new_filter->short_code  = $short_code;
-			$new_filter->save();
-
-			wp_send_json_success( __( "Filter saved", KMCF7MS_TEXT_DOMAIN ), 200 );
+		} else {
+			wp_send_json_error( __( "You do not have permission to perform this action", KMCFMF_TEXT_DOMAIN ), 400 );
 		}
 		wp_die();
 	}
@@ -118,7 +137,9 @@ class FiltersModule extends Module {
 	 * @since v1.6.0
 	 * Remove the first and last characters in a string if they are '/'
 	 * */
-	private function removeRegexStartAndEnd( $expression ): string {
+	private function removeRegexStartAndEnd(
+		$expression
+	): string {
 		if ( preg_match( "/^\/.*\//", $expression, $matches ) ) {
 			// remove the first and last characters in $matches[0]
 			$expression = substr( $matches[0], 1, - 1 );
@@ -139,47 +160,57 @@ class FiltersModule extends Module {
 				'expression' => 'required',
 				"id"         => 'required'
 			),
-			$_POST
+			$_REQUEST
 		);
 
-		if ( $validator->validate() ) {
-			$name        = sanitize_text_field( $_POST['name'] );
-			$description = sanitize_text_field( $_POST['description'] );
-			$expression  = sanitize_text_field( $_POST['expression'] );
-			$id          = sanitize_text_field( $_POST['id'] );
+		if ( current_user_can( 'manage_options' ) ) {
+			if ( $validated_data = $validator->validate() ) {
+				$nonce = sanitize_text_field( wp_unslash( $validated_data['_wpnonce'] ) );
+				if ( wp_verify_nonce( $nonce, 'kmcfmf_can_update_filter' ) ) {
+					$name        = sanitize_text_field( $validated_data['name'] );
+					$description = sanitize_text_field( $validated_data['description'] );
+					$expression  = sanitize_text_field( $validated_data['expression'] );
+					$id          = sanitize_text_field( $validated_data['id'] );
 
-			$short_code = trim( strtolower( $name ) );
-			$short_code = str_replace( " ", "-", $short_code );
+					$short_code = trim( strtolower( $name ) );
+					$short_code = str_replace( " ", "-", $short_code );
 
-			if ( in_array( $short_code, $this->default_filters ) ) {
-				wp_send_json_error( __( "The filter name  already exists", KMCF7MS_TEXT_DOMAIN ), 400 );
-			}
-			$exists = MyFilter::where( 'short_code', '=', $short_code )->first();
-			if ( $exists && $exists->id != intval( $id ) ) {
-				wp_send_json_error( __( "A filter with this name  already exists", KMCF7MS_TEXT_DOMAIN ), 400 );
-			} else {
-				$my_filter = MyFilter::find( $id );
-				if ( $my_filter ) {
-					$my_filter->name        = $name;
-					$my_filter->description = $description;
-					$my_filter->expression  = $this->removeRegexStartAndEnd( $expression );
-					$my_filter->short_code  = $short_code;
-					$my_filter->save();
+					if ( in_array( $short_code, $this->default_filters ) ) {
+						wp_send_json_error( __( "The filter name  already exists", KMCFMF_TEXT_DOMAIN ), 400 );
+					}
+					$exists = MyFilter::where( 'short_code', '=', $short_code )->first();
+					if ( $exists && $exists->id != intval( $id ) ) {
+						wp_send_json_error( __( "A filter with this name  already exists", KMCFMF_TEXT_DOMAIN ), 400 );
+					} else {
+						$my_filter = MyFilter::find( $id );
+						if ( $my_filter ) {
+							$my_filter->name        = $name;
+							$my_filter->description = $description;
+							$my_filter->expression  = $this->removeRegexStartAndEnd( $expression );
+							$my_filter->short_code  = $short_code;
+							$my_filter->save();
+						} else {
+							wp_send_json_error( __( "We could not find this filter", KMCFMF_TEXT_DOMAIN ), 400 );
+						}
+					}
+
+					wp_send_json_success( __( "Filter saved", KMCFMF_TEXT_DOMAIN ), 200 );
 				} else {
-					wp_send_json_error( __( "We could not find this filter", KMCF7MS_TEXT_DOMAIN ), 400 );
+					wp_send_json_error( __( "Invalid nonce", KMCFMF_TEXT_DOMAIN ), 400 );
 				}
 			}
-
-			wp_send_json_success( __( "Filter saved", KMCF7MS_TEXT_DOMAIN ), 200 );
+		} else {
+			wp_send_json_error( __( "You do not have permission to perform this action", KMCFMF_TEXT_DOMAIN ), 400 );
 		}
 		wp_die();
 	}
 
-	protected function addActions() {
+	protected
+	function addActions() {
 		parent::addActions();
-		add_action( 'wp_ajax_kmcf7_delete_filter', [ $this, 'deleteFilter' ] );
-		add_action( 'wp_ajax_kmcf7_update_filter', [ $this, 'updateFilter' ] );
-		add_action( 'wp_ajax_kmcf7_save_filter', [ $this, 'saveFilter' ] );
+		add_action( 'wp_ajax_kmcfmf_delete_filter', [ $this, 'deleteFilter' ] );
+		add_action( 'wp_ajax_kmcfmf_update_filter', [ $this, 'updateFilter' ] );
+		add_action( 'wp_ajax_kmcfmf_save_filter', [ $this, 'saveFilter' ] );
 	}
 
 }

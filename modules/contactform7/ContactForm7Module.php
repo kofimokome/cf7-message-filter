@@ -32,7 +32,7 @@ class ContactForm7Module extends Module {
      */
     private function getErrorMessages() {
         $this->spam_word_error = ( get_option( 'kmcfmf_spam_word_error', false ) ? get_option( 'kmcfmf_spam_word_error' ) : __( "One or more fields have an error. Please check and try again.", 'contact-form-7' ) );
-        $this->spam_email_error = ( get_option( 'kmcfmf_spam_email_error', false ) ? get_option( 'kmcfmf_spam_email_error' ) : __( 'The e-mail address entered is invalid.', KMCF7MS_TEXT_DOMAIN ) );
+        $this->spam_email_error = ( get_option( 'kmcfmf_spam_email_error', false ) ? get_option( 'kmcfmf_spam_email_error' ) : __( 'The e-mail address entered is invalid.', KMCFMF_TEXT_DOMAIN ) );
     }
 
     /**
@@ -128,7 +128,7 @@ class ContactForm7Module extends Module {
         // fixes for cf7-conditional-fields plugin
         if ( is_null( $submission ) ) {
             if ( isset( $_POST['_wpcf7'] ) ) {
-                $id = (int) $_POST['_wpcf7'];
+                $id = (int) sanitize_text_field( wp_unslash( $_POST['_wpcf7'] ) );
                 $contact_form = wpcf7_contact_form( $id );
             }
         } else {
@@ -164,7 +164,7 @@ class ContactForm7Module extends Module {
     private function validateTextField( $result, $tag ) {
         global $kmcf7_spam_status;
         $name = $tag->name;
-        $message = ( isset( $_POST[$name] ) ? trim( (string) $_POST[$name] ) : '' );
+        $message = ( isset( $_POST[$name] ) ? trim( sanitize_text_field( wp_unslash( $_POST[$name] ) ) ) : '' );
         $filter = new Filter();
         $spam_word = $filter->validateTextField( $message );
         // Spam word is recognized
@@ -180,7 +180,7 @@ class ContactForm7Module extends Module {
                 // fixes for cf7-conditional-fields plugin
                 if ( is_null( $submission ) ) {
                     if ( isset( $_POST['_wpcf7'] ) ) {
-                        $id = (int) $_POST['_wpcf7'];
+                        $id = (int) sanitize_text_field( wp_unslash( $_POST['_wpcf7'] ) );
                         $contact_form = wpcf7_contact_form( $id );
                         $submission = WPCF7_Submission::get_instance( $contact_form );
                     }
@@ -190,7 +190,7 @@ class ContactForm7Module extends Module {
                 $data = array(
                     'word'    => $spam_word,
                     'form'    => 'cf7',
-                    'message' => json_encode( $submission->get_posted_data() ),
+                    'message' => wp_json_encode( $submission->get_posted_data() ),
                     'form_id' => $contact_form->id(),
                 );
                 MessagesModule::getInstance()->updateDatabase( $data );
@@ -293,7 +293,7 @@ class ContactForm7Module extends Module {
     private function validateEmailField( $result, $tag ) {
         global $kmcf7_spam_status;
         $name = $tag->name;
-        $value = ( isset( $_POST[$name] ) ? trim( wp_unslash( strtr( (string) $_POST[$name], "\n", " " ) ) ) : '' );
+        $value = ( isset( $_POST[$name] ) ? trim( sanitize_text_field( strtr( wp_unslash( $_POST[$name] ), "\n", " " ) ) ) : '' );
         $filter = new Filter();
         $spam = $filter->validateEmail( $value );
         if ( $spam ) {
@@ -309,7 +309,7 @@ class ContactForm7Module extends Module {
                 $data = array(
                     'email'   => $spam,
                     'form'    => 'cf7',
-                    'message' => json_encode( $submission->get_posted_data() ),
+                    'message' => wp_json_encode( $submission->get_posted_data() ),
                     'form_id' => $contact_form->id(),
                 );
                 MessagesModule::getInstance()->updateDatabase( $data );

@@ -1,11 +1,25 @@
 # Change Log
 
+## 1.6.3.1 Changes
+
+1. Security fixes
+2. Update Freemius
+
+## 1.6.3 Changes
+
+1. Fix security loophole
+2. Update blocked messages page.
+3. Update Freemius
+4. Fix pressing the enter key refreshes the settings page without saving the spam word 
+5. Fix unable to delete  a spam word
 
 ## 1.6.2.1 Changes
+
 1. Fix Ukrainian anthem playing on Russian sites
 2. Update Freemius
 
 ## 1.6.2 Changes
+
 1. Fix XXS issue on old messages page
 2. Fix filters with apostrophes not working as expected
 
@@ -13,7 +27,6 @@
 
 1. Fix values from checkboxes and select fields not showing when viewing a blocked messages.
 2. Fixes to the new tag UI
-
 
 ## v1.6.0 Changes
 

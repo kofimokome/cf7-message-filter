@@ -8,9 +8,9 @@ namespace km_message_filter;
 
 function addModels( $includes ) {
 	$models = [
-		KMCF7MS_MODELS_DIR . '/Message.php',//
-		KMCF7MS_MODELS_DIR . '/Statistic.php',//
-		KMCF7MS_MODELS_DIR . '/MyFilter.php',//
+		KMCFMF_MODELS_DIR . '/Message.php',//
+		KMCFMF_MODELS_DIR . '/Statistic.php',//
+		KMCFMF_MODELS_DIR . '/MyFilter.php',//
 	];
 
 	return array_merge( $includes, $models );

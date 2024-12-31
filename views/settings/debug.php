@@ -10,7 +10,7 @@ function parseDate( $time ) {
 		return 'Never';
 	}
 
-	return date( 'Y-m-d H:i:s', $time );
+	return gmdate( 'Y-m-d H:i:s', $time );
 }
 
 $can_sync = get_option( 'kmcfmf_enable_collection', '' ) == 'on'; // for users who did not accept the freemius policy after installation
@@ -59,13 +59,13 @@ if ( $can_sync ) {
 	}
 }
 ?>
-    <h1><?php esc_html_e( "Debug Settings ", KMCF7MS_TEXT_DOMAIN ) ?></h1>
+    <h1><?php esc_html_e( "Debug Settings ", KMCFMF_TEXT_DOMAIN ) ?></h1>
     <div>
 
-		<?php _e( "Please copy the information below and send to the support team if asked.", KMCF7MS_TEXT_DOMAIN ) ?>
+		<?php _e( "Please copy the information below and send to the support team if asked.", KMCFMF_TEXT_DOMAIN ) ?>
     </div>
 
-    <button onclick="copyInfo()" class="button button-primary"><?php _e( "Copy text", KMCF7MS_TEXT_DOMAIN ) ?></button>
+    <button onclick="copyInfo()" class="button button-primary"><?php _e( "Copy text", KMCFMF_TEXT_DOMAIN ) ?></button>
 
     <div style="overflow:scroll">
     <pre onclick="copyInfo()" style="cursor:pointer">
@@ -73,11 +73,11 @@ if ( $can_sync ) {
     </pre>
     </div>
     <textarea id="myInput" style="display:none" readonly>
-        <?php echo json_encode( $debug_info ) ?>
+        <?php echo wp_json_encode( $debug_info ) ?>
     </textarea>
 
     <!-- The button used to copy the text -->
-    <button onclick="copyInfo()" class="button button-primary"><?php _e( "Copy text", KMCF7MS_TEXT_DOMAIN ) ?></button>
+    <button onclick="copyInfo()" class="button button-primary"><?php _e( "Copy text", KMCFMF_TEXT_DOMAIN ) ?></button>
 
     <script>
         function copyInfo() {
@@ -91,7 +91,7 @@ if ( $can_sync ) {
             copyText.setSelectionRange(0, 99999); // For mobile devices
 
             navigator.clipboard.writeText(copyText.value);
-            alert('<?php _e( "Text copied", KMCF7MS_TEXT_DOMAIN ) ?>')
+            alert('<?php _e( "Text copied", KMCFMF_TEXT_DOMAIN ) ?>')
         }
     </script>
 <?php

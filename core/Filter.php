@@ -173,7 +173,7 @@ class Filter {
 
 					break;
 				case 'link':
-					$pattern = '/((ftp|http|https):\/\/\w+)|(www\.\w+\.\w+)/ium'; // filters http://google.com and http://www.google.com and www.google.com
+					$pattern = '/((ftp|http|https):\/\/\w+)|(www\.\w+\.\w+)|(\w{2,}\.\w+\.\w{2,})/ium'; // filters http://google.com and http://www.google.com and www.google.com
 					$found   = preg_match( $pattern, $message );
 					break;
 				case 'emoji':

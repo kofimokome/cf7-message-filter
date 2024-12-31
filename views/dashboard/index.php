@@ -89,7 +89,7 @@ $frequent_emails = StatisticsModule::getInstance()->frequentEmails();
                         <div>
                             <a href="<?php /*echo $upgrade_url */
 				?>">
-                                <img src="<?php /*echo KMCF7MS_IMAGES_URL . '/black_friday.png' */
+                                <img src="<?php /*echo KMCFMF_IMAGES_URL . '/black_friday.png' */
 				?>" alt=""
                                      class="img-fluid" style="border: solid 1px"/>
                             </a>
@@ -106,7 +106,7 @@ $frequent_emails = StatisticsModule::getInstance()->frequentEmails();
                             <div class="card-body">
                                 <div class="d-flex">
                                     <div class="flex-grow-1">
-                                        <span class="text-muted text-uppercase fs-12 fw-bold"><?php esc_html_e( "Total Messages Blocked", KMCF7MS_TEXT_DOMAIN ) ?></span>
+                                        <span class="text-muted text-uppercase fs-12 fw-bold"><?php esc_html_e( "Total Messages Blocked", KMCFMF_TEXT_DOMAIN ) ?></span>
                                         <h3 class="mb-0">
 											<?php echo get_option( 'kmcfmf_messages_blocked' ); ?>
                                         </h3>
@@ -120,7 +120,7 @@ $frequent_emails = StatisticsModule::getInstance()->frequentEmails();
                             <div class="card-body">
                                 <div class="d-flex">
                                     <div class="flex-grow-1">
-                                        <span class="text-muted text-uppercase fs-12 fw-bold"><?php esc_html_e( "Messages Blocked Today", KMCF7MS_TEXT_DOMAIN ) ?></span>
+                                        <span class="text-muted text-uppercase fs-12 fw-bold"><?php esc_html_e( "Messages Blocked Today", KMCFMF_TEXT_DOMAIN ) ?></span>
                                         <h3 class="mb-0">
 											<?php echo get_option( 'kmcfmf_messages_blocked_today' ); ?>
                                         </h3>
@@ -134,7 +134,7 @@ $frequent_emails = StatisticsModule::getInstance()->frequentEmails();
                             <div class="card-body">
                                 <div class="d-flex">
                                     <div class="flex-grow-1">
-                                        <span class="text-muted text-uppercase fs-12 fw-bold"><?php esc_html_e( "Spam Words & Emails", KMCF7MS_TEXT_DOMAIN ) ?></span>
+                                        <span class="text-muted text-uppercase fs-12 fw-bold"><?php esc_html_e( "Spam Words & Emails", KMCFMF_TEXT_DOMAIN ) ?></span>
                                         <h3 class="mb-0">
 											<?php
 											$words  = get_option( 'kmcfmf_restricted_words', '' );
@@ -163,7 +163,7 @@ $frequent_emails = StatisticsModule::getInstance()->frequentEmails();
                             <div class="card-body">
                                 <div class="d-flex">
                                     <div class="flex-grow-1">
-                                        <span class="text-muted text-uppercase fs-12 fw-bold"><?php esc_html_e( "Plan", KMCF7MS_TEXT_DOMAIN ) ?></span>
+                                        <span class="text-muted text-uppercase fs-12 fw-bold"><?php esc_html_e( "Plan", KMCFMF_TEXT_DOMAIN ) ?></span>
                                         <h3 class="mb-0">
 											<?php if ( kmcf7ms_fs()->is_premium() ): ?>
                                                 PRO
@@ -184,7 +184,7 @@ $frequent_emails = StatisticsModule::getInstance()->frequentEmails();
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body pb-0">
-                                <h5 class="card-title mb-0 header-title"><?php esc_html_e( "Statistics", KMCF7MS_TEXT_DOMAIN ) ?></h5>
+                                <h5 class="card-title mb-0 header-title"><?php esc_html_e( "Statistics", KMCFMF_TEXT_DOMAIN ) ?></h5>
                                 <div class="mt-2">
                                     Showing <select name="stats" id="stats">
                                         <option value="7d">7 days</option>
@@ -209,7 +209,7 @@ $frequent_emails = StatisticsModule::getInstance()->frequentEmails();
                     <div class="col-xl-6">
                         <div class="card">
                             <div class="card-body pb-0">
-                                <h5 class="card-title mb-0 header-title"><?php esc_html_e( "Word Frequency", KMCF7MS_TEXT_DOMAIN ) ?></h5>
+                                <h5 class="card-title mb-0 header-title"><?php esc_html_e( "Word Frequency", KMCFMF_TEXT_DOMAIN ) ?></h5>
 
                                 <div id="words-chart" class="apex-charts mt-3" dir="ltr"></div>
                             </div>
@@ -218,7 +218,7 @@ $frequent_emails = StatisticsModule::getInstance()->frequentEmails();
                     <div class="col-xl-6">
                         <div class="card">
                             <div class="card-body pb-0">
-                                <h5 class="card-title mb-0 header-title"><?php esc_html_e( "Email Frequency", KMCF7MS_TEXT_DOMAIN ) ?></h5>
+                                <h5 class="card-title mb-0 header-title"><?php esc_html_e( "Email Frequency", KMCFMF_TEXT_DOMAIN ) ?></h5>
 
                                 <div id="emails-chart" class="apex-charts mt-3" dir="ltr"></div>
                             </div>
@@ -237,7 +237,7 @@ $frequent_emails = StatisticsModule::getInstance()->frequentEmails();
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"
-                        id="exampleModalLabel"><?php esc_html_e( "Thank You For Choosing Contact Form 7 Filter", KMCF7MS_TEXT_DOMAIN ) ?></h5>
+                        id="exampleModalLabel"><?php esc_html_e( "Thank You For Choosing Contact Form 7 Filter", KMCFMF_TEXT_DOMAIN ) ?></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -245,37 +245,36 @@ $frequent_emails = StatisticsModule::getInstance()->frequentEmails();
                 <div class="modal-body">
                     <div class="alert border-success">
 						<?php esc_html_e( " It will be great if you can take just 5 minutes of your
-                        time to leave a review, if this plugin has been useful to you", KMCF7MS_TEXT_DOMAIN ) ?><br>
+                        time to leave a review, if this plugin has been useful to you", KMCFMF_TEXT_DOMAIN ) ?><br>
                         <a href="https://wordpress.org/support/plugin/cf7-message-filter/reviews/#new-post"
                            class="btn btn-success" target="_blank"
-                           rel="noopener noreferrer"><?php esc_html_e( "Submit Review", KMCF7MS_TEXT_DOMAIN ) ?></a>
+                           rel="noopener noreferrer"><?php esc_html_e( "Submit Review", KMCFMF_TEXT_DOMAIN ) ?></a>
                         <!--<a href="https://ko-fi.com/kofimokome"
                            class="btn btn-primary" target="_blank"
-                           rel="noopener noreferrer"><?php /*esc_html_e( "Buy me Coffee", KMCF7MS_TEXT_DOMAIN ) */
+                           rel="noopener noreferrer"><?php /*esc_html_e( "Buy me Coffee", KMCFMF_TEXT_DOMAIN ) */
 						?></a>-->
 
                     </div>
                     <h5> Here are a few changes in this version:</h5>
                     <ol>
                         <!--                        <li>Pro users can now receive suggested spam words and emails every month.</li>-->
-                        <li>Fix Security loophole</li>
-                        <li>Fix Ukrainian anthem playing on Russian sites</li>
-                        <li>Fix filters with apostrophes not working as expected</li>
+                        <li>Security fixes</li>
+                        <li>Update Freemius</li>
                     </ol>
-					<?php /*esc_html_e( "Please help translate this plugin to your language", KMCF7MS_TEXT_DOMAIN ) */
+					<?php /*esc_html_e( "Please help translate this plugin to your language", KMCFMF_TEXT_DOMAIN ) */
 					?><!-- <a
                             href="https://translate.wordpress.org/projects/wp-plugins/cf7-message-filter/"
                             target="_blank"
-                            class="btn btn-sm btn-primary"><?php /*esc_html_e( "Translate Now", KMCF7MS_TEXT_DOMAIN ) */
+                            class="btn btn-sm btn-primary"><?php /*esc_html_e( "Translate Now", KMCFMF_TEXT_DOMAIN ) */
 					?></a>-->
                     <!--                    <br>-->
 					<?php _e( 'If you find an issue, please <a href="https://wordpress.org/support/plugin/cf7-message-filter/"
                                                     target="_blank">create a support ticket here</a> and I will do my
-                    best to fix as soon as possible', KMCF7MS_TEXT_DOMAIN ) ?>
+                    best to fix as soon as possible', KMCFMF_TEXT_DOMAIN ) ?>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary"
-                            data-dismiss="modal"><?php esc_html_e( "Close", KMCF7MS_TEXT_DOMAIN ) ?></button>
+                            data-dismiss="modal"><?php esc_html_e( "Close", KMCFMF_TEXT_DOMAIN ) ?></button>
                 </div>
             </div>
         </div>
@@ -298,14 +297,14 @@ $frequent_emails = StatisticsModule::getInstance()->frequentEmails();
 
 
 </div>
-<?php $word_options = json_encode( array_keys( $frequent_words ) );
+<?php $word_options = wp_json_encode( array_keys( $frequent_words ) );
 $words              = "[";
 foreach ( $frequent_words as $word ) {
 	$words .= $word . ",";
 }
 $words .= "]";
 
-$email_options = json_encode( array_keys( $frequent_emails ) );
+$email_options = wp_json_encode( array_keys( $frequent_emails ) );
 $emails        = "[";
 foreach ( $frequent_emails as $email ) {
 	$emails .= $email . ",";
@@ -326,6 +325,7 @@ $ajax_url = admin_url( "admin-ajax.php" );
             let formData = new FormData();
             formData.append("action", 'kmcf7_get_stats');
             formData.append("mode", mode);
+            formData.append("_wpnonce", '<?php echo wp_create_nonce( 'kmcfmf_can_get_statistics' ) ?>');
 
             updateChat({x_axis: [], y_axis: []});
 

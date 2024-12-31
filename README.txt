@@ -1,11 +1,11 @@
 === Message Filter for Contact Form 7 ===
-Contributors: kofimokome
+Contributors: kofimokome, freemius
 Donate link: https://ko-fi.com/kofimokome
 Tags: spam, filter, spam-filter, contact form 7, wpforms
-Requires at least: 6.3
-Tested up to: 6.6
-Stable tag: 1.6.2.1
-Requires PHP: 7.4
+Requires at least: 6.6
+Tested up to: 6.7
+Stable tag: 1.6.3.1
+Requires PHP: 8.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,6 +60,17 @@ How can I report security bugs?
 You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/cf7-message-filter)
 
 == Changelog ==
+
+= 1.6.3.1=
+* Security fixes
+* Update Freemius
+
+= 1.6.3=
+* Fix security loophole
+* Update blocked messages page
+* Update Freemius
+* Fix pressing the enter key refreshes the settings page without saving the spam word
+* Fix unable to delete  a spam word
 
 = 1.6.2.1=
 * Fix Ukrainian anthem playing on Russian sites

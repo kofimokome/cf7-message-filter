@@ -78,28 +78,39 @@ class StatisticsModule extends Module {
 	 * Get the statistics from the database
 	 */
 	public function getStats() {
-		$validator = KMValidator::make( [ 'mode' => 'required', ], $_POST );
 
-		if ( $validator->validate() ) {
-			$mode = sanitize_text_field( $_POST['mode'] );
-			switch ( $mode ) {
-				case '30d':
+
+		$validator = KMValidator::make( [ 'mode' => 'required', '_wpnonce' => 'required', ], $_REQUEST );
+		if ( $validated_data = $validator->validate() ) {
+
+			$nonce = sanitize_text_field( wp_unslash( $validated_data['_wpnonce'] ) );
+			if ( wp_verify_nonce( $nonce, 'kmcfmf_can_get_statistics' ) ) {
+				$mode = "";
+				if ( isset( $validated_data['mode'] ) ) {
+					$mode = sanitize_text_field( wp_unslash( $validated_data['mode'] ) );
+				}
+				switch ( $mode ) {
+					case '30d':
 //					$stats = Statistic::where( 'date', '>=', date( 'Y-m-d', strtotime( '-30 days' ) ) )->get();
-					$stats = Statistic::orderBy( 'date', 'desc' )->take( 30 );
-					$data  = self::formatData( $stats, '30d' );
-					break;
-				case '1y':
-					$data = self::getYearlyStats();
+						$stats = Statistic::orderBy( 'date', 'desc' )->take( 30 );
+						$data  = self::formatData( $stats, '30d' );
+						break;
+					case '1y':
+						$data = self::getYearlyStats();
 //					$stats = Statistic::where( 'date', '>=', date( 'Y-m-d', strtotime( '-1 year' ) ) )->get();
-					break;
-				default:
-					$stats = Statistic::orderBy( 'date', 'desc' )->take( 7 );
+						break;
+					default:
+						$stats = Statistic::orderBy( 'date', 'desc' )->take( 7 );
 //					$stats = Statistic::where( 'date', '>=', date( 'Y-m-d', strtotime( '-7 days' ) ) )->get();
-					$data = self::formatData( $stats, '7d' );
-					break;
+						$data = self::formatData( $stats, '7d' );
+						break;
+				}
+				wp_send_json_success( $data );
+			} else {
+				wp_send_json_error( __( "Invalid nonce", KMCFMF_TEXT_DOMAIN ), 400 );
 			}
-			wp_send_json_success( $data );
 		}
+
 		wp_die();
 
 	}
@@ -112,7 +123,7 @@ class StatisticsModule extends Module {
 		$x_axis = [];
 		$y_axis = [];
 		foreach ( $stats as $stat ) {
-			$x_axis[] = $mode == '1y' ? date( 'M Y', strtotime( $stat->date ) ) : date( 'd M', strtotime( $stat->date ) );
+			$x_axis[] = $mode == '1y' ? gmdate( 'M Y', strtotime( $stat->date ) ) : gmdate( 'd M', strtotime( $stat->date ) );
 			$y_axis[] = $stat->messages_blocked;
 		}
 		$data = [

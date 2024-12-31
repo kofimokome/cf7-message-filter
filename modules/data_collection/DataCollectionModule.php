@@ -114,43 +114,51 @@ class DataCollectionModule extends Module {
      * @author kofimokome
      */
     private function request(
-        $url = '',
+        $path = '',
         $type = 'post',
         $data = [],
         $headers = []
     ) {
         update_option( 'kmcfmf_collection_working', 1 );
-        $url = $this->api_root . $url;
-        $x = curl_init();
-        curl_setopt( $x, CURLOPT_URL, $url );
-        if ( $type == 'post' ) {
-            curl_setopt( $x, CURLOPT_POST, true );
-        }
-        if ( sizeof( $data ) > 0 ) {
-            $post = http_build_query( $data );
-            curl_setopt( $x, CURLOPT_POSTFIELDS, $post );
-        }
-        if ( sizeof( $headers ) > 0 ) {
-            curl_setopt( $x, CURLOPT_HTTPHEADER, $headers );
-        }
-        //		curl_setopt( $x, CURLOPT_HEADER, true );
-        //		curl_setopt( $x, CURLOPT_FAILONERROR, true );
-        curl_setopt( $x, CURLOPT_RETURNTRANSFER, true );
-        curl_setopt( $x, CURLOPT_SSL_VERIFYPEER, false );
-        curl_setopt( $x, CURLOPT_TIMEOUT, 4 );
-        $y = curl_exec( $x );
-        $http_code = curl_getinfo( $x, CURLINFO_HTTP_CODE );
-        if ( $http_code < 300 ) {
-            $response = json_decode( $y, true );
-            curl_close( $x );
+        $url = $this->api_root . $path;
+        add_filter(
+            'http_request_timeout',
+            function ( $redirect_count, $url_to_call ) use($url) {
+                return ( $url == $url_to_call ? 4 : $redirect_count );
+            },
+            10,
+            2
+        );
+        add_filter(
+            'https_ssl_verify',
+            function ( $ssl_verify, $url_to_call ) use($url) {
+                return ( $url == $url_to_call ? false : $ssl_verify );
+            },
+            10,
+            2
+        );
+        $response = wp_remote_request( $url, [
+            'method'  => strtoupper( $type ),
+            'headers' => $headers,
+            'body'    => $data,
+        ] );
+        if ( is_wp_error( $response ) ) {
+            $http_code = $response->get_error_code();
+            if ( $http_code == 403 ) {
+                update_option( 'kmcfmf_auth_token', '' );
+            }
             update_option( 'kmcfmf_collection_working', 0 );
-            return $response;
+        } else {
+            $http_code = $response['response']['code'] ?? 400;
+            if ( $http_code == 403 ) {
+                update_option( 'kmcfmf_auth_token', '' );
+            } else {
+                if ( $http_code < 400 ) {
+                    update_option( 'kmcfmf_collection_working', 0 );
+                    return json_decode( $response['body'] ?? '', true );
+                }
+            }
         }
-        if ( $http_code == 403 ) {
-            update_option( 'kmcfmf_auth_token', '' );
-        }
-        curl_close( $x );
-        update_option( 'kmcfmf_collection_working', 0 );
         return false;
     }
 
@@ -168,7 +176,9 @@ class DataCollectionModule extends Module {
                 'words'  => $spam_words,
                 'emails' => $spam_emails,
             ];
-            $headers = ["Authorization: Bearer {$token}"];
+            $headers = [
+                "Authorization" => "Bearer {$token}",
+            ];
             $response = $this->request(
                 $url,
                 'post',
@@ -194,7 +204,7 @@ class DataCollectionModule extends Module {
             update_option( 'kmcfmf_collection_syncing_now', 'blocked_messages' );
         }
         // add 15 minutes to the current time for the next sync
-        $next_sync = strtotime( '+15 minutes' );
+        $next_sync = strtotime( ' + 15 minutes' );
         update_option( 'kmcfmf_collection_next_sync', $next_sync );
     }
 
@@ -204,7 +214,7 @@ class DataCollectionModule extends Module {
      */
     private function syncMessages() {
         $last_id_synced = get_option( 'kmcfmf_collection_last_id_synced', 0 );
-        $messages = Message::select( 'id, message' )->where( 'id', '>', $last_id_synced )->orderBy( 'id', 'asc' )->take( 50 );
+        $messages = Message::select( 'id, message' )->where( 'id', ' > ', $last_id_synced )->orderBy( 'id', 'asc' )->take( 50 );
         // update count
         if ( ($size = sizeof( $messages )) > 0 ) {
             // send message to server
@@ -220,7 +230,7 @@ class DataCollectionModule extends Module {
                     update_option( 'kmcfmf_collection_syncing_now', 'spam_words' );
                 } else {
                     // add 15 minutes to the current time
-                    $next_sync = strtotime( '+15 minutes' );
+                    $next_sync = strtotime( ' + 15 minutes' );
                     update_option( 'kmcfmf_collection_next_sync', $next_sync );
                 }
             } else {
@@ -229,7 +239,7 @@ class DataCollectionModule extends Module {
                     $retries++;
                     update_option( 'kmcfmf_collection_retries', $retries );
                     // add 15 minutes to the current time
-                    $next_sync = strtotime( '+15 minutes' );
+                    $next_sync = strtotime( ' + 15 minutes' );
                     update_option( 'kmcfmf_collection_next_sync', $next_sync );
                 } else {
                     update_option( 'kmcfmf_collection_retries', 0 );
@@ -263,7 +273,9 @@ class DataCollectionModule extends Module {
         $data = [
             'messages' => $messages,
         ];
-        $headers = ["Authorization: Bearer {$token}"];
+        $headers = [
+            "Authorization" => "Bearer {$token}",
+        ];
         $response = $this->request(
             $url,
             'post',
@@ -282,13 +294,23 @@ class DataCollectionModule extends Module {
      * @author kofimokome
      */
     public function dismissDataCollectionNotice() {
-        $accept = ( isset( $_POST['accept'] ) ? sanitize_text_field( $_POST['accept'] ) : 'no' );
-        if ( $accept == 'yes' ) {
-            update_option( 'kmcfmf_enable_collection', 'on' );
+        $validator = KMValidator::make( [
+            '_wpnonce' => 'required',
+        ], $_REQUEST );
+        if ( $validated_data = $validator->validate() ) {
+            $nonce = sanitize_text_field( wp_unslash( $validated_data['_wpnonce'] ) );
+            if ( wp_verify_nonce( $nonce, 'kmcfmf_can_dismiss_data_collection_notice' ) ) {
+                $accept = ( isset( $validated_data['accept'] ) ? sanitize_text_field( wp_unslash( $validated_data['accept'] ) ) : 'no' );
+                if ( $accept == 'yes' ) {
+                    update_option( 'kmcfmf_enable_collection', 'on' );
+                }
+                $next_notice = strtotime( ' + 30 days' );
+                update_option( 'kmcfmf_data_collection_next_notice', $next_notice );
+                wp_send_json_success();
+            } else {
+                wp_send_json_error( __( "Invalid nonce", KMCFMF_TEXT_DOMAIN ), 400 );
+            }
         }
-        $next_notice = strtotime( '+30 days' );
-        update_option( 'kmcfmf_data_collection_next_notice', $next_notice );
-        wp_send_json_success();
         wp_die();
     }
 

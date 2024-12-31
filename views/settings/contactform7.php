@@ -31,15 +31,15 @@ $contact_forms = $contact_form_module->getForms();
 $tag_ui        = get_option( 'kmcfmf_tag_ui', 'new_ui' );
 
 ?>
-    <h1><?php esc_html_e( "Contact Form 7 Settings ", KMCF7MS_TEXT_DOMAIN ) ?></h1>
+    <h1><?php esc_html_e( "Contact Form 7 Settings ", KMCFMF_TEXT_DOMAIN ) ?></h1>
 	<?php if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ): ?>
     <div class="alert alert-danger alert-dismissible">
-        <p><?php esc_html_e( 'Please Install & Activate Contact Form 7 Plugin First!', KMCF7MS_TEXT_DOMAIN ); ?></p>
+        <p><?php esc_html_e( 'Please Install & Activate Contact Form 7 Plugin First!', KMCFMF_TEXT_DOMAIN ); ?></p>
     </div>
 <?php else: ?>
 	<?php settings_errors(); ?>
     <div>
-        <strong>Tip:</strong> <?php _e( "Use <code>*</code> to analyse all fields for each category below:", KMCF7MS_TEXT_DOMAIN ) ?>
+        <strong>Tip:</strong> <?php _e( "Use <code>*</code> to analyse all fields for each category below:", KMCFMF_TEXT_DOMAIN ) ?>
     </div>
     <form method="post" action="options.php">
 		<?php
@@ -57,7 +57,7 @@ $tag_ui        = get_option( 'kmcfmf_tag_ui', 'new_ui' );
             $('#kmcfmf_tags_by_name').selectize({
                 delimiter: ',',
                 persist: true,
-                options: <?php echo json_encode( $text_fields )?>,
+                options: <?php echo wp_json_encode( $text_fields )?>,
                 create: function (input) {
                     return {
                         value: input,
@@ -68,7 +68,7 @@ $tag_ui        = get_option( 'kmcfmf_tag_ui', 'new_ui' );
             $('#kmcfmf_contact_form_7_textarea_fields').selectize({
                 delimiter: ',',
                 persist: true,
-                options: <?php echo json_encode( $textarea_fields )?>,
+                options: <?php echo wp_json_encode( $textarea_fields )?>,
                 create: function (input) {
                     return {
                         value: input,
@@ -79,7 +79,7 @@ $tag_ui        = get_option( 'kmcfmf_tag_ui', 'new_ui' );
             $('#kmcfmf_contact_form_7_email_fields').selectize({
                 delimiter: ',',
                 persist: true,
-                options: <?php echo json_encode( $email_fields )?>,
+                options: <?php echo wp_json_encode( $email_fields )?>,
                 create: function (input) {
                     return {
                         value: input,
@@ -116,7 +116,7 @@ $tag_ui        = get_option( 'kmcfmf_tag_ui', 'new_ui' );
             filter_forms.selectize({
                 delimiter: ',',
                 persist: true,
-                options: <?php echo json_encode( $contact_forms )?>,
+                options: <?php echo wp_json_encode( $contact_forms )?>,
             });
         })
     </script>

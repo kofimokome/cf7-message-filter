@@ -12,7 +12,7 @@ class KMCFMessageFilter {
 
 	public function __construct() {
 		// do something here
-		$this->version  = '1.6.2.1';
+		$this->version  = '1.6.3.1';
 		$this->blocked  = get_option( "kmcfmf_messages_blocked_today_tmp", 0 );
 		self::$instance = $this;
 	}
@@ -71,7 +71,7 @@ class KMCFMessageFilter {
 	 * Initialises class modules
 	 */
 	public function initModules() {
-		foreach ( Module::getModules( KMCF7MS_MODULE_DIR, false ) as $dir ) {
+		foreach ( Module::getModules( KMCFMF_MODULE_DIR, false ) as $dir ) {
 			$module = 'km_message_filter\\' . rtrim( $dir, ".php " );
 			new $module();
 		}
@@ -105,9 +105,8 @@ class KMCFMessageFilter {
 		foreach ( $option_names as $option_name ) {
 			if ( get_option( $option_name ) == false ) {
 				// The option hasn't been added yet. We'll add it with $autoload set to 'no'.
-				$deprecated = null;
-				$autoload   = 'no';
-				add_option( $option_name, 0, $deprecated, $autoload );
+				$autoload = 'no';
+				add_option( $option_name, 0, "", $autoload );
 			}
 
 			if ( $reset_message_filter_counter ) {
@@ -116,10 +115,6 @@ class KMCFMessageFilter {
 
 		}
 		$messages_module = MessagesModule::getInstance();
-		if ( $reset_message_filter_counter || file_get_contents( $messages_module->getLogFile() ) == '' ) {
-			$content = "{}";
-			file_put_contents( $messages_module->getLogFile(), $content );
-		}
 
 		if ( $reset_message_filter_counter || get_option( 'kmcfmf_blocked_messages' ) == '' || get_option( 'kmcfmf_blocked_messages' ) == '0' ) {
 			$content = "{}";
@@ -130,14 +125,14 @@ class KMCFMessageFilter {
 		update_option( 'kmcfmf_report_email', get_option( 'kmcfmf_report_email', '' ) == '' ? get_option( 'admin_email' ) : get_option( 'kmcfmf_report_email' ) );
 		update_option( 'kmcfmf_word_stats', get_option( 'kmcfmf_word_stats' ) == '0' ? '[]' : get_option( 'kmcfmf_word_stats' ) );
 		update_option( 'kmcfmf_email_stats', get_option( 'kmcfmf_email_stats' ) == '0' ? '[]' : get_option( 'kmcfmf_email_stats' ) );
-		update_option( 'kmcfmf_last_cleared_date', get_option( 'kmcfmf_last_cleared_date' ) == '0' ? strtotime( Date( "d F Y" ) ) : get_option( 'kmcfmf_last_cleared_date' ) );
+		update_option( 'kmcfmf_last_cleared_date', get_option( 'kmcfmf_last_cleared_date' ) == '0' ? strtotime( gmdate( "d F Y" ) ) : get_option( 'kmcfmf_last_cleared_date' ) );
 
 		$date = get_option( 'kmcfmf_date_of_today' );
-		$now  = strtotime( Date( "Y-m-d" ) );
+		$now  = strtotime( gmdate( "Y-m-d" ) );
 
 		if ( (int) $date < (int) $now ) {
 			$statistics                   = new Statistic();
-			$statistics->date             = date( 'Y-m-d', $date );
+			$statistics->date             = gmdate( 'Y-m-d', $date );
 			$statistics->messages_blocked = get_option( "kmcfmf_messages_blocked_today" );
 			$statistics->emails_blocked   = get_option( "kmcfmf_emails_blocked_today" );
 			$statistics->save();
@@ -170,7 +165,7 @@ class KMCFMessageFilter {
 	 * @since v1.3.4
 	 * Adds the admin menu page
 	 */
-	public function addMenuPage() {
+	public function addMenuPage(): void {
 		$menu_title = 'CF7 Form Filter';
 		if ( $this->blocked > 0 ) {
 			$menu_title .= " <span class='update-plugins count-1'><span class='update-count'>$this->blocked </span></span>";
@@ -197,7 +192,8 @@ class KMCFMessageFilter {
 	 * Adds black friday notice to the admin dashboard
 	 */
 
-	public function closeBlackFridayNotice() {
+	public function closeBlackFridayNotice(): void {
+		//todo: Check for nonce first
 		update_option( 'kmcf7ms_black_friday_notice', 'off' );
 	}
 
@@ -206,34 +202,36 @@ class KMCFMessageFilter {
 	 * @since v1.5.5
 	 * Adds data collection notice to the admin dashboard
 	 */
-	public function dataCollectionNotice() {
+	public function dataCollectionNotice(): void {
 		$data_collection_url = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-options&tab=data_collection';
 		$can_sync            = get_option( 'kmcfmf_enable_collection', '' ) == 'on';
 		$next_notice         = get_option( 'kmcfmf_data_collection_next_notice', 0 );
 		$now                 = time();
 		$show_notice         = ( $now > $next_notice ) && ! $can_sync;
+		$nonce               = wp_create_nonce( "kmcfmf_can_dismiss_data_collection_notice" );
 		if ( $show_notice ):
 			?>
             <div id="kmcf7-data-notice" class="notice notice-info is-dismissible">
                 <p><b>Message Filter for Contact Form 7:</b> <br/>
-                    We appreciate you using our plugin!<br/>To continuously improve this plugin, we would like to
-                    collect:
+					<?php _e( "We appreciate you using our plugin!<br/>To continuously improve this plugin, we would like to
+                    collect:", KMCFMF_TEXT_DOMAIN ); ?>
                 <ol>
-                    <li>The words in your spam list.</li>
-                    <li>Spam messages blocked by this plugin</li>
+                    <li><?php _e( "The words in your spam list", KMCFMF_TEXT_DOMAIN ) ?>.</li>
+                    <li><?php _e( "Spam messages blocked by this plugin", KMCFMF_TEXT_DOMAIN ) ?></li>
                 </ol>
-                You can easily opt-in or out of this data collection at any time by visiting the
-                <a href="<?php echo $data_collection_url ?>">settings page</a>. <br>
+				<?php _e( "You can easily opt-in or out of this data collection at any time by visiting the", KMCFMF_TEXT_DOMAIN ); ?>
+                <a href="<?php echo $data_collection_url ?>"><? _e( "settings page", KMCFMF_TEXT_DOMAIN ) ?></a>. <br>
                 <br>
                 <div id="kmcf7-data-notice-buttons">
-                    <button id="kmcf7-data-notice-button-yes" class="button button-primary">Yes, Allow</button>
+                    <button id="kmcf7-data-notice-button-yes"
+                            class="button button-primary"><?php _e( "Yes, Allow", KMCFMF_TEXT_DOMAIN ) ?></button>
                     <a id="kmcf7-data-notice-button-no" href="#"
                        style="margin-left:10px; vertical-align: bottom">
-                        No, Not Now
+						<?php _e( "No, Not Now", KMCFMF_TEXT_DOMAIN ) ?>
                     </a>
                 </div>
                 <div id="kmcf7-data-notice-loading" style="display:none">
-                    <button class="button" disabled>Please wait...</button>
+                    <button class="button" disabled><?php _e( "Please wait...", KMCFMF_TEXT_DOMAIN ) ?></button>
                 </div>
                 </p>
             </div>
@@ -248,7 +246,8 @@ class KMCFMessageFilter {
                                 type: 'POST',
                                 data: {
                                     action: 'kmcfmf_dismiss_data_collection_notice',
-                                    accept: 'no'
+                                    accept: 'no',
+                                    _wpnonce: '<?php echo $nonce ?>'
                                 },
                                 success: function (response) {
                                     console.log(response);
@@ -263,7 +262,8 @@ class KMCFMessageFilter {
                                 type: 'POST',
                                 data: {
                                     action: 'kmcfmf_dismiss_data_collection_notice',
-                                    accept: 'yes'
+                                    accept: 'yes',
+                                    _wpnonce: '<?php echo $nonce?>'
                                 },
                                 success: function (response) {
                                     console.log(response);
@@ -277,7 +277,8 @@ class KMCFMessageFilter {
                                 type: 'POST',
                                 data: {
                                     action: 'kmcfmf_dismiss_data_collection_notice',
-                                    accept: 'no'
+                                    accept: 'no',
+                                    _wpnonce: '<?php echo $nonce ?>'
                                 },
                                 success: function (response) {
                                     console.log(response);
@@ -294,7 +295,7 @@ class KMCFMessageFilter {
 	 * @since v1.5.2
 	 * Adds black friday notice to the admin dashboard
 	 */
-	public function blackFridayNotice() {
+	public function blackFridayNotice(): void {
 		$upgrade_url = admin_url( 'admin.php' ) . '?page=kmcf7-message-filter-pricing';
 		if ( kmcf7ms_fs()->is_free_plan() && get_option( 'kmcf7ms_black_friday_notice', 'on' ) == 'on' ):
 			?>
@@ -341,7 +342,7 @@ class KMCFMessageFilter {
 	 * @since v1.3.4
 	 * Adds stylesheets and scripts on the admin side
 	 */
-	public function addAdminScripts( $hook ) {
+	public function addAdminScripts( $hook ): void {
 
 		global $wp;
 		$url = add_query_arg( array( $_GET ), $wp->request );
