@@ -2,6 +2,7 @@
 
 namespace km_message_filter;
 
+use KMValidator;
 class DataCollectionModule extends Module {
     private static $instance;
 
@@ -43,6 +44,8 @@ class DataCollectionModule extends Module {
         //		} else {
         //			$can_sync = get_option( 'kmcfmf_disable_collection', '' ) != 'on'; // for users who accepted the freemius policy after installation
         //		}
+        // disable sync for now
+        $can_sync = false;
         if ( $can_sync ) {
             $next_sync = get_option( 'kmcfmf_collection_next_sync', 0 );
             $diff = 1;

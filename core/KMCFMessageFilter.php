@@ -12,7 +12,7 @@ class KMCFMessageFilter {
 
 	public function __construct() {
 		// do something here
-		$this->version  = '1.6.3.1';
+		$this->version  = '1.6.3.2';
 		$this->blocked  = get_option( "kmcfmf_messages_blocked_today_tmp", 0 );
 		self::$instance = $this;
 	}
@@ -209,6 +209,8 @@ class KMCFMessageFilter {
 		$now                 = time();
 		$show_notice         = ( $now > $next_notice ) && ! $can_sync;
 		$nonce               = wp_create_nonce( "kmcfmf_can_dismiss_data_collection_notice" );
+		// hide notice for now
+		$show_notice = false;
 		if ( $show_notice ):
 			?>
             <div id="kmcf7-data-notice" class="notice notice-info is-dismissible">
