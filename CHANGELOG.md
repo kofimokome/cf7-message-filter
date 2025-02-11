@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.6.3.3 Changes
+
+1. Security fixes
+2. Update Freemius
+
 ## 1.6.3.2 Changes
 
 1. Pause Data Collection Temporarily

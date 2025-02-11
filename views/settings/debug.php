@@ -23,6 +23,7 @@ $debug_info = [
 	'is_contact_form_7_filter_enabled' => get_option( 'kmcfmf_enable_contact_form_7_toggle' ) == 'on' ? 'Yes' : "No",
 	'is_spam_filter_enabled'           => get_option( 'kmcfmf_email_filter_toggle' ) == 'on' ? 'Yes' : "No",
 	'is_message_filter_enabled'        => get_option( 'kmcfmf_message_filter_toggle' ) == 'on' ? 'Yes' : "No",
+	'is_email_filter_enabled'        => get_option( 'kmcfmf_email_filter_toggle' ) == 'on' ? 'Yes' : "No",
 	'is_wp_forms_filter_enabled'       => get_option( 'kmcfmf_enable_wp_forms_toggle' ) == 'on' ? 'Yes' : "No",
 	'is_sync_allowed'                  => $can_sync ? 'Yes' : 'No',
 

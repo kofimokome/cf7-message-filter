@@ -2,7 +2,7 @@
 
 namespace km_message_filter;
 
-use WordPressTools;
+use WPTools;
 $ajax_url = admin_url( "admin-ajax.php" );
 $words = get_option( 'kmcfmf_restricted_words', '' );
 $words = sizeof( explode( ',', $words ) );
@@ -213,7 +213,7 @@ submit_button();
          style="display:none; position:absolute; z-index: 9; left:0;top:0; width: 100%; height: 100%; align-content: center; align-items: center; justify-content: center; background: rgba(0,0,0,0.2)">
         <div style="background: white; width: 500px; height:500px; overflow-y:auto; position: relative; padding-left: 10px; padding-right: 10px;">
 			<?php 
-WordPressTools::getInstance( __FILE__ )->renderView( 'settings.filters', true );
+WPTools::getInstance( __FILE__ )->renderView( 'settings.filters', true );
 ?>
         </div>
     </div>

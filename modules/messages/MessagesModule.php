@@ -4,9 +4,9 @@ namespace km_message_filter;
 
 use KMSubMenuPage;
 use KMValidator;
-use WordPressTools;
 use WPCF7_ContactForm;
 use WPCF7_Submission;
+use WPTools;
 
 class MessagesModule extends Module {
 	private static $instance;
@@ -18,7 +18,7 @@ class MessagesModule extends Module {
 		$this->transferOldData();
 //		$this->module = 'packages';
 		self::$instance = $this;
-		$this->wp_tools = WordPressTools::getInstance( __FILE__ );
+		$this->wp_tools = WPTools::getInstance( __FILE__ );
 	}
 
 	/**
@@ -203,6 +203,9 @@ class MessagesModule extends Module {
 	 */
 	public function serverMessages() {
 		try {
+			if ( ! current_user_can( 'manage_options' ) ) {
+				throw new \Exception( __( 'You do not have permission to perform this action', KMCFMF_TEXT_DOMAIN ) );
+			}
 			$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
 			if ( ! wp_verify_nonce( $nonce, 'kmcfmf_can_get_blocked_messages' ) ) {
 				throw new \Exception( __( 'Invalid nonce', KMCFMF_TEXT_DOMAIN ) );
@@ -213,8 +216,8 @@ class MessagesModule extends Module {
 			$draw             = isset( $_REQUEST['draw'] ) ? intval( sanitize_text_field( wp_unslash( $_REQUEST['draw'] ) ) ) : '';
 			$length           = isset( $_REQUEST['length'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['length'] ) ) : '';
 			$start            = isset( $_REQUEST['start'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['start'] ) ) : '';
-			$search           = isset( $_REQUEST['search'] ) ? rest_sanitize_array( wp_unslash( $_REQUEST['search'] ) ) : '';
-			$search_value     = sanitize_text_field( wp_unslash( $search['value'] ) );
+			$search           = isset( $_REQUEST['search'] ) ? rest_sanitize_array( wp_unslash( $_REQUEST['search'] ) ) : [];
+			$search_value     = sanitize_text_field( wp_unslash( $search[0] ) );
 			$search_value     = trim( $search_value );
 			$current_page     = ( $start / $length ) + 1;
 			$results          = Message::where( 'message', 'LIKE', "%{$search_value}%" )->orderBy( 'id', 'desc' )->paginate( $length, $current_page );
@@ -232,7 +235,7 @@ class MessagesModule extends Module {
 			$messages = array();
 
 			// todo: Investigate why this function returns two different results for some contact forms on the frontend and here
-			$rows = $this->getRows2( $form_id, $contact_form );
+			$rows = $this->getColumns2( $form_id, $contact_form );
 
 			foreach ( $results as $result ) {
 				$decoded_message = json_decode( $result->message );
@@ -280,7 +283,7 @@ class MessagesModule extends Module {
 	 * New version of getRows()
 	 * @since 1.4.0
 	 */
-	public function getRows2( $form_id, $contact_form ) {
+	public function getColumns2( $form_id, $contact_form ) {
 		$rows = array();
 		switch ( $contact_form ) {
 			case 'cf7':
@@ -493,7 +496,7 @@ class MessagesModule extends Module {
 								$result       = $submission->get_result();
 //					$contact_form->submit();
 								if ( $result['status'] != 'mail_sent' ) {
-									wp_send_json_error( __( $result, KMCFMF_TEXT_DOMAIN ), 400 );
+									wp_send_json_error( $result, KMCFMF_TEXT_DOMAIN, 400 );
 								}
 								$message_id = intval( $message_id );
 								$message    = Message::find( $message_id );
@@ -550,6 +553,75 @@ class MessagesModule extends Module {
 	}
 
 	/**
+	 * @since v1.6.3.3
+	 * @author: kofimokome
+	 */
+	public function downloadCSV() {
+		$validator = KMValidator::make(
+			array(
+				'form_id'      => 'required',
+				'contact_form' => 'required',
+				'_wpnonce'     => 'required'
+			),
+			$_REQUEST
+		);
+		if ( current_user_can( 'manage_options' ) ) {
+			if ( $validated_data = $validator->validate() ) {
+				$nonce = sanitize_text_field( wp_unslash( $validated_data['_wpnonce'] ) );
+				if ( wp_verify_nonce( $nonce, 'kmcfmf_can_download_csv' ) ) {
+
+					$form_id      = sanitize_text_field( $validated_data['form_id'] );
+					$contact_form = sanitize_text_field( $validated_data['contact_form'] );
+					$columns      = $this->getColumns2( $form_id, $contact_form );
+					$columns[]    = 'date-blocked';
+					$messages     = Message::where( 'contact_form', '=', $contact_form );
+
+					if ( $form_id != 'all' ) {
+						$messages = $messages->andWhere( 'form_id', '=', $form_id );
+					}
+
+					$messages = $messages->orderBy( 'id', 'desc' )->get();
+
+					$filename = 'blocked_messages_' . date( 'Y-m-d' ) . '.csv';
+					$fp       = fopen( 'php://output', 'w' );
+					header( 'Content-type: application/csv' );
+					header( 'Content-Disposition: attachment; filename=' . $filename );
+					fputcsv( $fp, $columns );
+					foreach ( $messages as $message ) {
+						$decoded_message = json_decode( $message->message );
+
+						$row = [];
+						if ( $form_id == 'all' ) {
+							$row[] = $this->getFormName( $message->form_id, $message->contact_form );
+						}
+						foreach ( $columns as $column ) {
+							if ( $column == 'date-blocked' ) {
+								$row[] = $message->created_at;
+							} else {
+								if ( property_exists( $decoded_message, $column ) ) {
+									$row[] = esc_html( self::decodeUnicodeVars( $decoded_message->$column ) );
+								} else {
+									$row[] = " ";
+								}
+							}
+						}
+						fputcsv( $fp, $row );
+					}
+					fclose( $fp );
+					exit();
+				} else {
+					wp_send_json_error( __( "Invalid nonce", KMCFMF_TEXT_DOMAIN ), 400 );
+				}
+			} else {
+				wp_send_json_error( __( "You do not have permission to perform this action", KMCFMF_TEXT_DOMAIN ), 400 );
+			}
+		} else {
+			throw new \Exception( __( 'You do not have permission to perform this action', KMCFMF_TEXT_DOMAIN ) );
+		}
+		wp_die();
+	}
+
+	/**
 	 * @since v1.3.4
 	 */
 	protected
@@ -562,6 +634,7 @@ class MessagesModule extends Module {
 	protected
 	function addActions() {
 		parent::addActions();
+		add_action( 'wp_ajax_kmcf7_download_csv', [ $this, 'downloadCSV' ] );
 		add_action( 'wp_ajax_kmcf7_messages', [ $this, 'serverMessages' ] );
 		add_action( 'wp_ajax_kmcf7_delete_message', [ $this, 'deleteMessage' ] );
 		add_action( 'wp_ajax_kmcf7_resubmit_message', [ $this, 'resubmitMessage' ] );

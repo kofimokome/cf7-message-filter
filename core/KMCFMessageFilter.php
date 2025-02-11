@@ -12,7 +12,7 @@ class KMCFMessageFilter {
 
 	public function __construct() {
 		// do something here
-		$this->version  = '1.6.3.2';
+		$this->version  = '1.6.3.3';
 		$this->blocked  = get_option( "kmcfmf_messages_blocked_today_tmp", 0 );
 		self::$instance = $this;
 	}
@@ -174,7 +174,7 @@ class KMCFMessageFilter {
 		$menu_page      = new KMMenuPage( array(
 			'page_title' => 'CF7 Form Filter',
 			'menu_title' => $menu_title,
-			'capability' => 'read',
+			'capability' => 'manage_options',
 			'menu_slug'  => 'kmcf7-message-filter',
 			'icon_url'   => 'dashicons-filter',
 			'position'   => 100,

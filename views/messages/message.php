@@ -23,7 +23,7 @@ $ajax_url   = admin_url( "admin-ajax.php" );
 	$contact_form    = $message_object->contact_form;
 	$message         = json_decode( $message_object->message );
 	$messages_module = MessagesModule::getInstance();
-	$rows            = $messages_module->getRows2( $form_id, $contact_form );
+	$rows            = $messages_module->getColumns2( $form_id, $contact_form );
 	?>
     <table class="kmcfmf_table table table-striped" style="overflow-x: scroll">
         <thead>

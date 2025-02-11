@@ -9,7 +9,7 @@
  * Plugin Name: Message Filter for Contact Form 7
  * Plugin URI: https://github.com/kofimokome/cf7-message-filter
  * Description: Filters messages submitted from contact form 7 if it has words or email marked as spam by the user
- * Version: 1.6.3.2
+ * Version: 1.6.3.3
  * Author: Kofi Mokome
  * Author URI: https://www.kofimokome.stream
  * License: GPL-2.0+
@@ -22,7 +22,7 @@
 namespace km_message_filter;
 
 use KMEnv;
-use WordPressTools;
+use WPTools;
 defined( 'ABSPATH' ) or die( 'Giving To Cesar What Belongs To Caesar' );
 if ( function_exists( 'kmcf7ms_fs' ) ) {
     kmcf7ms_fs()->set_basename( false, __FILE__ );
@@ -148,7 +148,7 @@ if ( function_exists( 'kmcf7ms_fs' ) ) {
             delete_option( 'kmcfmf_weekly_stats' );
             delete_option( 'kmcfmf_weekend' );
         }
-        $wordpress_tools = new WordPressTools(__FILE__);
+        $wordpress_tools = new WPTools(__FILE__);
         $wordpress_tools->migration_manager->runMigrations();
         $message_filter = new KMCFMessageFilter();
         $message_filter->run();
@@ -171,7 +171,7 @@ if ( function_exists( 'kmcf7ms_fs' ) ) {
     function KMCF7Uninstall() {
         global $wpdb;
         if ( get_option( 'kmcfmf_message_delete_data', 'off' ) == 'on' ) {
-            $instance = WordPressTools::getInstance( __FILE__ );
+            $instance = WPTools::getInstance( __FILE__ );
             $instance->migration_manager->dropAll();
             //query the wp options table and delete all options that start with kmcfmf_
             $pattern = 'kmcfmf_%';

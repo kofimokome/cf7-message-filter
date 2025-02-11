@@ -43,7 +43,7 @@ $forms = MessagesModule::getInstance()->getForms();
     </form>
 </div>-->
 <?php
-$rows = MessagesModule::getInstance()->getRows2( $form_id, $selected_contact_form );
+$form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_contact_form );
 
 ?>
 <form action="" class="form-inline mb-4 mt-4">
@@ -72,6 +72,7 @@ $rows = MessagesModule::getInstance()->getRows2( $form_id, $selected_contact_for
     <div class="alert alert-info">
 		<?php _e( "Hint: Press and hold <kbd>CMD</kbd> or <kbd>CRTL</kbd> while clicking on any cell to select it", KMCFMF_TEXT_DOMAIN ) ?>
     </div>
+
     <button class="btn btn-danger btn-sm km-delete-btn" style="display: none" onclick="showDeleteModal()">
 		<?php _e( "Delete selected", KMCFMF_TEXT_DOMAIN ) ?>
     </button>
@@ -80,24 +81,28 @@ $rows = MessagesModule::getInstance()->getRows2( $form_id, $selected_contact_for
         </button>-->
 </div>
 <div class="mb-3">
-    <b><?php _e( "Visible Columns", KMCFMF_TEXT_DOMAIN ) ?>: <a href="#" id="toggle-visible-columns-container">Show/Hide</a>
+    <b><?php _e( "Visible Columns", KMCFMF_TEXT_DOMAIN ) ?>: <a href="#"
+                                                                id="toggle-visible-columns-container">Show/Hide</a>
         <div id="visible-columns-container" class="mt-2">
             <input id="input-ID" name="ID" type="checkbox" value="2" class="table-column"
                    checked/> <span class="mr-2">ID</span>
-			<?php foreach ( $rows as $index => $row ):if ( strlen( trim( $row ) ) > 0 ): ?>
-                <input id="input-<?php echo $row ?>" name="<?php echo $row ?>" type="checkbox"
+			<?php foreach ( $form_columns as $index => $form_column ):if ( strlen( trim( $form_column ) ) > 0 ): ?>
+                <input id="input-<?php echo $form_column ?>" name="<?php echo $form_column ?>" type="checkbox"
                        value="<?php echo $index + 3 ?>" class="table-column"
-                       checked/> <span class="mr-2"> <?php echo $row ?></span>
+                       checked/> <span class="mr-2"> <?php echo $form_column ?></span>
 			<?php endif; endforeach; ?>
         </div>
 </div>
-<table id="km-table" class="kmcfmf_table table table-striped" style="overflow-x: scroll">
+<button class="btn btn-primary mb-3" onclick="showDownloadModal()">
+	<?php _e( "Download CSV", KMCFMF_TEXT_DOMAIN ) ?>
+</button>
+<table id="km-table" class="kmcfmf_table table table-striped" style="overflow-x: scroll;">
     <thead>
     <tr>
         <th></th>
         <th><?php _e( "Actions", KMCFMF_TEXT_DOMAIN ) ?></th>
         <th><b>ID</b></th>
-		<?php foreach ( $rows as $row ): ?>
+		<?php foreach ( $form_columns as $row ): ?>
             <th>
                 <b><?php echo $row ?></b>
             </th>
@@ -132,8 +137,11 @@ $rows = MessagesModule::getInstance()->getRows2( $form_id, $selected_contact_for
     const GET_MESSAGES_NONCE = "<?php echo wp_create_nonce( 'kmcfmf_can_get_blocked_messages' )?>";
     const DELETE_MESSAGE_NONCE = "<?php echo wp_create_nonce( 'kmcfmf_can_delete_messages' )?>";
     const RESUBMIT_MESSAGE_NONCE = "<?php echo wp_create_nonce( 'kmcfmf_can_resubmit_messages' )?>";
+    const DOWNLOAD_MESSAGE_NONCE = "<?php echo wp_create_nonce( 'kmcfmf_can_download_csv' )?>";
     const forms = <?php echo wp_json_encode( $forms )?>;
     const all_registered_form_placeholder = "<?php _e( "All Registered Forms", KMCFMF_TEXT_DOMAIN )?>"
+    const selected_contact_form = '<?php echo $selected_contact_form?>'
+    const form_id = '<?php echo $form_id?>'
     console.log(forms['cf7']);
     jQuery(function ($) {
         $(document).ready(function () {
@@ -186,10 +194,10 @@ $rows = MessagesModule::getInstance()->getRows2( $form_id, $selected_contact_for
                     }],
                     buttons: [
                         // 'colvis',
-                        {
+                       /* {
                             extend: 'csv',
                             text: 'Download CSV'
-                        },
+                        },*/
                     ],
                     lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                     select: true
@@ -377,6 +385,65 @@ $rows = MessagesModule::getInstance()->getRows2( $form_id, $selected_contact_for
                     if (result.isConfirmed)*/
                 window.location.reload()
                 // })
+            }
+        })
+    }
+
+    function showDownloadModal() {
+
+        let formData = new FormData();
+        formData.append("action", 'kmcf7_download_csv');
+        formData.append("form_id", form_id);
+        formData.append("contact_form", selected_contact_form);
+        bootstrapSwal().fire({
+            title: 'Download CSV',
+            text: '<?php _e( "CSV Download could take a long time depending on the number of blocked messages", KMCFMF_TEXT_DOMAIN ) ?>',
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: '<?php _e( "Yes, download", KMCFMF_TEXT_DOMAIN )?>',
+            showLoaderOnConfirm: true,
+            preConfirm: (login) => {
+                return fetch("<?php echo $ajax_url?>" + "?_wpnonce=" + DOWNLOAD_MESSAGE_NONCE, {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(async response => {
+                        if (!response.ok) {
+                            const e = await response.text();
+                            let message = "Something went wrong";
+                            try {
+                                const response_json = JSON.parse(e)
+                                if (response_json.data)
+                                    message = response_json.data.message ?? response_json.data.toString()
+                            } catch (e) {
+                                // Silence is golden
+                            }
+                            throw new Error(message)
+                        } else
+                            return response.blob()
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(
+                            `Request failed: ${error}`
+                        )
+                    })
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed && result.value) {
+                const url = window.URL.createObjectURL(result.value);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'blocked_messages.csv';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                Swal.fire({
+                    title: `Download CSV`,
+                    icon: 'success',
+                    text: '<?php  _e( "CSV generated successfully", KMCFMF_TEXT_DOMAIN )?>',
+                })
             }
         })
     }

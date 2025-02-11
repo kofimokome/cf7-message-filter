@@ -4,7 +4,7 @@ namespace km_message_filter;
 
 use KMSetting;
 use KMSubMenuPage;
-use WordPressTools;
+use WPTools;
 
 class SettingsModule extends Module {
 	private $is_free;
@@ -15,7 +15,7 @@ class SettingsModule extends Module {
 		$this->is_free = ( ! kmcf7ms_fs()->is_premium() || ! kmcf7ms_fs()->is_plan_or_trial( 'pro' ) );
 		$this->addSettings();
 		$this->checkWildcardInSettingFields();
-		$this->wp_tools = WordPressTools::getInstance( __FILE__ );
+		$this->wp_tools = WPTools::getInstance( __FILE__ );
 
 		$is_using_old_tag_ui = get_option( 'kmcfmf_use_old_tag_ui', 'deleted' );
 

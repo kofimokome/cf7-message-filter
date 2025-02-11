@@ -3,7 +3,7 @@
 namespace km_message_filter;
 
 use KMSubMenuPage;
-use WordPressTools;
+use WPTools;
 
 class DashboardModule extends Module {
 	private $blocked;
@@ -48,7 +48,7 @@ class DashboardModule extends Module {
 	 * Displays content on dashboard sub menu page
 	 */
 	function dashboardPageContent() {
-		$instance = WordPressTools::getInstance( __FILE__ );
+		$instance = WPTools::getInstance( __FILE__ );
 		$instance->renderView( 'dashboard.index' );
 	}
 
