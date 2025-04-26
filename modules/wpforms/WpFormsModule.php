@@ -121,7 +121,8 @@ class WpFormsModule extends Module {
         if ( !isset( $_POST['wpforms'] ) || !isset( $_POST['wpforms']['fields'] ) || !isset( $_POST['wpforms']['id'] ) ) {
             return $errors;
         }
-        $fields = sanitize_text_field( wp_unslash( $_POST['wpforms']['fields'] ) );
+        $fields = wp_unslash( $_POST['wpforms']['fields'] );
+        // sanitize text field does not work here
         $form_fields = $form_data['fields'];
         $this->form_fields = $form_fields;
         $this->fields = $fields;
@@ -246,7 +247,8 @@ class WpFormsModule extends Module {
         if ( !isset( $_POST['wpforms'] ) || !isset( $_POST['wpforms']['fields'] ) || !isset( $_POST['wpforms']['id'] ) ) {
             return $errors;
         }
-        $fields = sanitize_text_field( wp_unslash( $_POST['wpforms']['fields'] ) );
+        $fields = wp_unslash( $_POST['wpforms']['fields'] );
+        // sanitize_text_field does not work here
         $form_fields = $form_data['fields'];
         $this->form_fields = $form_fields;
         $this->fields = $fields;
@@ -288,7 +290,8 @@ class WpFormsModule extends Module {
         if ( !isset( $_POST['wpforms'] ) || !isset( $_POST['wpforms']['fields'] ) || !isset( $_POST['wpforms']['id'] ) ) {
             return $errors;
         }
-        $fields = sanitize_text_field( wp_unslash( $_POST['wpforms']['fields'] ) );
+        $fields = wp_unslash( $_POST['wpforms']['fields'] );
+        // sanitize_text_field does not work here
         $form_fields = $form_data['fields'];
         $this->form_fields = $form_fields;
         $this->fields = $fields;
