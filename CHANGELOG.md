@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.6.3.5 Changes
+
+1. Update plugin to work with the latest version of WPForms
+2. Other bug fixes
+
+## 1.6.3.4 Changes
+
+1. Update WordPress Tools
+2. Fix translations were triggered too early error
+
 ## 1.6.3.3 Changes
 
 1. Security fixes

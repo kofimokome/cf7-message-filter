@@ -171,7 +171,7 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        url: '<?php echo admin_url( "admin-ajax.php?action=kmcf7_messages&form_id={$form_id}&contact_form={$selected_contact_form}" )?>' + "&_wpnonce=" + GET_MESSAGES_NONCE,
+                        url: '<?php echo admin_url( "admin-ajax.php?action=kmcf7_messages&form_id={$form_id}&contact_form={$selected_contact_form}" )?>' + "&_wpnonce=" + GET_MESSAGES_NONCE + "&form_columns=" + JSON.stringify(<?php echo json_encode( array_values( $form_columns ) )?>),
                         error: function (jqXHR, textStatus, errorThrown) {
                             let error_message = '';
                             // check if responseJSON is not empty
@@ -194,10 +194,10 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
                     }],
                     buttons: [
                         // 'colvis',
-                       /* {
-                            extend: 'csv',
-                            text: 'Download CSV'
-                        },*/
+                        /* {
+							 extend: 'csv',
+							 text: 'Download CSV'
+						 },*/
                     ],
                     lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                     select: true

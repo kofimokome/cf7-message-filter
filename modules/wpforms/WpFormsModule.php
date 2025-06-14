@@ -56,7 +56,7 @@ class WpFormsModule extends Module {
         ));
         if ( function_exists( 'wpforms' ) ) {
             $args['post_status'] = 'publish';
-            $forms = wpforms()->get( 'form' )->get( '', $args );
+            $forms = wpforms()->obj( 'form' )->get( '', $args );
             foreach ( $forms as $form ) {
                 $content = json_decode( $form->post_content, true );
                 $fields = $content['fields'];
@@ -102,7 +102,7 @@ class WpFormsModule extends Module {
         $forms = array();
         if ( function_exists( 'wpforms' ) ) {
             $args['post_status'] = 'publish';
-            $wp_forms = wpforms()->get( 'form' )->get( '', $args );
+            $wp_forms = wpforms()->obj( 'form' )->get( '', $args );
             foreach ( $wp_forms as $form ) {
                 array_push( $forms, array(
                     'text'  => $form->post_title,

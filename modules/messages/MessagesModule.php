@@ -220,6 +220,7 @@ class MessagesModule extends Module {
 			$search_value     = sanitize_text_field( wp_unslash( $search[0] ) );
 			$search_value     = trim( $search_value );
 			$current_page     = ( $start / $length ) + 1;
+			$form_columns     = sanitize_text_field( wp_unslash( $_REQUEST['form_columns'] ) );
 			$results          = Message::where( 'message', 'LIKE', "%{$search_value}%" )->orderBy( 'id', 'desc' )->paginate( $length, $current_page );
 			if ( $contact_form == 'all' ) {
 				$form_id = 'all';
@@ -235,8 +236,8 @@ class MessagesModule extends Module {
 			$messages = array();
 
 			// todo: Investigate why this function returns two different results for some contact forms on the frontend and here
-			$rows = $this->getColumns2( $form_id, $contact_form );
-
+//			$rows = $this->getColumns2( $form_id, $contact_form );
+			$rows = json_decode( $form_columns );
 			foreach ( $results as $result ) {
 				$decoded_message = json_decode( $result->message );
 				$message         = array(
@@ -248,6 +249,9 @@ class MessagesModule extends Module {
 					$message[] = $this->getFormName( $result->form_id, $result->contact_form );
 				}
 				foreach ( $rows as $row ) {
+					if ( $row == 'Contact Form' ) {
+						continue;
+					}
 					if ( property_exists( $decoded_message, $row ) ) {
 						$content   = esc_html( self::decodeUnicodeVars( $decoded_message->$row ) );
 						$ellipses  = strlen( $content ) > 50 ? "..." : '.';
@@ -290,8 +294,13 @@ class MessagesModule extends Module {
 				if ( class_exists( 'WPCF7_ContactForm' ) ) {
 					if ( $form_id == 'all' ) {
 						$rows = [ 'Contact Form' ];
-						foreach ( WPCF7_ContactForm::find() as $cf7_form ) {
+						foreach (
+							WPCF7_ContactForm::find( [
+								'post_status' => 'publish',
+							] ) as $cf7_form
+						) {
 							// todo: get only published forms
+
 							$rows = array_merge( $rows, $this->scanCf7Rows( $cf7_form->id() ) );
 						}
 					} else {
@@ -303,7 +312,7 @@ class MessagesModule extends Module {
 				if ( function_exists( 'wpforms' ) ) {
 					if ( $form_id == 'all' ) {
 						$rows = [ 'Contact Form' ];
-						foreach ( wpforms()->get( 'form' )->get() as $wp_form ) {
+						foreach ( wpforms()->obj( 'form' )->get() as $wp_form ) {
 							// get only published forms
 							if ( $wp_form->post_status == 'publish' ) {
 								$rows = array_merge( $rows, $this->scanWPFormRows( $wp_form->ID ) );
@@ -317,12 +326,16 @@ class MessagesModule extends Module {
 			default:
 				$rows = [ 'Contact Form' ];
 				if ( class_exists( 'WPCF7_ContactForm' ) ) {
-					foreach ( WPCF7_ContactForm::find() as $cf7_form ) {
+					foreach (
+						WPCF7_ContactForm::find( [
+							'post_status' => 'publish',
+						] ) as $cf7_form
+					) {
 						$rows = array_merge( $rows, $this->scanCf7Rows( $cf7_form->id() ) );
 					}
 				}
 				if ( function_exists( 'wpforms' ) ) {
-					foreach ( wpforms()->get( 'form' )->get() as $wp_form ) {
+					foreach ( wpforms()->obj( 'form' )->get() as $wp_form ) {
 						// get only published forms
 						if ( $wp_form->post_status == 'publish' ) {
 							$rows = array_merge( $rows, $this->scanWPFormRows( $wp_form->ID ) );
