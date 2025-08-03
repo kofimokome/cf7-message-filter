@@ -99,7 +99,7 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
 <table id="km-table" class="kmcfmf_table table table-striped" style="overflow-x: scroll;">
     <thead>
     <tr>
-        <th></th>
+        <th><input type="checkbox" id="km-select-all"/></th>
         <th><?php _e( "Actions", KMCFMF_TEXT_DOMAIN ) ?></th>
         <th><b>ID</b></th>
 		<?php foreach ( $form_columns as $row ): ?>
@@ -142,7 +142,7 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
     const all_registered_form_placeholder = "<?php _e( "All Registered Forms", KMCFMF_TEXT_DOMAIN )?>"
     const selected_contact_form = '<?php echo $selected_contact_form?>'
     const form_id = '<?php echo $form_id?>'
-    console.log(forms['cf7']);
+
     jQuery(function ($) {
         $(document).ready(function () {
             const registered_form_select = $("#km-registered-forms");
@@ -234,6 +234,13 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
                 }
             }
 
+            $("#km-select-all").on('click', function () {
+                if ($(this).is(":checked")) {
+                    table.rows().select();
+                } else {
+                    table.rows().deselect();
+                }
+            });
             $(".table-column").on('click', function () {
                 const value = $(this).attr('value');
                 const name = $(this).attr('name');

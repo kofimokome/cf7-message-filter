@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.6.3.6 Changes
+
+1. Add checkbox to select all blocked messages
+2. Update Freemius
+
 ## 1.6.3.5 Changes
 
 1. Update plugin to work with the latest version of WPForms
