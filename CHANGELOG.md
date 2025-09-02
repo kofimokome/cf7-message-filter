@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.6.3.7 Changes
+
+1. Add the ability to delete all blocked messages in a contact form
+
 ## 1.6.3.6 Changes
 
 1. Add checkbox to select all blocked messages

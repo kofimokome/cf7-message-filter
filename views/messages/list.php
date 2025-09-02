@@ -11,16 +11,16 @@ $columns               = '{}';
 $form_id               = isset( $_GET['form-id'] ) ? sanitize_text_field( wp_unslash( $_GET['form-id'] ) ) : 'all';
 $selected_contact_form = isset( $_GET['contact-form'] ) ? sanitize_text_field( wp_unslash( $_GET['contact-form'] ) ) : 'all';
 if ( $selected_contact_form == 'all' ) {
-	if ( class_exists( 'WPCF7_ContactForm' ) ) {
-		$selected_contact_form = 'cf7';
-	} else if ( function_exists( 'wpforms' ) ) {
-		$selected_contact_form = 'wpforms';
-	}
+    if ( class_exists( 'WPCF7_ContactForm' ) ) {
+        $selected_contact_form = 'cf7';
+    } else if ( function_exists( 'wpforms' ) ) {
+        $selected_contact_form = 'wpforms';
+    }
 }
 $selected_form = $selected_contact_form . '-' . $form_id;
 
 if ( $selected_form != '' ) {
-	$columns = get_option( 'kmcfmf_visible_columns_' . $selected_form, '{}' );
+    $columns = get_option( 'kmcfmf_visible_columns_' . $selected_form, '{}' );
 }
 update_option( "kmcfmf_messages_blocked_today_tmp", 0 );
 $forms = MessagesModule::getInstance()->getForms();
@@ -50,31 +50,37 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
     <input type="hidden" name="page" value="kmcf7-filtered-messages">
     <select name="contact-form" id="km-contact-forms" class="py-0 form-control mr-1">
         <!--        <option value="all">--><?php //_e( "All Contact Forms", KMCFMF_TEXT_DOMAIN )
-		?><!--</option>-->
-		<?php foreach ( $forms as $key => $form ): ?>
+        ?><!--</option>-->
+        <?php foreach ( $forms as $key => $form ): ?>
             <option value="<?php echo $key ?>" <?php echo $selected_contact_form == $key ? 'selected' : '' ?>><?php echo $form['name'] ?></option>
-		<?php endforeach; ?>
+        <?php endforeach; ?>
     </select>
     <select name="form-id" id="km-registered-forms" class="py-0 form-control">
         <option value="all"><?php _e( "All Registered Forms", KMCFMF_TEXT_DOMAIN ) ?></option>
-		<?php foreach ( $forms as $key => $contact_form ): ?>
-			<?php if ( $key == $selected_contact_form || $selected_contact_form == 'all' ): ?>
-				<?php foreach ( $contact_form['forms'] as $form ): ?>
+        <?php foreach ( $forms as $key => $contact_form ): ?>
+            <?php if ( $key == $selected_contact_form || $selected_contact_form == 'all' ): ?>
+                <?php foreach ( $contact_form['forms'] as $form ): ?>
                     <option value="<?php echo $form['id'] ?>" <?php echo $form_id == $form['id'] ? 'selected' : '' ?>><?php echo $form['name'] ?></option>
-				<?php endforeach; ?>
-			<?php endif; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
 
-		<?php endforeach; ?>
+        <?php endforeach; ?>
     </select>
     <button class="btn btn-primary btn-inline ml-1"><?php _e( "Show Blocked Messages", KMCFMF_TEXT_DOMAIN ) ?></button>
 </form>
 <div class="mb-2">
     <div class="alert alert-info">
-		<?php _e( "Hint: Press and hold <kbd>CMD</kbd> or <kbd>CRTL</kbd> while clicking on any cell to select it", KMCFMF_TEXT_DOMAIN ) ?>
+        <?php _e( "Hint: Press and hold <kbd>CMD</kbd> or <kbd>CRTL</kbd> while clicking on any cell to select it", KMCFMF_TEXT_DOMAIN ) ?>
     </div>
 
     <button class="btn btn-danger btn-sm km-delete-btn" style="display: none" onclick="showDeleteModal()">
-		<?php _e( "Delete selected", KMCFMF_TEXT_DOMAIN ) ?>
+        <?php _e( "Delete selected message(s)", KMCFMF_TEXT_DOMAIN ) ?>
+        - (<span class="km-selected-count"></span>)
+    </button>
+
+    <button class="btn btn-danger btn-sm km-delete-btn" style="display: none" onclick="showDeleteAllModal()">
+        <?php _e( "Delete all messages", KMCFMF_TEXT_DOMAIN ) ?>
+        - (<span class="km-all-count"></span>)
     </button>
     <!--<button class="btn btn-primary btn-sm km-delete-btn" style="display: none" onclick="showResubmitModal()">
 			<?php /*_e( "Restore selected", KMCFMF_TEXT_DOMAIN ) */ ?>
@@ -86,15 +92,15 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
         <div id="visible-columns-container" class="mt-2">
             <input id="input-ID" name="ID" type="checkbox" value="2" class="table-column"
                    checked/> <span class="mr-2">ID</span>
-			<?php foreach ( $form_columns as $index => $form_column ):if ( strlen( trim( $form_column ) ) > 0 ): ?>
+            <?php foreach ( $form_columns as $index => $form_column ):if ( strlen( trim( $form_column ) ) > 0 ): ?>
                 <input id="input-<?php echo $form_column ?>" name="<?php echo $form_column ?>" type="checkbox"
                        value="<?php echo $index + 3 ?>" class="table-column"
                        checked/> <span class="mr-2"> <?php echo $form_column ?></span>
-			<?php endif; endforeach; ?>
+            <?php endif; endforeach; ?>
         </div>
 </div>
 <button class="btn btn-primary mb-3" onclick="showDownloadModal()">
-	<?php _e( "Download CSV", KMCFMF_TEXT_DOMAIN ) ?>
+    <?php _e( "Download CSV", KMCFMF_TEXT_DOMAIN ) ?>
 </button>
 <table id="km-table" class="kmcfmf_table table table-striped" style="overflow-x: scroll;">
     <thead>
@@ -102,11 +108,11 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
         <th><input type="checkbox" id="km-select-all"/></th>
         <th><?php _e( "Actions", KMCFMF_TEXT_DOMAIN ) ?></th>
         <th><b>ID</b></th>
-		<?php foreach ( $form_columns as $row ): ?>
+        <?php foreach ( $form_columns as $row ): ?>
             <th>
                 <b><?php echo $row ?></b>
             </th>
-		<?php endforeach; ?>
+        <?php endforeach; ?>
     </tr>
     </thead>
     <tbody>
@@ -114,8 +120,15 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
     </tbody>
 </table>
 <button class="btn btn-danger btn-sm km-delete-btn" style="display: none" onclick="showDeleteModal()">
-	<?php _e( "Delete selected", KMCFMF_TEXT_DOMAIN ) ?>
+    <?php _e( "Delete selected message(s)", KMCFMF_TEXT_DOMAIN ) ?>
+    - (<span class="km-selected-count"></span>)
 </button>
+
+<button class="btn btn-danger btn-sm km-delete-btn" style="display: none" onclick="showDeleteAllModal()">
+    <?php _e( "Delete all messages", KMCFMF_TEXT_DOMAIN ) ?>
+    - (<span class="km-all-count"></span>)
+</button>
+
 <!--<button class="btn btn-primary btn-sm km-delete-btn" style="display: none" onclick="showResubmitModal()">
 		<?php /*_e( "Restore selected", KMCFMF_TEXT_DOMAIN ) */ ?>
     </button> -->
@@ -206,6 +219,8 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
             );
 
             table.on('select', function () {
+                $(".km-selected-count").html(table.rows({selected: true}).count())
+                $(".km-all-count").html(table.page.info().recordsTotal)
                 $(".km-delete-btn").show()
             });
             table.on('deselect', function () {
@@ -237,6 +252,8 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
             $("#km-select-all").on('click', function () {
                 if ($(this).is(":checked")) {
                     table.rows().select();
+                    // $(".km-selected-count").html( table.rows({ selected: true }).count())
+                    // $(".km-all-count").html(table.page.info().recordsTotal)
                 } else {
                     table.rows().deselect();
                 }
@@ -338,6 +355,63 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
         })
     }
 
+    function showDeleteAllModal() {
+        const form_id = <?php echo $form_id?>;
+
+        let formData = new FormData();
+        formData.append("action", 'kmcf7_delete_all_messages');
+        formData.append("form_id", form_id);
+
+        const text = '<?php _e( "Are you sure you want to delete all messages under this form?", KMCFMF_TEXT_DOMAIN ) ?>';
+
+        bootstrapSwal().fire({
+            title: 'Delete All Message(s)',
+            text: text,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete all',
+            showLoaderOnConfirm: true,
+            preConfirm: (login) => {
+                return fetch("<?php echo $ajax_url?>" + "?_wpnonce=" + DELETE_MESSAGE_NONCE, {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(async response => {
+                        if (!response.ok) {
+                            const e = await response.text();
+                            let message = "Something went wrong";
+                            try {
+                                const response_json = JSON.parse(e)
+                                if (response_json.data)
+                                    message = response_json.data.message ?? response_json.data.toString()
+                            } catch (e) {
+                                // Silence is golden
+                            }
+                            throw new Error(message)
+                        } else
+                            return response.json()
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(
+                            `Request failed: ${error}`
+                        )
+                    })
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                /* Swal.fire({
+					 title: `Delete Message(s)`,
+					 icon: 'success',
+					 text: '<?php  _e( "Message(s) deleted successfully", KMCFMF_TEXT_DOMAIN )?>',
+                }).then((result) => {
+                    if (result.isConfirmed)*/
+                window.location.reload()
+                // })
+            }
+        })
+    }
+
     function showDeleteModal() {
         let message_ids = []
         const data = table.rows('.selected').data()
@@ -348,9 +422,11 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
         let formData = new FormData();
         formData.append("action", 'kmcf7_delete_message');
         formData.append("message_ids", message_ids);
+        const text = '<?php _e( "Are you sure you want to delete the selected message(s)?", KMCFMF_TEXT_DOMAIN ) ?>';
+
         bootstrapSwal().fire({
             title: 'Delete Message(s)',
-            text: '<?php _e( "Are you sure you want to delete the selected message(s)?", KMCFMF_TEXT_DOMAIN ) ?>',
+            text: text,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes, delete',

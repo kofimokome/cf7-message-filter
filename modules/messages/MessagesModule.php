@@ -116,7 +116,7 @@ class MessagesModule extends Module {
 		update_option( "kmcfmf_messages_blocked_today_tmp", get_option( "kmcfmf_messages_blocked_today_tmp" ) + 1 );
 
 		$today                      = gmdate( 'N' );
-		$weekly_stats               = json_decode( get_option( 'kmcfmf_weekly_stats' ) );
+		$weekly_stats               = json_decode( get_option( 'kmcfmf_weekly_stats' ), true );
 		$weekly_stats[ $today - 1 ] = get_option( "kmcfmf_messages_blocked_today" );
 		update_option( 'kmcfmf_weekly_stats', wp_json_encode( $weekly_stats ) );
 
@@ -284,107 +284,6 @@ class MessagesModule extends Module {
 	}
 
 	/**
-	 * New version of getRows()
-	 * @since 1.4.0
-	 */
-	public function getColumns2( $form_id, $contact_form ) {
-		$rows = array();
-		switch ( $contact_form ) {
-			case 'cf7':
-				if ( class_exists( 'WPCF7_ContactForm' ) ) {
-					if ( $form_id == 'all' ) {
-						$rows = [ 'Contact Form' ];
-						foreach (
-							WPCF7_ContactForm::find( [
-								'post_status' => 'publish',
-							] ) as $cf7_form
-						) {
-							// todo: get only published forms
-
-							$rows = array_merge( $rows, $this->scanCf7Rows( $cf7_form->id() ) );
-						}
-					} else {
-						$rows = $this->scanCf7Rows( $form_id );
-					}
-				}
-				break;
-			case 'wpforms':
-				if ( function_exists( 'wpforms' ) ) {
-					if ( $form_id == 'all' ) {
-						$rows = [ 'Contact Form' ];
-						foreach ( wpforms()->obj( 'form' )->get() as $wp_form ) {
-							// get only published forms
-							if ( $wp_form->post_status == 'publish' ) {
-								$rows = array_merge( $rows, $this->scanWPFormRows( $wp_form->ID ) );
-							}
-						}
-					} else {
-						$rows = $this->scanWPFormRows( $form_id );
-					}
-				}
-				break;
-			default:
-				$rows = [ 'Contact Form' ];
-				if ( class_exists( 'WPCF7_ContactForm' ) ) {
-					foreach (
-						WPCF7_ContactForm::find( [
-							'post_status' => 'publish',
-						] ) as $cf7_form
-					) {
-						$rows = array_merge( $rows, $this->scanCf7Rows( $cf7_form->id() ) );
-					}
-				}
-				if ( function_exists( 'wpforms' ) ) {
-					foreach ( wpforms()->obj( 'form' )->get() as $wp_form ) {
-						// get only published forms
-						if ( $wp_form->post_status == 'publish' ) {
-							$rows = array_merge( $rows, $this->scanWPFormRows( $wp_form->ID ) );
-						}
-					}
-				}
-				break;
-
-		}
-
-		return array_unique( $rows, SORT_REGULAR );
-	}
-
-	/**
-	 * @since 1.6.3
-	 * Scans a contact form 7 form for rows
-	 */
-	private function scanCf7Rows( $form_id ) {
-		$rows = array();
-
-		$form = WPCF7_ContactForm::get_instance( $form_id );
-		$tags = $form->scan_form_tags();
-		foreach ( $tags as $tag ) {
-			array_push( $rows, $tag->name );
-		}
-
-		return $rows;
-	}
-
-	/**
-	 * @since 1.6.3
-	 * Scans a wp form for rows
-	 */
-	private function scanWPFormRows( $form_id ) {
-		$rows = array();
-
-		$form = wpforms()->get( 'form' )->get( $form_id );
-
-		$content = json_decode( $form->post_content, true );
-		$fields  = $content['fields'];
-
-		foreach ( $fields as $field ) {
-			array_push( $rows, $field['label'] );
-		}
-
-		return $rows;
-	}
-
-	/**
 	 * @since 1.6.3
 	 * Get the name of a form from its ID
 	 */
@@ -431,7 +330,7 @@ class MessagesModule extends Module {
 		$validator = KMValidator::make(
 			array(
 				'message_ids' => 'required',
-				"_wpnonce"    => 'required'
+				"_wpnonce"    => 'required',
 			),
 			$_REQUEST
 		);
@@ -450,6 +349,45 @@ class MessagesModule extends Module {
 							}
 						} else {
 							wp_send_json_error( __( "We could not find this message", KMCFMF_TEXT_DOMAIN ), 400 );
+						}
+
+					}
+					wp_send_json_success( __( "Message(s) deleted", KMCFMF_TEXT_DOMAIN ) );
+
+				} else {
+					wp_send_json_error( __( "Invalid nonce", KMCFMF_TEXT_DOMAIN ), 400 );
+				}
+
+			}
+		} else {
+			wp_send_json_error( __( "You do not have permission to perform this action", KMCFMF_TEXT_DOMAIN ), 400 );
+		}
+
+		wp_die();
+	}
+
+	/**
+	 * @since 1.6.3.7
+	 * Delete all messages in a contact form from the database
+	 */
+	public function deleteAllMessages() {
+
+		$validator = KMValidator::make(
+			array(
+				'form_id'  => 'required',
+				"_wpnonce" => 'required',
+			),
+			$_REQUEST
+		);
+		if ( current_user_can( 'manage_options' ) ) {
+			if ( $validated_data = $validator->validate() ) {
+				$nonce = sanitize_text_field( wp_unslash( $validated_data['_wpnonce'] ) );
+				if ( wp_verify_nonce( $nonce, 'kmcfmf_can_delete_messages' ) ) {
+					$form_id            = sanitize_text_field( wp_unslash( $validated_data['form_id'] ) );
+					$messages_to_delete = Message::where( 'form_id', '=', $form_id )->get();
+					foreach ( $messages_to_delete as $message_to_delete ) {
+						if ( ! $message_to_delete->delete() ) {
+							wp_send_json_error( __( "We could not delete this message", KMCFMF_TEXT_DOMAIN ), 500 );
 						}
 					}
 					wp_send_json_success( __( "Message(s) deleted", KMCFMF_TEXT_DOMAIN ) );
@@ -635,6 +573,107 @@ class MessagesModule extends Module {
 	}
 
 	/**
+	 * New version of getRows()
+	 * @since 1.4.0
+	 */
+	public function getColumns2( $form_id, $contact_form ) {
+		$rows = array();
+		switch ( $contact_form ) {
+			case 'cf7':
+				if ( class_exists( 'WPCF7_ContactForm' ) ) {
+					if ( $form_id == 'all' ) {
+						$rows = [ 'Contact Form' ];
+						foreach (
+							WPCF7_ContactForm::find( [
+								'post_status' => 'publish',
+							] ) as $cf7_form
+						) {
+							// todo: get only published forms
+
+							$rows = array_merge( $rows, $this->scanCf7Rows( $cf7_form->id() ) );
+						}
+					} else {
+						$rows = $this->scanCf7Rows( $form_id );
+					}
+				}
+				break;
+			case 'wpforms':
+				if ( function_exists( 'wpforms' ) ) {
+					if ( $form_id == 'all' ) {
+						$rows = [ 'Contact Form' ];
+						foreach ( wpforms()->obj( 'form' )->get() as $wp_form ) {
+							// get only published forms
+							if ( $wp_form->post_status == 'publish' ) {
+								$rows = array_merge( $rows, $this->scanWPFormRows( $wp_form->ID ) );
+							}
+						}
+					} else {
+						$rows = $this->scanWPFormRows( $form_id );
+					}
+				}
+				break;
+			default:
+				$rows = [ 'Contact Form' ];
+				if ( class_exists( 'WPCF7_ContactForm' ) ) {
+					foreach (
+						WPCF7_ContactForm::find( [
+							'post_status' => 'publish',
+						] ) as $cf7_form
+					) {
+						$rows = array_merge( $rows, $this->scanCf7Rows( $cf7_form->id() ) );
+					}
+				}
+				if ( function_exists( 'wpforms' ) ) {
+					foreach ( wpforms()->obj( 'form' )->get() as $wp_form ) {
+						// get only published forms
+						if ( $wp_form->post_status == 'publish' ) {
+							$rows = array_merge( $rows, $this->scanWPFormRows( $wp_form->ID ) );
+						}
+					}
+				}
+				break;
+
+		}
+
+		return array_unique( $rows, SORT_REGULAR );
+	}
+
+	/**
+	 * @since 1.6.3
+	 * Scans a contact form 7 form for rows
+	 */
+	private function scanCf7Rows( $form_id ) {
+		$rows = array();
+
+		$form = WPCF7_ContactForm::get_instance( $form_id );
+		$tags = $form->scan_form_tags();
+		foreach ( $tags as $tag ) {
+			array_push( $rows, $tag->name );
+		}
+
+		return $rows;
+	}
+
+	/**
+	 * @since 1.6.3
+	 * Scans a wp form for rows
+	 */
+	private function scanWPFormRows( $form_id ) {
+		$rows = array();
+
+		$form = wpforms()->get( 'form' )->get( $form_id );
+
+		$content = json_decode( $form->post_content, true );
+		$fields  = $content['fields'];
+
+		foreach ( $fields as $field ) {
+			array_push( $rows, $field['label'] );
+		}
+
+		return $rows;
+	}
+
+	/**
 	 * @since v1.3.4
 	 */
 	protected
@@ -650,6 +689,7 @@ class MessagesModule extends Module {
 		add_action( 'wp_ajax_kmcf7_download_csv', [ $this, 'downloadCSV' ] );
 		add_action( 'wp_ajax_kmcf7_messages', [ $this, 'serverMessages' ] );
 		add_action( 'wp_ajax_kmcf7_delete_message', [ $this, 'deleteMessage' ] );
+		add_action( 'wp_ajax_kmcf7_delete_all_messages', [ $this, 'deleteAllMessages' ] );
 		add_action( 'wp_ajax_kmcf7_resubmit_message', [ $this, 'resubmitMessage' ] );
 		add_action( 'wp_ajax_kmcf7_save_visible_columns', [ $this, 'saveVisibleColumns' ] );
 	}
