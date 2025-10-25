@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.6.3.8 Changes
+
+1. Update Freemius
+
 ## 1.6.3.7 Changes
 
 1. Add the ability to delete all blocked messages in a contact form

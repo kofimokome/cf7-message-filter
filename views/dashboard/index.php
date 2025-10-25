@@ -258,7 +258,7 @@ $frequent_emails = StatisticsModule::getInstance()->frequentEmails();
                     <h5> Here are a few changes in this version:</h5>
                     <ol>
                         <!--                        <li>Pro users can now receive suggested spam words and emails every month.</li>-->
-                        <li> Add the ability to delete all blocked messages in a contact form</li>
+                        <li> Update Freemius</li>
                     </ol>
 					<?php /*esc_html_e( "Please help translate this plugin to your language", KMCFMF_TEXT_DOMAIN ) */
 					?><!-- <a

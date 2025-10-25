@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/kofimokome
 Tags: spam, filter, spam-filter, contact form 7, wpforms
 Requires at least: 6.6
 Tested up to: 6.8
-Stable tag: 1.6.3.7
+Stable tag: 1.6.3.8
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -60,6 +60,9 @@ How can I report security bugs?
 You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/cf7-message-filter)
 
 == Changelog ==
+
+= 1.6.3.8=
+* Update Freemius
 
 = 1.6.3.7=
 * Add the ability to delete all blocked messages in a contact form
