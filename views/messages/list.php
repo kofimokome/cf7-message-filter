@@ -52,7 +52,7 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
         <!--        <option value="all">--><?php //_e( "All Contact Forms", KMCFMF_TEXT_DOMAIN )
         ?><!--</option>-->
         <?php foreach ( $forms as $key => $form ): ?>
-            <option value="<?php echo $key ?>" <?php echo $selected_contact_form == $key ? 'selected' : '' ?>><?php echo $form['name'] ?></option>
+            <option value="<?php echo esc_attr( $key ) ?>" <?php echo $selected_contact_form == $key ? 'selected' : '' ?>><?php echo esc_html( $form['name'] ) ?></option>
         <?php endforeach; ?>
     </select>
     <select name="form-id" id="km-registered-forms" class="py-0 form-control">
@@ -60,7 +60,7 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
         <?php foreach ( $forms as $key => $contact_form ): ?>
             <?php if ( $key == $selected_contact_form || $selected_contact_form == 'all' ): ?>
                 <?php foreach ( $contact_form['forms'] as $form ): ?>
-                    <option value="<?php echo $form['id'] ?>" <?php echo $form_id == $form['id'] ? 'selected' : '' ?>><?php echo $form['name'] ?></option>
+                    <option value="<?php echo esc_attr( $form['id'] ) ?>" <?php echo $form_id == $form['id'] ? 'selected' : '' ?>><?php echo esc_html( $form['name'] ) ?></option>
                 <?php endforeach; ?>
             <?php endif; ?>
 
@@ -93,9 +93,9 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
             <input id="input-ID" name="ID" type="checkbox" value="2" class="table-column"
                    checked/> <span class="mr-2">ID</span>
             <?php foreach ( $form_columns as $index => $form_column ):if ( strlen( trim( $form_column ) ) > 0 ): ?>
-                <input id="input-<?php echo $form_column ?>" name="<?php echo $form_column ?>" type="checkbox"
-                       value="<?php echo $index + 3 ?>" class="table-column"
-                       checked/> <span class="mr-2"> <?php echo $form_column ?></span>
+                <input id="input-<?php echo esc_attr($form_column) ?>" name="<?php echo esc_attr($form_column) ?>" type="checkbox"
+                       value="<?php echo esc_attr($index + 3) ?>" class="table-column"
+                       checked/> <span class="mr-2"> <?php echo esc_html($form_column) ?></span>
             <?php endif; endforeach; ?>
         </div>
 </div>
@@ -110,7 +110,7 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
         <th><b>ID</b></th>
         <?php foreach ( $form_columns as $row ): ?>
             <th>
-                <b><?php echo $row ?></b>
+                <b><?php echo esc_html($row) ?></b>
             </th>
         <?php endforeach; ?>
     </tr>
@@ -153,8 +153,8 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
     const DOWNLOAD_MESSAGE_NONCE = "<?php echo wp_create_nonce( 'kmcfmf_can_download_csv' )?>";
     const forms = <?php echo wp_json_encode( $forms )?>;
     const all_registered_form_placeholder = "<?php _e( "All Registered Forms", KMCFMF_TEXT_DOMAIN )?>"
-    const selected_contact_form = '<?php echo $selected_contact_form?>'
-    const form_id = '<?php echo $form_id?>'
+    const selected_contact_form = '<?php echo esc_js( $selected_contact_form )?>'
+    const form_id = '<?php echo esc_js( $form_id )?>'
 
     jQuery(function ($) {
         $(document).ready(function () {
@@ -184,7 +184,7 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        url: '<?php echo admin_url( "admin-ajax.php?action=kmcf7_messages&form_id={$form_id}&contact_form={$selected_contact_form}" )?>' + "&_wpnonce=" + GET_MESSAGES_NONCE + "&form_columns=" + JSON.stringify(<?php echo json_encode( array_values( $form_columns ) )?>),
+                        url: '<?php echo admin_url( "admin-ajax.php?action=kmcf7_messages&form_id=" . esc_js( $form_id ) . "&contact_form=" . esc_js( $selected_contact_form ) )?>' + "&_wpnonce=" + GET_MESSAGES_NONCE + "&form_columns=" + JSON.stringify(<?php echo json_encode( array_values( $form_columns ) )?>),
                         error: function (jqXHR, textStatus, errorThrown) {
                             let error_message = '';
                             // check if responseJSON is not empty
@@ -228,7 +228,7 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
             });
 
             // column.visible(!column.visible());
-            let cachedColumns = localStorage.getItem("<?php echo $selected_form?>")
+            let cachedColumns = localStorage.getItem("<?php echo esc_js( $selected_form )?>")
             if (cachedColumns !== undefined && cachedColumns !== null) {
                 cachedColumns = JSON.parse(cachedColumns)
             } else {
@@ -265,17 +265,17 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
 
                 // Toggle the visibility
                 column.visible(!column.visible());
-                const cachedColumnsInLocalStorage = localStorage.getItem("<?php echo $selected_form?>")
+                const cachedColumnsInLocalStorage = localStorage.getItem("<?php echo esc_js( $selected_form )?>")
                 if (cachedColumnsInLocalStorage !== undefined && cachedColumnsInLocalStorage !== null) {
-                    localStorage.removeItem("<?php echo $selected_form?>")
+                    localStorage.removeItem("<?php echo esc_js( $selected_form )?>")
                 }
                 cachedColumns[name] = {"id": value, visible: column.visible()}
                 let formData = new FormData();
                 formData.append("action", 'kmcf7_save_visible_columns');
-                formData.append("form", '<?php echo $selected_form ?>');
+                formData.append("form", '<?php echo esc_js( $selected_form ) ?>');
                 formData.append("columns", JSON.stringify(cachedColumns));
                 formData.append("_wpnonce", '<?php echo wp_create_nonce( 'kmcfmf_can_save_visible_columns' )?>');
-                fetch("<?php echo $ajax_url?>", {
+                fetch("<?php echo esc_url($ajax_url)?>", {
                     method: 'POST',
                     body: formData
                 })
@@ -315,7 +315,7 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
             confirmButtonText: 'OK, resubmit',
             showLoaderOnConfirm: true,
             preConfirm: (login) => {
-                return fetch("<?php echo $ajax_url?>" + "?_wpnonce=" + RESUBMIT_MESSAGE_NONCE, {
+                return fetch("<?php echo esc_url($ajax_url)?>" + "?_wpnonce=" + RESUBMIT_MESSAGE_NONCE, {
                     method: 'POST',
                     body: formData
                 })
@@ -356,7 +356,7 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
     }
 
     function showDeleteAllModal() {
-        const form_id = <?php echo $form_id?>;
+        const form_id = '<?php echo esc_js( $form_id )?>';
 
         let formData = new FormData();
         formData.append("action", 'kmcf7_delete_all_messages');
@@ -372,7 +372,7 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
             confirmButtonText: 'Yes, delete all',
             showLoaderOnConfirm: true,
             preConfirm: (login) => {
-                return fetch("<?php echo $ajax_url?>" + "?_wpnonce=" + DELETE_MESSAGE_NONCE, {
+                return fetch("<?php echo esc_url( $ajax_url )?>" + "?_wpnonce=" + DELETE_MESSAGE_NONCE, {
                     method: 'POST',
                     body: formData
                 })
@@ -432,7 +432,7 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
             confirmButtonText: 'Yes, delete',
             showLoaderOnConfirm: true,
             preConfirm: (login) => {
-                return fetch("<?php echo $ajax_url?>" + "?_wpnonce=" + DELETE_MESSAGE_NONCE, {
+                return fetch("<?php echo esc_url( $ajax_url )?>" + "?_wpnonce=" + DELETE_MESSAGE_NONCE, {
                     method: 'POST',
                     body: formData
                 })
@@ -486,7 +486,7 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
             confirmButtonText: '<?php _e( "Yes, download", KMCFMF_TEXT_DOMAIN )?>',
             showLoaderOnConfirm: true,
             preConfirm: (login) => {
-                return fetch("<?php echo $ajax_url?>" + "?_wpnonce=" + DOWNLOAD_MESSAGE_NONCE, {
+                return fetch("<?php echo esc_url( $ajax_url )?>" + "?_wpnonce=" + DOWNLOAD_MESSAGE_NONCE, {
                     method: 'POST',
                     body: formData
                 })

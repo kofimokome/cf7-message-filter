@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.6.4.0 Changes
+1. Update Freemius
+2. Security fixes
+
+## 1.6.3.9 Changes
+1. Update Freemius
+2. Security fixes
+
 ## 1.6.3.8 Changes
 
 1. Update Freemius

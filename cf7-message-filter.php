@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @link              www.kofimokome.stream
+ * @link              www.kofimoko.me
  * @since             1.0.0
  * @package           km_message_filter
  *
@@ -9,9 +9,9 @@
  * Plugin Name: Message Filter for Contact Form 7
  * Plugin URI: https://github.com/kofimokome/cf7-message-filter
  * Description: Filters messages submitted from contact form 7 if it has words or email marked as spam by the user
- * Version: 1.6.3.8
+ * Version: 1.6.4.0
  * Author: Kofi Mokome
- * Author URI: https://www.kofimokome.stream
+ * Author URI: https://www.kofimoko.me
  * License: GPL-2.0+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain: cf7-message-filter
@@ -39,18 +39,19 @@ if ( function_exists( 'kmcf7ms_fs' ) ) {
                 // Include Freemius SDK.
                 require_once dirname( __FILE__ ) . '/freemius/start.php';
                 $kmcf7ms_fs = fs_dynamic_init( array(
-                    'id'             => '11062',
-                    'slug'           => 'cf7-message-filter',
-                    'type'           => 'plugin',
-                    'public_key'     => 'pk_699cdf1dd29834038369b6605acb5',
-                    'is_premium'     => false,
-                    'premium_suffix' => 'Pro',
-                    'has_addons'     => false,
-                    'has_paid_plans' => true,
-                    'menu'           => array(
+                    'id'               => '11062',
+                    'slug'             => 'cf7-message-filter',
+                    'type'             => 'plugin',
+                    'public_key'       => 'pk_699cdf1dd29834038369b6605acb5',
+                    'is_premium'       => false,
+                    'premium_suffix'   => 'Pro',
+                    'has_addons'       => false,
+                    'has_paid_plans'   => true,
+                    'menu'             => array(
                         'slug' => 'kmcf7-message-filter',
                     ),
-                    'is_live'        => true,
+                    'is_live'          => true,
+                    'is_org_compliant' => true,
                 ) );
             }
             return $kmcf7ms_fs;

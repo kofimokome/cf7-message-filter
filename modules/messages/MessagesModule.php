@@ -383,6 +383,10 @@ class MessagesModule extends Module {
 			if ( $validated_data = $validator->validate() ) {
 				$nonce = sanitize_text_field( wp_unslash( $validated_data['_wpnonce'] ) );
 				if ( wp_verify_nonce( $nonce, 'kmcfmf_can_delete_messages' ) ) {
+					if( $validated_data['form_id'] == 'all' ){
+						wp_send_json_error( __( "Please select a contact form first", KMCFMF_TEXT_DOMAIN ), 400 );
+					}
+
 					$form_id            = sanitize_text_field( wp_unslash( $validated_data['form_id'] ) );
 					$messages_to_delete = Message::where( 'form_id', '=', $form_id )->get();
 					foreach ( $messages_to_delete as $message_to_delete ) {

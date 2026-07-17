@@ -5,6 +5,7 @@
     padding: 5px;
     border-radius: 5px;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .km-tag-container__with_custom_filter {

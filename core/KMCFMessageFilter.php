@@ -12,7 +12,7 @@ class KMCFMessageFilter {
 
 	public function __construct() {
 		// do something here
-		$this->version  = '1.6.3.8';
+		$this->version  = '1.6.4.0';
 		$this->blocked  = get_option( "kmcfmf_messages_blocked_today_tmp", 0 );
 		self::$instance = $this;
 	}
@@ -222,7 +222,7 @@ class KMCFMessageFilter {
                     <li><?php _e( "Spam messages blocked by this plugin", KMCFMF_TEXT_DOMAIN ) ?></li>
                 </ol>
 				<?php _e( "You can easily opt-in or out of this data collection at any time by visiting the", KMCFMF_TEXT_DOMAIN ); ?>
-                <a href="<?php echo $data_collection_url ?>"><? _e( "settings page", KMCFMF_TEXT_DOMAIN ) ?></a>. <br>
+                <a href="<?php echo $data_collection_url ?>"><?php _e( "settings page", KMCFMF_TEXT_DOMAIN ) ?></a>. <br>
                 <br>
                 <div id="kmcf7-data-notice-buttons">
                     <button id="kmcf7-data-notice-button-yes"
@@ -371,18 +371,10 @@ class KMCFMessageFilter {
 //			wp_enqueue_script( 'dash', plugins_url( 'assets/js/pages/dashboard.init.js', dirname( __FILE__ ) ), array( 'jquery' ), '1.0.0', true );
 			wp_enqueue_script( 'app', plugins_url( 'assets/js/app.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '1.0.0', true );
 			wp_enqueue_script( 'bootstrap', plugins_url( 'assets/js/bootstrap.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '4.3.1', false );
-			wp_enqueue_script( 'datatable', plugins_url( 'assets/libs/datatables/datatables.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '1.12.1', false );
-			wp_enqueue_script( 'datatable-select', plugins_url( 'assets/libs/datatables/select.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '1.4.0', false );
-			wp_enqueue_script( 'datatable-buttons', plugins_url( 'assets/libs/datatables/buttons.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '2.2.3', false );
-			wp_enqueue_script( 'datatable-pdfmake', plugins_url( 'assets/libs/datatables/pdfmake.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '0.1.53', false );
-			wp_enqueue_script( 'datatable-buttons-html5', plugins_url( 'assets/libs/datatables/buttons.html5.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '2.2.3', false );
-			wp_enqueue_script( 'datatable-jszip', plugins_url( 'assets/libs/datatables/jszip.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '3.1.3', false );
-			wp_enqueue_script( 'datatable-colvis', plugins_url( 'assets/libs/datatables/colvis.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '2.3.2', false );
+			wp_enqueue_script( 'datatable', plugins_url( 'assets/libs/datatables/datatables.min.js', dirname( __FILE__ ) ), array( 'jquery' ), '2.3.8', false );
 
 
-			wp_enqueue_style( 'datatable', plugins_url( '/assets/libs/datatables/datatables.min.css', dirname( __FILE__ ) ), '', '1.12.1' );
-			wp_enqueue_style( 'datatable-select', plugins_url( '/assets/libs/datatables/select.min.css', dirname( __FILE__ ) ), '', '1.4.0' );
-			wp_enqueue_style( 'datatable-buttons', plugins_url( '/assets/libs/datatables/buttons.min.css', dirname( __FILE__ ) ), '', '2.2.3' );
+			wp_enqueue_style( 'datatable', plugins_url( '/assets/libs/datatables/datatables.min.css', dirname( __FILE__ ) ), '', '2.3.8' );
 			wp_enqueue_style( 'bootstrap', plugins_url( '/assets/css/bootstrap.min.css', dirname( __FILE__ ) ), '', '4.3.1' );
 			wp_enqueue_style( 'app', plugins_url( '/assets/css/app.min.css', dirname( __FILE__ ) ), '', '4.3.1' );
 			wp_enqueue_style( 'icons', plugins_url( '/assets/css/icons.min.css', dirname( __FILE__ ) ), '', '4.3.1' );
