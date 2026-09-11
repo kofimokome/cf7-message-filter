@@ -60,13 +60,13 @@ if ( $can_sync ) {
 	}
 }
 ?>
-    <h1><?php esc_html_e( "Debug Settings ", KMCFMF_TEXT_DOMAIN ) ?></h1>
+    <h1><?php esc_html_e( "Debug Settings ", 'cf7-message-filter' ) ?></h1>
     <div>
 
-		<?php _e( "Please copy the information below and send to the support team if asked.", KMCFMF_TEXT_DOMAIN ) ?>
+		<?php _e( "Please copy the information below and send to the support team if asked.", 'cf7-message-filter' ) ?>
     </div>
 
-    <button onclick="copyInfo()" class="button button-primary"><?php _e( "Copy text", KMCFMF_TEXT_DOMAIN ) ?></button>
+    <button onclick="copyInfo()" class="button button-primary"><?php _e( "Copy text", 'cf7-message-filter' ) ?></button>
 
     <div style="overflow:scroll">
     <pre onclick="copyInfo()" style="cursor:pointer">
@@ -78,7 +78,7 @@ if ( $can_sync ) {
     </textarea>
 
     <!-- The button used to copy the text -->
-    <button onclick="copyInfo()" class="button button-primary"><?php _e( "Copy text", KMCFMF_TEXT_DOMAIN ) ?></button>
+    <button onclick="copyInfo()" class="button button-primary"><?php _e( "Copy text", 'cf7-message-filter' ) ?></button>
 
     <script>
         function copyInfo() {
@@ -92,7 +92,7 @@ if ( $can_sync ) {
             copyText.setSelectionRange(0, 99999); // For mobile devices
 
             navigator.clipboard.writeText(copyText.value);
-            alert('<?php _e( "Text copied", KMCFMF_TEXT_DOMAIN ) ?>')
+            alert('<?php _e( "Text copied", 'cf7-message-filter' ) ?>')
         }
     </script>
 <?php

@@ -13,8 +13,8 @@ $ajax_url   = admin_url( "admin-ajax.php" );
     </style>
     <h3>
         <button class="btn btn-sm btn-primary"
-                onclick="window.history.back()"><?php _e( "Go back", KMCFMF_TEXT_DOMAIN ) ?></button>
-		<?php _e( "Message Details", KMCFMF_TEXT_DOMAIN ) ?>
+                onclick="window.history.back()"><?php _e( "Go back", 'cf7-message-filter' ) ?></button>
+		<?php _e( "Message Details", 'cf7-message-filter' ) ?>
     </h3>
 
 	<?php if ( $message_id > 0 ) {
@@ -28,8 +28,8 @@ $ajax_url   = admin_url( "admin-ajax.php" );
     <table class="kmcfmf_table table table-striped" style="overflow-x: scroll">
         <thead>
         <tr>
-            <th><?php _e( "Field", KMCFMF_TEXT_DOMAIN ) ?></th>
-            <th><?php _e( "Value", KMCFMF_TEXT_DOMAIN ) ?></th>
+            <th><?php _e( "Field", 'cf7-message-filter' ) ?></th>
+            <th><?php _e( "Value", 'cf7-message-filter' ) ?></th>
         </tr>
         </thead>
         <tbody>
@@ -54,7 +54,7 @@ $ajax_url   = admin_url( "admin-ajax.php" );
         <tr>
             <td>
                 <b>
-					<?php _e( "Date Blocked", KMCFMF_TEXT_DOMAIN ) ?>
+					<?php _e( "Date Blocked", 'cf7-message-filter' ) ?>
                 </b>
             </td>
             <td>
@@ -64,10 +64,10 @@ $ajax_url   = admin_url( "admin-ajax.php" );
         </tbody>
     </table>
     <button class="btn btn-danger btn-sm" onclick="showDeleteModal()">
-		<?php _e( "Delete", KMCFMF_TEXT_DOMAIN ) ?>
+		<?php _e( "Delete", 'cf7-message-filter' ) ?>
     </button>
     <button class="btn btn-primary btn-sm" onclick="showResubmitModal()">
-		<?php _e( "Resubmit", KMCFMF_TEXT_DOMAIN ) ?>
+		<?php _e( "Resubmit", 'cf7-message-filter' ) ?>
     </button>
 
     <!--    <div class="mt-3">
@@ -100,7 +100,7 @@ $ajax_url   = admin_url( "admin-ajax.php" );
 
             bootstrapSwal().fire({
                 title: 'Delete Message',
-                text: '<?php _e( "Are you sure you want to delete this message?", KMCFMF_TEXT_DOMAIN ) ?>',
+                text: '<?php _e( "Are you sure you want to delete this message?", 'cf7-message-filter' ) ?>',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete',
@@ -137,7 +137,7 @@ $ajax_url   = admin_url( "admin-ajax.php" );
                     /*Swal.fire({
                         title: `Delete Message`,
                         icon: 'success',
-                        text: '<?php  _e( "Message deleted successfully", KMCFMF_TEXT_DOMAIN )?>',
+                        text: '<?php  _e( "Message deleted successfully", 'cf7-message-filter' )?>',
                     }).then((result) => {
                         if (result.isConfirmed)*/
                     history.back()
@@ -153,7 +153,7 @@ $ajax_url   = admin_url( "admin-ajax.php" );
 
             bootstrapSwal().fire({
                 title: 'Resubmit Message',
-                text: '<?php _e( "Resubmitting a message may not work if you have another spam filter or captcha plugin installed. We will not be able to bypass the verification process of these plugins.", KMCFMF_TEXT_DOMAIN ) ?>',
+                text: '<?php _e( "Resubmitting a message may not work if you have another spam filter or captcha plugin installed. We will not be able to bypass the verification process of these plugins.", 'cf7-message-filter' ) ?>',
                 icon: 'info',
                 showCancelButton: true,
                 confirmButtonText: 'OK, resubmit',
@@ -190,7 +190,7 @@ $ajax_url   = admin_url( "admin-ajax.php" );
                     Swal.fire({
                         title: `Resubmit message`,
                         icon: 'success',
-                        text: '<?php  _e( "Message resubmitted successfully", KMCFMF_TEXT_DOMAIN )?>',
+                        text: '<?php  _e( "Message resubmitted successfully", 'cf7-message-filter' )?>',
                     }).then((result) => {
                         if (result.isConfirmed)
                             history.back()

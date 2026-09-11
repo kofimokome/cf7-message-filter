@@ -4,23 +4,23 @@ namespace km_message_filter;
 $ajax_url = admin_url( "admin-ajax.php" );
 
 $my_filters           = MyFilter::all();
-$can_add_more_filters = ( kmcf7ms_fs()->is_premium() && kmcf7ms_fs()->is_plan_or_trial( 'pro' ) ) || ( ! kmcf7ms_fs()->is_premium() && count( $my_filters ) < 1 )
+$can_add_more_filters = ( kmcf7ms_fs()->is_premium() && kmcf7ms_fs()->is_plan_or_trial( 'pro' ) ) || ( kmcf7ms_fs()->is_free_plan() && count( $my_filters ) < 1 )
 ?>
-<h1><?php esc_html_e( "My Filters ", KMCFMF_TEXT_DOMAIN ) ?></h1>
+<h1><?php esc_html_e( "My Filters ", 'cf7-message-filter' ) ?></h1>
 <div>
 
-	<?php _e( "Here, you can create your own custom spam filter", KMCFMF_TEXT_DOMAIN ) ?>
+	<?php _e( "Here, you can create your own custom spam filter", 'cf7-message-filter' ) ?>
 </div>
 
 <div style="margin-top: 10px">
-	<?php _e( "Creating a custom filter requires knowledge of <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions' target='_blank'>Regular Expressions</a>. You can contact us (Pro users only) to write a custom filter for you.", KMCFMF_TEXT_DOMAIN ) ?>
+	<?php _e( "Creating a custom filter requires knowledge of <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions' target='_blank'>Regular Expressions</a>. You can contact us (Pro users only) to write a custom filter for you.", 'cf7-message-filter' ) ?>
 </div>
 <div>
-	<?php _e( "A Filter can take variables in the form of<code>{{variable}}</code>. For example, if you want to filter multiple words with the same custom filter, you can add a variable, say  'name'  in the regular expression. <code>\S+{{name}}\S+</code>.<br/> You can pass the variable when calling the filter as shown below: <code>[my-filter-name name=John Doe]</code>", KMCFMF_TEXT_DOMAIN ) ?>
+	<?php _e( "A Filter can take variables in the form of<code>{{variable}}</code>. For example, if you want to filter multiple words with the same custom filter, you can add a variable, say  'name'  in the regular expression. <code>\S+{{name}}\S+</code>.<br/> You can pass the variable when calling the filter as shown below: <code>[my-filter-name name=John Doe]</code>", 'cf7-message-filter' ) ?>
 </div>
 <?php if ( ! $can_add_more_filters ): ?>
     <div style="margin-top: 10px">
-        <strong><?php _e( "Note: As a free user, you can add up to 1 custom filter.", KMCFMF_TEXT_DOMAIN ) ?></strong>
+        <strong><?php _e( "Note: As a free user, you can add up to 1 custom filter.", 'cf7-message-filter' ) ?></strong>
     </div>
 <?php endif; ?>
 <table class="wp-list-table widefat fixed striped table-view-list posts" style="margin-top: 40px">
@@ -28,22 +28,22 @@ $can_add_more_filters = ( kmcf7ms_fs()->is_premium() && kmcf7ms_fs()->is_plan_or
     <tr>
         <th>S/N</th>
         <th scope="col">
-			<?php _e( "Name", KMCFMF_TEXT_DOMAIN ) ?>
+			<?php _e( "Name", 'cf7-message-filter' ) ?>
         </th>
         <th scope="col">
-			<?php _e( "Description", KMCFMF_TEXT_DOMAIN ) ?>
+			<?php _e( "Description", 'cf7-message-filter' ) ?>
         </th>
         <th scope="col">
-			<?php _e( "Short Code", KMCFMF_TEXT_DOMAIN ) ?>
+			<?php _e( "Short Code", 'cf7-message-filter' ) ?>
         </th>
         <th scope="col">
-			<?php _e( "Expression", KMCFMF_TEXT_DOMAIN ) ?>
+			<?php _e( "Expression", 'cf7-message-filter' ) ?>
         </th>
         <th scope="col">
-			<?php _e( "Created At", KMCFMF_TEXT_DOMAIN ) ?>
+			<?php _e( "Created At", 'cf7-message-filter' ) ?>
         </th>
         <th scope="col">
-			<?php _e( "Actions", KMCFMF_TEXT_DOMAIN ) ?>
+			<?php _e( "Actions", 'cf7-message-filter' ) ?>
         </th>
     </tr>
     </thead>
@@ -52,7 +52,7 @@ $can_add_more_filters = ( kmcf7ms_fs()->is_premium() && kmcf7ms_fs()->is_plan_or
     <tr>
         <td>1</td>
         <td>Link</td>
-        <td><?php esc_html_e( "Filters messages having links", KMCFMF_TEXT_DOMAIN ) ?></td>
+        <td><?php esc_html_e( "Filters messages having links", 'cf7-message-filter' ) ?></td>
         <td><code>[link]</code></td>
         <td>-</td>
         <td>-</td>
@@ -61,7 +61,7 @@ $can_add_more_filters = ( kmcf7ms_fs()->is_premium() && kmcf7ms_fs()->is_plan_or
     <tr>
         <td>2</td>
         <td>Russian</td>
-        <td><?php esc_html_e( "Filters messages having russian (cyrillic) characters", KMCFMF_TEXT_DOMAIN ) ?></td>
+        <td><?php esc_html_e( "Filters messages having russian (cyrillic) characters", 'cf7-message-filter' ) ?></td>
         <td><code>[russian]</code></td>
         <td>-</td>
         <td>-</td>
@@ -70,7 +70,7 @@ $can_add_more_filters = ( kmcf7ms_fs()->is_premium() && kmcf7ms_fs()->is_plan_or
     <tr>
         <td>3</td>
         <td>Hiragana</td>
-        <td><?php esc_html_e( "Filters messages having japanese (hiragana) characters", KMCFMF_TEXT_DOMAIN ) ?></td>
+        <td><?php esc_html_e( "Filters messages having japanese (hiragana) characters", 'cf7-message-filter' ) ?></td>
         <td><code>[hiragana]</code></td>
         <td>-</td>
         <td>-</td>
@@ -79,7 +79,7 @@ $can_add_more_filters = ( kmcf7ms_fs()->is_premium() && kmcf7ms_fs()->is_plan_or
     <tr>
         <td>4</td>
         <td>Katakana</td>
-        <td><?php esc_html_e( "Filters messages having japanese (katakana) characters", KMCFMF_TEXT_DOMAIN ) ?></td>
+        <td><?php esc_html_e( "Filters messages having japanese (katakana) characters", 'cf7-message-filter' ) ?></td>
         <td><code>[katakana]</code></td>
         <td>-</td>
         <td>-</td>
@@ -90,7 +90,7 @@ $can_add_more_filters = ( kmcf7ms_fs()->is_premium() && kmcf7ms_fs()->is_plan_or
             5
         </td>
         <td>Kanji</td>
-        <td><?php esc_html_e( "Filters messages having japanese (kanji) characters", KMCFMF_TEXT_DOMAIN ) ?></td>
+        <td><?php esc_html_e( "Filters messages having japanese (kanji) characters", 'cf7-message-filter' ) ?></td>
         <td><code>[kanji]</code></td>
         <td>-</td>
         <td>-</td>
@@ -102,7 +102,7 @@ $can_add_more_filters = ( kmcf7ms_fs()->is_premium() && kmcf7ms_fs()->is_plan_or
         </td>
         <td>Japanese</td>
         <td><?php _e( "Filter messages having japanese characters. Calls the following filters: <code>[hiragana]</code>,<code>[katakana]</code>
-                and <code>[kanji]</code>", KMCFMF_TEXT_DOMAIN ) ?></td>
+                and <code>[kanji]</code>", 'cf7-message-filter' ) ?></td>
         <td><code>[japanese]</code></td>
         <td>-</td>
         <td>-</td>
@@ -114,7 +114,7 @@ $can_add_more_filters = ( kmcf7ms_fs()->is_premium() && kmcf7ms_fs()->is_plan_or
             7
         </td>
         <td>Emoji</td>
-        <td><?php esc_html_e( "Filters messages having emojis", KMCFMF_TEXT_DOMAIN ) ?> 😀😜</td>
+        <td><?php esc_html_e( "Filters messages having emojis", 'cf7-message-filter' ) ?> 😀😜</td>
         <td><code>[emoji]</code></td>
         <td>-</td>
         <td>-</td>
@@ -133,12 +133,12 @@ $can_add_more_filters = ( kmcf7ms_fs()->is_premium() && kmcf7ms_fs()->is_plan_or
                 <input type="text" name="name" class="km-new-filter-name"
                        id="km-new-filter-name-<?php esc_html_e( $my_filter->id ); ?>"
                        value=" <?php echo esc_html( $my_filter->name ) ?>"
-                       placeholder="<?php _e( 'Name of filter', KMCFMF_TEXT_DOMAIN ) ?>">
+                       placeholder="<?php _e( 'Name of filter', 'cf7-message-filter' ) ?>">
             </td>
             <td>
                    <textarea name="description" class="km-new-filter-description"
                              id="km-new-filter-description-<?php esc_html_e( $my_filter->id ); ?>"
-                             placeholder="<?php _e( 'Filter description (optional)', KMCFMF_TEXT_DOMAIN ) ?>"> <?php echo esc_html( $my_filter->description ) ?></textarea>
+                             placeholder="<?php _e( 'Filter description (optional)', 'cf7-message-filter' ) ?>"> <?php echo esc_html( $my_filter->description ) ?></textarea>
             </td>
             <td><kbd>[<?php echo esc_html( FiltersModule::getInstance()->buildShortCode( $my_filter, true ) ) ?>]</kbd>
             </td>
@@ -153,10 +153,10 @@ $can_add_more_filters = ( kmcf7ms_fs()->is_premium() && kmcf7ms_fs()->is_plan_or
                 </button>
                 <input type="button" name="update" id="km-update-<?php esc_html_e( $my_filter->id ); ?>"
                        class="button button-primary km-update"
-                       value="<?php _e( "Update", KMCFMF_TEXT_DOMAIN ) ?>">
+                       value="<?php _e( "Update", 'cf7-message-filter' ) ?>">
                 <input style="background: orangered; border-color: orangered"
                        id="km-delete-<?php esc_html_e( $my_filter->id ); ?>" type="button" name="delete"
-                       class="button button-primary km-delete" value="<?php _e( "Delete", KMCFMF_TEXT_DOMAIN ) ?>">
+                       class="button button-primary km-delete" value="<?php _e( "Delete", 'cf7-message-filter' ) ?>">
             </td>
         </tr>
 	<?php endforeach; ?>
@@ -167,11 +167,11 @@ $can_add_more_filters = ( kmcf7ms_fs()->is_premium() && kmcf7ms_fs()->is_plan_or
             <td></td>
             <td>
                 <input type="text" name="name" id="km-new-filter-name"
-                       placeholder="<?php _e( 'Name of filter', KMCFMF_TEXT_DOMAIN ) ?>">
+                       placeholder="<?php _e( 'Name of filter', 'cf7-message-filter' ) ?>">
             </td>
             <td>
             <textarea name="description" id="km-new-filter-description"
-                      placeholder="<?php _e( 'Filter description (optional)', KMCFMF_TEXT_DOMAIN ) ?>"></textarea>
+                      placeholder="<?php _e( 'Filter description (optional)', 'cf7-message-filter' ) ?>"></textarea>
             </td>
             <td></td>
             <td>
@@ -184,13 +184,13 @@ $can_add_more_filters = ( kmcf7ms_fs()->is_premium() && kmcf7ms_fs()->is_plan_or
                 <button style="display:none" class="button button-primary disabled km-loading-btn" disabled>loading ...
                 </button>
                 <input type="button" name="save" id="km-save" class="button button-primary"
-                       value="<?php _e( "Save", KMCFMF_TEXT_DOMAIN ) ?>">
+                       value="<?php _e( "Save", 'cf7-message-filter' ) ?>">
             </td>
         </tr>
 	<?php else: ?>
         <tr>
             <td colspan="7">
-                <h3> <?php _e( "You can add only 1 custom filter. Upgrade to Pro to add more custom filters", KMCFMF_TEXT_DOMAIN ) ?>
+                <h3> <?php _e( "You can add only 1 custom filter. Upgrade to Pro to add more custom filters", 'cf7-message-filter' ) ?>
                 </h3>
             </td>
         </tr>
@@ -223,7 +223,7 @@ $can_add_more_filters = ( kmcf7ms_fs()->is_premium() && kmcf7ms_fs()->is_plan_or
             formData.append("_wpnonce", '<?php echo wp_create_nonce( 'kmcfmf_can_delete_filter' )?>');
             Swal.fire({
                 title: 'Delete Filter',
-                text: '<?php _e( "Are you sure you want to delete this filter?", KMCFMF_TEXT_DOMAIN ) ?>',
+                text: '<?php _e( "Are you sure you want to delete this filter?", 'cf7-message-filter' ) ?>',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete',

@@ -2,7 +2,7 @@
 
 namespace km_message_filter;
 ?>
-    <h1><?php esc_html_e( "Error Messages Settings", KMCFMF_TEXT_DOMAIN ) ?></h1>
+    <h1><?php esc_html_e( "Error Messages Settings", 'cf7-message-filter' ) ?></h1>
 	<?php settings_errors(); ?>
 
     <form method="post" action="options.php">

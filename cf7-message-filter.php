@@ -9,7 +9,7 @@
  * Plugin Name: Message Filter for Contact Form 7
  * Plugin URI: https://github.com/kofimokome/cf7-message-filter
  * Description: Filters messages submitted from contact form 7 if it has words or email marked as spam by the user
- * Version: 1.6.4.0
+ * Version: 1.6.4.1
  * Author: Kofi Mokome
  * Author URI: https://www.kofimoko.me
  * License: GPL-2.0+
@@ -117,7 +117,7 @@ if ( function_exists( 'kmcf7ms_fs' ) ) {
         $requires = apply_filters( 'kmcf7_requires_filter', [] );
         foreach ( $requires as $file ) {
             if ( !($filepath = file_exists( $file )) ) {
-                KMCF7ErrorNotice( sprintf( __( 'Error locating <b>%s</b> for inclusion', KMCFMF_TEXT_DOMAIN ), $file ) );
+                KMCF7ErrorNotice( sprintf( __( 'Error locating <b>%s</b> for inclusion', 'cf7-message-filter' ), $file ) );
                 $error = true;
             } else {
                 require_once $file;
@@ -132,7 +132,7 @@ if ( function_exists( 'kmcf7ms_fs' ) ) {
         $includes = apply_filters( 'kmcf7_includes_filter', [] );
         foreach ( $includes as $file ) {
             if ( !($filepath = file_exists( $file )) ) {
-                KMCF7ErrorNotice( sprintf( __( 'Error locating <b>%s</b> for inclusion', KMCFMF_TEXT_DOMAIN ), $file ) );
+                KMCF7ErrorNotice( sprintf( __( 'Error locating <b>%s</b> for inclusion', 'cf7-message-filter' ), $file ) );
                 $error = true;
             } else {
                 include_once $file;
@@ -195,6 +195,6 @@ if ( function_exists( 'kmcf7ms_fs' ) ) {
             KMCF7Start();
         }
         // todo: for future use
-        load_plugin_textdomain( KMCFMF_TEXT_DOMAIN, false, basename( dirname( __FILE__ ) ) . '/languages' );
+        load_plugin_textdomain( 'cf7-message-filter', false, basename( dirname( __FILE__ ) ) . '/languages' );
     } );
 }

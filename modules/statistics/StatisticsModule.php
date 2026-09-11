@@ -107,7 +107,7 @@ class StatisticsModule extends Module {
 				}
 				wp_send_json_success( $data );
 			} else {
-				wp_send_json_error( __( "Invalid nonce", KMCFMF_TEXT_DOMAIN ), 400 );
+				wp_send_json_error( __( "Invalid nonce", 'cf7-message-filter' ), 400 );
 			}
 		}
 

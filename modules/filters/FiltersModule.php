@@ -68,16 +68,16 @@ class FiltersModule extends Module {
 					if ( $my_filter ) {
 						$my_filter->delete();
 					} else {
-						wp_send_json_error( __( "We could not find this filter", KMCFMF_TEXT_DOMAIN ), 400 );
+						wp_send_json_error( __( "We could not find this filter", 'cf7-message-filter' ), 400 );
 					}
-					wp_send_json_success( __( "Filter deleted", KMCFMF_TEXT_DOMAIN ), 200 );
+					wp_send_json_success( __( "Filter deleted", 'cf7-message-filter' ), 200 );
 
 				} else {
-					wp_send_json_error( __( "Invalid nonce", KMCFMF_TEXT_DOMAIN ), 400 );
+					wp_send_json_error( __( "Invalid nonce", 'cf7-message-filter' ), 400 );
 				}
 			}
 		} else {
-			wp_send_json_error( __( "You do not have permission to perform this action", KMCFMF_TEXT_DOMAIN ), 400 );
+			wp_send_json_error( __( "You do not have permission to perform this action", 'cf7-message-filter' ), 400 );
 		}
 		wp_die();
 	}
@@ -108,12 +108,12 @@ class FiltersModule extends Module {
 					$short_code = str_replace( " ", "-", $short_code );
 
 					if ( in_array( $short_code, $this->default_filters ) ) {
-						wp_send_json_error( __( "The filter name  already exists", KMCFMF_TEXT_DOMAIN ), 400 );
+						wp_send_json_error( __( "The filter name  already exists", 'cf7-message-filter' ), 400 );
 					}
 
 					$exists = MyFilter::where( 'short_code', '=', $short_code )->get();
 					if ( $exists ) {
-						wp_send_json_error( __( "A filter with this name  already exists", KMCFMF_TEXT_DOMAIN ), 400 );
+						wp_send_json_error( __( "A filter with this name  already exists", 'cf7-message-filter' ), 400 );
 					}
 					$new_filter              = new MyFilter();
 					$new_filter->name        = $name;
@@ -122,13 +122,13 @@ class FiltersModule extends Module {
 					$new_filter->short_code  = $short_code;
 					$new_filter->save();
 
-					wp_send_json_success( __( "Filter saved", KMCFMF_TEXT_DOMAIN ), 200 );
+					wp_send_json_success( __( "Filter saved", 'cf7-message-filter' ), 200 );
 				} else {
-					wp_send_json_error( __( "Invalid nonce", KMCFMF_TEXT_DOMAIN ), 400 );
+					wp_send_json_error( __( "Invalid nonce", 'cf7-message-filter' ), 400 );
 				}
 			}
 		} else {
-			wp_send_json_error( __( "You do not have permission to perform this action", KMCFMF_TEXT_DOMAIN ), 400 );
+			wp_send_json_error( __( "You do not have permission to perform this action", 'cf7-message-filter' ), 400 );
 		}
 		wp_die();
 	}
@@ -176,11 +176,11 @@ class FiltersModule extends Module {
 					$short_code = str_replace( " ", "-", $short_code );
 
 					if ( in_array( $short_code, $this->default_filters ) ) {
-						wp_send_json_error( __( "The filter name  already exists", KMCFMF_TEXT_DOMAIN ), 400 );
+						wp_send_json_error( __( "The filter name  already exists", 'cf7-message-filter' ), 400 );
 					}
 					$exists = MyFilter::where( 'short_code', '=', $short_code )->first();
 					if ( $exists && $exists->id != intval( $id ) ) {
-						wp_send_json_error( __( "A filter with this name  already exists", KMCFMF_TEXT_DOMAIN ), 400 );
+						wp_send_json_error( __( "A filter with this name  already exists", 'cf7-message-filter' ), 400 );
 					} else {
 						$my_filter = MyFilter::find( $id );
 						if ( $my_filter ) {
@@ -190,17 +190,17 @@ class FiltersModule extends Module {
 							$my_filter->short_code  = $short_code;
 							$my_filter->save();
 						} else {
-							wp_send_json_error( __( "We could not find this filter", KMCFMF_TEXT_DOMAIN ), 400 );
+							wp_send_json_error( __( "We could not find this filter", 'cf7-message-filter' ), 400 );
 						}
 					}
 
-					wp_send_json_success( __( "Filter saved", KMCFMF_TEXT_DOMAIN ), 200 );
+					wp_send_json_success( __( "Filter saved", 'cf7-message-filter' ), 200 );
 				} else {
-					wp_send_json_error( __( "Invalid nonce", KMCFMF_TEXT_DOMAIN ), 400 );
+					wp_send_json_error( __( "Invalid nonce", 'cf7-message-filter' ), 400 );
 				}
 			}
 		} else {
-			wp_send_json_error( __( "You do not have permission to perform this action", KMCFMF_TEXT_DOMAIN ), 400 );
+			wp_send_json_error( __( "You do not have permission to perform this action", 'cf7-message-filter' ), 400 );
 		}
 		wp_die();
 	}

@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.6.4.1 Changes
+1. Update Freemius
+2. Fix migration bug for new installations
+
 ## 1.6.4.0 Changes
 1. Update Freemius
 2. Security fixes

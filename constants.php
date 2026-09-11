@@ -16,6 +16,5 @@ const KMCFMF_MODULE_DIR     = KMCFMF_DIR . 'modules';
 const KMCFMF_ASSET_URL      = KMCFMF_URL . 'assets';
 const KMCFMF_IMAGES_URL     = KMCFMF_ASSET_URL . '/images';
 
-const KMCFMF_TEXT_DOMAIN = 'cf7-message-filter';
 define( 'KMCFMF_TABLE_PREFIX', $wpdb->prefix . 'kmcf7_' );
 

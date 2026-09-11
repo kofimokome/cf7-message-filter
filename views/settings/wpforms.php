@@ -33,18 +33,18 @@ $contact_forms = $wp_forms_module->getForms();
 $tag_ui        = get_option( 'kmcfmf_tag_ui', 'new_ui' );
 
 ?>
-    <h1><?php esc_html_e( "WP Forms Settings ", KMCFMF_TEXT_DOMAIN ) ?></h1>
+    <h1><?php esc_html_e( "WP Forms Settings ", 'cf7-message-filter' ) ?></h1>
 	<?php /*if ( ! is_plugin_active( 'wpforms-lite/wpforms.php' ) && ! is_plugin_active( 'wpforms/wpforms.php' ) ): */
 	?><!--
     <div class="alert alert-danger alert-dismissible">
-        <p><?php /*esc_html_e( 'Please Install & Activate WPForms Plugin First!', KMCFMF_TEXT_DOMAIN ); */
+        <p><?php /*esc_html_e( 'Please Install & Activate WPForms Plugin First!', 'cf7-message-filter' ); */
 	?></p>
     </div>
 --><?php /*else: */
 ?>
 	<?php settings_errors(); ?>
     <div>
-        <strong>Tip:</strong> <?php _e( "Use <code>*</code> to analyse all fields for each category below:", KMCFMF_TEXT_DOMAIN ) ?>
+        <strong>Tip:</strong> <?php _e( "Use <code>*</code> to analyse all fields for each category below:", 'cf7-message-filter' ) ?>
     </div>
     <form method="post" action="options.php">
 		<?php

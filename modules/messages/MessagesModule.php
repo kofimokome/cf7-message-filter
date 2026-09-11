@@ -204,11 +204,11 @@ class MessagesModule extends Module {
 	public function serverMessages() {
 		try {
 			if ( ! current_user_can( 'manage_options' ) ) {
-				throw new \Exception( __( 'You do not have permission to perform this action', KMCFMF_TEXT_DOMAIN ) );
+				throw new \Exception( __( 'You do not have permission to perform this action', 'cf7-message-filter' ) );
 			}
 			$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
 			if ( ! wp_verify_nonce( $nonce, 'kmcfmf_can_get_blocked_messages' ) ) {
-				throw new \Exception( __( 'Invalid nonce', KMCFMF_TEXT_DOMAIN ) );
+				throw new \Exception( __( 'Invalid nonce', 'cf7-message-filter' ) );
 			}
 			$link_to_messages = admin_url( 'admin.php' ) . '?page=kmcf7-filtered-messages';
 			$form_id          = isset( $_REQUEST['form_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['form_id'] ) ) : '';
@@ -242,7 +242,7 @@ class MessagesModule extends Module {
 				$decoded_message = json_decode( $result->message );
 				$message         = array(
 					"",
-					"<a href='{$link_to_messages}&message_id={$result->id}' class='btn btn-sm btn-primary'>" . __( "View", KMCFMF_TEXT_DOMAIN ) . "</a> <button class='btn btn-sm btn-primary' onclick='showResubmitModal({$result->id})'>" . __( "Restore", KMCFMF_TEXT_DOMAIN ) . "</button>",
+					"<a href='{$link_to_messages}&message_id={$result->id}' class='btn btn-sm btn-primary'>" . __( "View", 'cf7-message-filter' ) . "</a> <button class='btn btn-sm btn-primary' onclick='showResubmitModal({$result->id})'>" . __( "Restore", 'cf7-message-filter' ) . "</button>",
 					intval( $result->id )
 				);
 				if ( $contact_form == 'all' || $form_id == 'all' ) {
@@ -345,22 +345,22 @@ class MessagesModule extends Module {
 						$message    = Message::find( $message_id );
 						if ( $message ) {
 							if ( ! $message->delete() ) {
-								wp_send_json_error( __( "We could not delete this message", KMCFMF_TEXT_DOMAIN ), 500 );
+								wp_send_json_error( __( "We could not delete this message", 'cf7-message-filter' ), 500 );
 							}
 						} else {
-							wp_send_json_error( __( "We could not find this message", KMCFMF_TEXT_DOMAIN ), 400 );
+							wp_send_json_error( __( "We could not find this message", 'cf7-message-filter' ), 400 );
 						}
 
 					}
-					wp_send_json_success( __( "Message(s) deleted", KMCFMF_TEXT_DOMAIN ) );
+					wp_send_json_success( __( "Message(s) deleted", 'cf7-message-filter' ) );
 
 				} else {
-					wp_send_json_error( __( "Invalid nonce", KMCFMF_TEXT_DOMAIN ), 400 );
+					wp_send_json_error( __( "Invalid nonce", 'cf7-message-filter' ), 400 );
 				}
 
 			}
 		} else {
-			wp_send_json_error( __( "You do not have permission to perform this action", KMCFMF_TEXT_DOMAIN ), 400 );
+			wp_send_json_error( __( "You do not have permission to perform this action", 'cf7-message-filter' ), 400 );
 		}
 
 		wp_die();
@@ -384,25 +384,25 @@ class MessagesModule extends Module {
 				$nonce = sanitize_text_field( wp_unslash( $validated_data['_wpnonce'] ) );
 				if ( wp_verify_nonce( $nonce, 'kmcfmf_can_delete_messages' ) ) {
 					if( $validated_data['form_id'] == 'all' ){
-						wp_send_json_error( __( "Please select a contact form first", KMCFMF_TEXT_DOMAIN ), 400 );
+						wp_send_json_error( __( "Please select a contact form first", 'cf7-message-filter' ), 400 );
 					}
 
 					$form_id            = sanitize_text_field( wp_unslash( $validated_data['form_id'] ) );
 					$messages_to_delete = Message::where( 'form_id', '=', $form_id )->get();
 					foreach ( $messages_to_delete as $message_to_delete ) {
 						if ( ! $message_to_delete->delete() ) {
-							wp_send_json_error( __( "We could not delete this message", KMCFMF_TEXT_DOMAIN ), 500 );
+							wp_send_json_error( __( "We could not delete this message", 'cf7-message-filter' ), 500 );
 						}
 					}
-					wp_send_json_success( __( "Message(s) deleted", KMCFMF_TEXT_DOMAIN ) );
+					wp_send_json_success( __( "Message(s) deleted", 'cf7-message-filter' ) );
 
 				} else {
-					wp_send_json_error( __( "Invalid nonce", KMCFMF_TEXT_DOMAIN ), 400 );
+					wp_send_json_error( __( "Invalid nonce", 'cf7-message-filter' ), 400 );
 				}
 
 			}
 		} else {
-			wp_send_json_error( __( "You do not have permission to perform this action", KMCFMF_TEXT_DOMAIN ), 400 );
+			wp_send_json_error( __( "You do not have permission to perform this action", 'cf7-message-filter' ), 400 );
 		}
 
 		wp_die();
@@ -451,26 +451,26 @@ class MessagesModule extends Module {
 								$result       = $submission->get_result();
 //					$contact_form->submit();
 								if ( $result['status'] != 'mail_sent' ) {
-									wp_send_json_error( $result, KMCFMF_TEXT_DOMAIN, 400 );
+									wp_send_json_error( $result, 'cf7-message-filter', 400 );
 								}
 								$message_id = intval( $message_id );
 								$message    = Message::find( $message_id );
 								$message->delete();
 
 							} else {
-								wp_send_json_error( __( "Feature only available for Contact Form 7", KMCFMF_TEXT_DOMAIN ), 400 );
+								wp_send_json_error( __( "Feature only available for Contact Form 7", 'cf7-message-filter' ), 400 );
 							}
 						} else {
-							wp_send_json_error( __( "We could not find this message", KMCFMF_TEXT_DOMAIN ), 400 );
+							wp_send_json_error( __( "We could not find this message", 'cf7-message-filter' ), 400 );
 						}
 					}
-					wp_send_json_success( __( "Message(s) resubmitted successfully", KMCFMF_TEXT_DOMAIN ), 200 );
+					wp_send_json_success( __( "Message(s) resubmitted successfully", 'cf7-message-filter' ), 200 );
 				} else {
-					wp_send_json_error( __( "Invalid nonce", KMCFMF_TEXT_DOMAIN ), 400 );
+					wp_send_json_error( __( "Invalid nonce", 'cf7-message-filter' ), 400 );
 				}
 			}
 		} else {
-			wp_send_json_error( __( "You do not have permission to perform this action", KMCFMF_TEXT_DOMAIN ), 400 );
+			wp_send_json_error( __( "You do not have permission to perform this action", 'cf7-message-filter' ), 400 );
 		}
 
 		wp_die();
@@ -496,12 +496,12 @@ class MessagesModule extends Module {
 					$columns = sanitize_text_field( $validated_data['columns'] );
 					update_option( 'kmcfmf_visible_columns_' . $form, $columns );
 
-					wp_send_json_success( __( "Visible columns saved", KMCFMF_TEXT_DOMAIN ), 200 );
+					wp_send_json_success( __( "Visible columns saved", 'cf7-message-filter' ), 200 );
 				} else {
-					wp_send_json_error( __( "Invalid nonce", KMCFMF_TEXT_DOMAIN ), 400 );
+					wp_send_json_error( __( "Invalid nonce", 'cf7-message-filter' ), 400 );
 				}
 			} else {
-				wp_send_json_error( __( "You do not have permission to perform this action", KMCFMF_TEXT_DOMAIN ), 400 );
+				wp_send_json_error( __( "You do not have permission to perform this action", 'cf7-message-filter' ), 400 );
 			}
 		}
 		wp_die();
@@ -565,13 +565,13 @@ class MessagesModule extends Module {
 					fclose( $fp );
 					exit();
 				} else {
-					wp_send_json_error( __( "Invalid nonce", KMCFMF_TEXT_DOMAIN ), 400 );
+					wp_send_json_error( __( "Invalid nonce", 'cf7-message-filter' ), 400 );
 				}
 			} else {
-				wp_send_json_error( __( "You do not have permission to perform this action", KMCFMF_TEXT_DOMAIN ), 400 );
+				wp_send_json_error( __( "You do not have permission to perform this action", 'cf7-message-filter' ), 400 );
 			}
 		} else {
-			throw new \Exception( __( 'You do not have permission to perform this action', KMCFMF_TEXT_DOMAIN ) );
+			throw new \Exception( __( 'You do not have permission to perform this action', 'cf7-message-filter' ) );
 		}
 		wp_die();
 	}

@@ -12,7 +12,7 @@ class KMCFMessageFilter {
 
 	public function __construct() {
 		// do something here
-		$this->version  = '1.6.4.0';
+		$this->version  = '1.6.4.1';
 		$this->blocked  = get_option( "kmcfmf_messages_blocked_today_tmp", 0 );
 		self::$instance = $this;
 	}
@@ -216,24 +216,24 @@ class KMCFMessageFilter {
             <div id="kmcf7-data-notice" class="notice notice-info is-dismissible">
                 <p><b>Message Filter for Contact Form 7:</b> <br/>
 					<?php _e( "We appreciate you using our plugin!<br/>To continuously improve this plugin, we would like to
-                    collect:", KMCFMF_TEXT_DOMAIN ); ?>
+                    collect:", 'cf7-message-filter' ); ?>
                 <ol>
-                    <li><?php _e( "The words in your spam list", KMCFMF_TEXT_DOMAIN ) ?>.</li>
-                    <li><?php _e( "Spam messages blocked by this plugin", KMCFMF_TEXT_DOMAIN ) ?></li>
+                    <li><?php _e( "The words in your spam list", 'cf7-message-filter' ) ?>.</li>
+                    <li><?php _e( "Spam messages blocked by this plugin", 'cf7-message-filter' ) ?></li>
                 </ol>
-				<?php _e( "You can easily opt-in or out of this data collection at any time by visiting the", KMCFMF_TEXT_DOMAIN ); ?>
-                <a href="<?php echo $data_collection_url ?>"><?php _e( "settings page", KMCFMF_TEXT_DOMAIN ) ?></a>. <br>
+				<?php _e( "You can easily opt-in or out of this data collection at any time by visiting the", 'cf7-message-filter' ); ?>
+                <a href="<?php echo $data_collection_url ?>"><?php _e( "settings page", 'cf7-message-filter' ) ?></a>. <br>
                 <br>
                 <div id="kmcf7-data-notice-buttons">
                     <button id="kmcf7-data-notice-button-yes"
-                            class="button button-primary"><?php _e( "Yes, Allow", KMCFMF_TEXT_DOMAIN ) ?></button>
+                            class="button button-primary"><?php _e( "Yes, Allow", 'cf7-message-filter' ) ?></button>
                     <a id="kmcf7-data-notice-button-no" href="#"
                        style="margin-left:10px; vertical-align: bottom">
-						<?php _e( "No, Not Now", KMCFMF_TEXT_DOMAIN ) ?>
+						<?php _e( "No, Not Now", 'cf7-message-filter' ) ?>
                     </a>
                 </div>
                 <div id="kmcf7-data-notice-loading" style="display:none">
-                    <button class="button" disabled><?php _e( "Please wait...", KMCFMF_TEXT_DOMAIN ) ?></button>
+                    <button class="button" disabled><?php _e( "Please wait...", 'cf7-message-filter' ) ?></button>
                 </div>
                 </p>
             </div>

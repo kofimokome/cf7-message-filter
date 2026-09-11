@@ -49,14 +49,14 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
 <form action="" class="form-inline mb-4 mt-4">
     <input type="hidden" name="page" value="kmcf7-filtered-messages">
     <select name="contact-form" id="km-contact-forms" class="py-0 form-control mr-1">
-        <!--        <option value="all">--><?php //_e( "All Contact Forms", KMCFMF_TEXT_DOMAIN )
+        <!--        <option value="all">--><?php //_e( "All Contact Forms", 'cf7-message-filter' )
         ?><!--</option>-->
         <?php foreach ( $forms as $key => $form ): ?>
             <option value="<?php echo esc_attr( $key ) ?>" <?php echo $selected_contact_form == $key ? 'selected' : '' ?>><?php echo esc_html( $form['name'] ) ?></option>
         <?php endforeach; ?>
     </select>
     <select name="form-id" id="km-registered-forms" class="py-0 form-control">
-        <option value="all"><?php _e( "All Registered Forms", KMCFMF_TEXT_DOMAIN ) ?></option>
+        <option value="all"><?php _e( "All Registered Forms", 'cf7-message-filter' ) ?></option>
         <?php foreach ( $forms as $key => $contact_form ): ?>
             <?php if ( $key == $selected_contact_form || $selected_contact_form == 'all' ): ?>
                 <?php foreach ( $contact_form['forms'] as $form ): ?>
@@ -66,28 +66,28 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
 
         <?php endforeach; ?>
     </select>
-    <button class="btn btn-primary btn-inline ml-1"><?php _e( "Show Blocked Messages", KMCFMF_TEXT_DOMAIN ) ?></button>
+    <button class="btn btn-primary btn-inline ml-1"><?php _e( "Show Blocked Messages", 'cf7-message-filter' ) ?></button>
 </form>
 <div class="mb-2">
     <div class="alert alert-info">
-        <?php _e( "Hint: Press and hold <kbd>CMD</kbd> or <kbd>CRTL</kbd> while clicking on any cell to select it", KMCFMF_TEXT_DOMAIN ) ?>
+        <?php _e( "Hint: Press and hold <kbd>CMD</kbd> or <kbd>CRTL</kbd> while clicking on any cell to select it", 'cf7-message-filter' ) ?>
     </div>
 
     <button class="btn btn-danger btn-sm km-delete-btn" style="display: none" onclick="showDeleteModal()">
-        <?php _e( "Delete selected message(s)", KMCFMF_TEXT_DOMAIN ) ?>
+        <?php _e( "Delete selected message(s)", 'cf7-message-filter' ) ?>
         - (<span class="km-selected-count"></span>)
     </button>
 
     <button class="btn btn-danger btn-sm km-delete-btn" style="display: none" onclick="showDeleteAllModal()">
-        <?php _e( "Delete all messages", KMCFMF_TEXT_DOMAIN ) ?>
+        <?php _e( "Delete all messages", 'cf7-message-filter' ) ?>
         - (<span class="km-all-count"></span>)
     </button>
     <!--<button class="btn btn-primary btn-sm km-delete-btn" style="display: none" onclick="showResubmitModal()">
-			<?php /*_e( "Restore selected", KMCFMF_TEXT_DOMAIN ) */ ?>
+			<?php /*_e( "Restore selected", 'cf7-message-filter' ) */ ?>
         </button>-->
 </div>
 <div class="mb-3">
-    <b><?php _e( "Visible Columns", KMCFMF_TEXT_DOMAIN ) ?>: <a href="#"
+    <b><?php _e( "Visible Columns", 'cf7-message-filter' ) ?>: <a href="#"
                                                                 id="toggle-visible-columns-container">Show/Hide</a>
         <div id="visible-columns-container" class="mt-2">
             <input id="input-ID" name="ID" type="checkbox" value="2" class="table-column"
@@ -100,13 +100,13 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
         </div>
 </div>
 <button class="btn btn-primary mb-3" onclick="showDownloadModal()">
-    <?php _e( "Download CSV", KMCFMF_TEXT_DOMAIN ) ?>
+    <?php _e( "Download CSV", 'cf7-message-filter' ) ?>
 </button>
 <table id="km-table" class="kmcfmf_table table table-striped" style="overflow-x: scroll;">
     <thead>
     <tr>
         <th><input type="checkbox" id="km-select-all"/></th>
-        <th><?php _e( "Actions", KMCFMF_TEXT_DOMAIN ) ?></th>
+        <th><?php _e( "Actions", 'cf7-message-filter' ) ?></th>
         <th><b>ID</b></th>
         <?php foreach ( $form_columns as $row ): ?>
             <th>
@@ -120,17 +120,17 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
     </tbody>
 </table>
 <button class="btn btn-danger btn-sm km-delete-btn" style="display: none" onclick="showDeleteModal()">
-    <?php _e( "Delete selected message(s)", KMCFMF_TEXT_DOMAIN ) ?>
+    <?php _e( "Delete selected message(s)", 'cf7-message-filter' ) ?>
     - (<span class="km-selected-count"></span>)
 </button>
 
 <button class="btn btn-danger btn-sm km-delete-btn" style="display: none" onclick="showDeleteAllModal()">
-    <?php _e( "Delete all messages", KMCFMF_TEXT_DOMAIN ) ?>
+    <?php _e( "Delete all messages", 'cf7-message-filter' ) ?>
     - (<span class="km-all-count"></span>)
 </button>
 
 <!--<button class="btn btn-primary btn-sm km-delete-btn" style="display: none" onclick="showResubmitModal()">
-		<?php /*_e( "Restore selected", KMCFMF_TEXT_DOMAIN ) */ ?>
+		<?php /*_e( "Restore selected", 'cf7-message-filter' ) */ ?>
     </button> -->
 <br>
 <?php
@@ -152,7 +152,7 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
     const RESUBMIT_MESSAGE_NONCE = "<?php echo wp_create_nonce( 'kmcfmf_can_resubmit_messages' )?>";
     const DOWNLOAD_MESSAGE_NONCE = "<?php echo wp_create_nonce( 'kmcfmf_can_download_csv' )?>";
     const forms = <?php echo wp_json_encode( $forms )?>;
-    const all_registered_form_placeholder = "<?php _e( "All Registered Forms", KMCFMF_TEXT_DOMAIN )?>"
+    const all_registered_form_placeholder = "<?php _e( "All Registered Forms", 'cf7-message-filter' )?>"
     const selected_contact_form = '<?php echo esc_js( $selected_contact_form )?>'
     const form_id = '<?php echo esc_js( $form_id )?>'
 
@@ -309,7 +309,7 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
 
         bootstrapSwal().fire({
             title: 'Resubmit Message(s)',
-            text: '<?php _e( "Resubmitting a message may not work if you have another spam filter or captcha plugin installed. We will not be able to bypass the verification process of these plugins.", KMCFMF_TEXT_DOMAIN ) ?>',
+            text: '<?php _e( "Resubmitting a message may not work if you have another spam filter or captcha plugin installed. We will not be able to bypass the verification process of these plugins.", 'cf7-message-filter' ) ?>',
             icon: 'info',
             showCancelButton: true,
             confirmButtonText: 'OK, resubmit',
@@ -346,7 +346,7 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
                 Swal.fire({
                     title: `Resubmit message`,
                     icon: 'success',
-                    text: '<?php  _e( "Message(s) resubmitted successfully", KMCFMF_TEXT_DOMAIN )?>',
+                    text: '<?php  _e( "Message(s) resubmitted successfully", 'cf7-message-filter' )?>',
                 }).then((result) => {
                     if (result.isConfirmed)
                         window.location.reload()
@@ -362,7 +362,7 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
         formData.append("action", 'kmcf7_delete_all_messages');
         formData.append("form_id", form_id);
 
-        const text = '<?php _e( "Are you sure you want to delete all messages under this form?", KMCFMF_TEXT_DOMAIN ) ?>';
+        const text = '<?php _e( "Are you sure you want to delete all messages under this form?", 'cf7-message-filter' ) ?>';
 
         bootstrapSwal().fire({
             title: 'Delete All Message(s)',
@@ -403,7 +403,7 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
                 /* Swal.fire({
 					 title: `Delete Message(s)`,
 					 icon: 'success',
-					 text: '<?php  _e( "Message(s) deleted successfully", KMCFMF_TEXT_DOMAIN )?>',
+					 text: '<?php  _e( "Message(s) deleted successfully", 'cf7-message-filter' )?>',
                 }).then((result) => {
                     if (result.isConfirmed)*/
                 window.location.reload()
@@ -422,7 +422,7 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
         let formData = new FormData();
         formData.append("action", 'kmcf7_delete_message');
         formData.append("message_ids", message_ids);
-        const text = '<?php _e( "Are you sure you want to delete the selected message(s)?", KMCFMF_TEXT_DOMAIN ) ?>';
+        const text = '<?php _e( "Are you sure you want to delete the selected message(s)?", 'cf7-message-filter' ) ?>';
 
         bootstrapSwal().fire({
             title: 'Delete Message(s)',
@@ -463,7 +463,7 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
                 /* Swal.fire({
 					 title: `Delete Message(s)`,
 					 icon: 'success',
-					 text: '<?php  _e( "Message(s) deleted successfully", KMCFMF_TEXT_DOMAIN )?>',
+					 text: '<?php  _e( "Message(s) deleted successfully", 'cf7-message-filter' )?>',
                 }).then((result) => {
                     if (result.isConfirmed)*/
                 window.location.reload()
@@ -480,10 +480,10 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
         formData.append("contact_form", selected_contact_form);
         bootstrapSwal().fire({
             title: 'Download CSV',
-            text: '<?php _e( "CSV Download could take a long time depending on the number of blocked messages", KMCFMF_TEXT_DOMAIN ) ?>',
+            text: '<?php _e( "CSV Download could take a long time depending on the number of blocked messages", 'cf7-message-filter' ) ?>',
             icon: 'info',
             showCancelButton: true,
-            confirmButtonText: '<?php _e( "Yes, download", KMCFMF_TEXT_DOMAIN )?>',
+            confirmButtonText: '<?php _e( "Yes, download", 'cf7-message-filter' )?>',
             showLoaderOnConfirm: true,
             preConfirm: (login) => {
                 return fetch("<?php echo esc_url( $ajax_url )?>" + "?_wpnonce=" + DOWNLOAD_MESSAGE_NONCE, {
@@ -525,7 +525,7 @@ $form_columns = MessagesModule::getInstance()->getColumns2( $form_id, $selected_
                 Swal.fire({
                     title: `Download CSV`,
                     icon: 'success',
-                    text: '<?php  _e( "CSV generated successfully", KMCFMF_TEXT_DOMAIN )?>',
+                    text: '<?php  _e( "CSV generated successfully", 'cf7-message-filter' )?>',
                 })
             }
         })

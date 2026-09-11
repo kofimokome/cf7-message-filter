@@ -311,7 +311,7 @@ class DataCollectionModule extends Module {
                 update_option( 'kmcfmf_data_collection_next_notice', $next_notice );
                 wp_send_json_success();
             } else {
-                wp_send_json_error( __( "Invalid nonce", KMCFMF_TEXT_DOMAIN ), 400 );
+                wp_send_json_error( __( "Invalid nonce", 'cf7-message-filter' ), 400 );
             }
         }
         wp_die();

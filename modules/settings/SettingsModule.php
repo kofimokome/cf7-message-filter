@@ -36,7 +36,7 @@ class SettingsModule extends Module {
 	 * @since v1.2.5
 	 */
 	public function addSettings() {
-		$max_words_text = $this->is_free ? __( "Note: You can add up of 40 words in the free version. Upgrade to add unlimited words.", KMCFMF_TEXT_DOMAIN ) : '';
+		$max_words_text = $this->is_free ? __( "Note: You can add up of 40 words in the free version. Upgrade to add unlimited words.", 'cf7-message-filter' ) : '';
 
 		// Check documentation here https://github.com/kofimokome/WordPress-Tools
 		// Plugin settings
@@ -46,7 +46,7 @@ class SettingsModule extends Module {
 			array(
 				'type'  => 'checkbox',
 				'id'    => 'kmcfmf_use_old_tag_ui',
-				'label' => __( 'Use old tag UI?: ', KMCFMF_TEXT_DOMAIN ),
+				'label' => __( 'Use old tag UI?: ', 'cf7-message-filter' ),
 				'tip'   => 'We have added a new tag UI to the plugin. If you are having issues with the new tag UI, you can switch to the old tag UI.'
 			)
 		);*/
@@ -54,11 +54,11 @@ class SettingsModule extends Module {
 			array(
 				'type'           => 'select',
 				'id'             => 'kmcfmf_tag_ui',
-				'label'          => __( 'Tag UI: ', KMCFMF_TEXT_DOMAIN ),
+				'label'          => __( 'Tag UI: ', 'cf7-message-filter' ),
 				'options'        => array(
-					'new_ui' => __( 'New UI', KMCFMF_TEXT_DOMAIN ),
-					'old_ui' => __( 'Old UI', KMCFMF_TEXT_DOMAIN ),
-					'none'   => __( 'None', KMCFMF_TEXT_DOMAIN ),
+					'new_ui' => __( 'New UI', 'cf7-message-filter' ),
+					'old_ui' => __( 'Old UI', 'cf7-message-filter' ),
+					'none'   => __( 'None', 'cf7-message-filter' ),
 				),
 				'tip'            => 'If you are having issues with the new UI, you can switch to the old UI.',
 				'default_option' => 'new_ui'
@@ -68,7 +68,7 @@ class SettingsModule extends Module {
 			array(
 				'type'  => 'checkbox',
 				'id'    => 'kmcfmf_message_filter_toggle',
-				'label' => __( 'Enable spam words filter?: ', KMCFMF_TEXT_DOMAIN ),
+				'label' => __( 'Enable spam words filter?: ', 'cf7-message-filter' ),
 				'tip'   => ''
 			)
 		);
@@ -77,8 +77,8 @@ class SettingsModule extends Module {
 				'type'        => 'textarea',
 				'id'          => 'kmcfmf_restricted_words',
 				'input_class' => 'select2',
-				'label'       => __( 'Spam words: ', KMCFMF_TEXT_DOMAIN ),
-				'tip'         => "Eg.  spam, word, word2, etc...  <br/><a href='#' id='km-show-filters'>" . __( "Click here to insert my filters", KMCFMF_TEXT_DOMAIN ) . "</a> " . $max_words_text,
+				'label'       => __( 'Spam words: ', 'cf7-message-filter' ),
+				'tip'         => "Eg.  spam, word, word2, etc...  <br/><a href='#' id='km-show-filters'>" . __( "Click here to insert my filters", 'cf7-message-filter' ) . "</a> " . $max_words_text,
 				'placeholder' => 'eg john, doe, baby, man, [link], [russian]'
 			)
 		);
@@ -86,7 +86,7 @@ class SettingsModule extends Module {
 			array(
 				'type'  => 'checkbox',
 				'id'    => 'kmcfmf_email_filter_toggle',
-				'label' => __( 'Enable spam email filter?: ', KMCFMF_TEXT_DOMAIN ),
+				'label' => __( 'Enable spam email filter?: ', 'cf7-message-filter' ),
 				'tip'   => ''
 			)
 		);
@@ -94,7 +94,7 @@ class SettingsModule extends Module {
 			array(
 				'type'        => 'textarea',
 				'id'          => 'kmcfmf_restricted_emails',
-				'label'       => __( 'Spam emails: ', KMCFMF_TEXT_DOMAIN ),
+				'label'       => __( 'Spam emails: ', 'cf7-message-filter' ),
 				'input_class' => 'select2',
 				'tip'         => 'Eg. ( john@gmail.com, john@yahoo.com, john@hotmail.com, etc... ) ' . $max_words_text,
 				'placeholder' => 'eg john@doe.com, mary@doman.tk,'
@@ -104,7 +104,7 @@ class SettingsModule extends Module {
 			array(
 				'type'  => 'checkbox',
 				'id'    => 'kmcfmf_message_auto_delete_toggle',
-				'label' => __( 'Auto delete messages: ', KMCFMF_TEXT_DOMAIN ),
+				'label' => __( 'Auto delete messages: ', 'cf7-message-filter' ),
 				'tip'   => ''
 			)
 		);
@@ -113,13 +113,13 @@ class SettingsModule extends Module {
 			array(
 				'type'    => 'select',
 				'id'      => 'kmcfmf_message_auto_delete_duration',
-				'label'   => __( 'Number of days: ', KMCFMF_TEXT_DOMAIN ),
+				'label'   => __( 'Number of days: ', 'cf7-message-filter' ),
 				'options' => array(
-					'30' => __( '1 Month', KMCFMF_TEXT_DOMAIN ),
-					'1'  => __( '1 Day', KMCFMF_TEXT_DOMAIN ),
-					'3'  => __( '3 Days', KMCFMF_TEXT_DOMAIN ),
-					'7'  => __( '1 Week', KMCFMF_TEXT_DOMAIN ),
-					'14' => __( '2 Weeks', KMCFMF_TEXT_DOMAIN ),
+					'30' => __( '1 Month', 'cf7-message-filter' ),
+					'1'  => __( '1 Day', 'cf7-message-filter' ),
+					'3'  => __( '3 Days', 'cf7-message-filter' ),
+					'7'  => __( '1 Week', 'cf7-message-filter' ),
+					'14' => __( '2 Weeks', 'cf7-message-filter' ),
 				),
 				// 'default_option' => ''
 			)
@@ -128,12 +128,12 @@ class SettingsModule extends Module {
 			array(
 				'type'    => 'select',
 				'id'      => 'kmcfmf_message_auto_delete_amount',
-				'label'   => __( 'Number of messages to delete: ', KMCFMF_TEXT_DOMAIN ),
+				'label'   => __( 'Number of messages to delete: ', 'cf7-message-filter' ),
 				'options' => array(
-					'10' => __( '10 Messages', KMCFMF_TEXT_DOMAIN ),
-					'20' => __( '20 Messages', KMCFMF_TEXT_DOMAIN ),
-					'40' => __( '40 Messages', KMCFMF_TEXT_DOMAIN ),
-					'80' => __( '80 Messages', KMCFMF_TEXT_DOMAIN ),
+					'10' => __( '10 Messages', 'cf7-message-filter' ),
+					'20' => __( '20 Messages', 'cf7-message-filter' ),
+					'40' => __( '40 Messages', 'cf7-message-filter' ),
+					'80' => __( '80 Messages', 'cf7-message-filter' ),
 				),
 				// 'default_option' => ''
 			)
@@ -143,7 +143,7 @@ class SettingsModule extends Module {
 			array(
 				'type'  => 'checkbox',
 				'id'    => 'kmcfmf_message_delete_data',
-				'label' => __( 'Delete my data when uninstalling this plugin: ', KMCFMF_TEXT_DOMAIN ),
+				'label' => __( 'Delete my data when uninstalling this plugin: ', 'cf7-message-filter' ),
 				'tip'   => ''
 			)
 		);
@@ -152,7 +152,7 @@ class SettingsModule extends Module {
 			array(
 				'type'  => 'checkbox',
 				'id'    => 'kmcfmf_message_filter_reset',
-				'label' => __( 'Reset plugin: ', KMCFMF_TEXT_DOMAIN ),
+				'label' => __( 'Reset plugin: ', 'cf7-message-filter' ),
 				'tip'   => ''
 			)
 		);*/
@@ -170,7 +170,7 @@ class SettingsModule extends Module {
 				'tip'   => '',
 				'type'  => 'checkbox',
 				'id'    => 'kmcfmf_enable_collection',
-				'label' => __( 'Enable data collection: ', KMCFMF_TEXT_DOMAIN ),
+				'label' => __( 'Enable data collection: ', 'cf7-message-filter' ),
 			)
 		);
 
@@ -178,10 +178,10 @@ class SettingsModule extends Module {
 			array(
 				'read_only' => $this->is_free,
 				'disabled'  => $this->is_free,
-				'tip'       => $this->is_free ? __( 'This feature is only available in the premium version', KMCFMF_TEXT_DOMAIN ) : __( 'Email reports are processed and sent from your website', KMCFMF_TEXT_DOMAIN ),
+				'tip'       => $this->is_free ? __( 'This feature is only available in the premium version', 'cf7-message-filter' ) : __( 'Email reports are processed and sent from your website', 'cf7-message-filter' ),
 				'type'      => 'checkbox',
 				'id'        => 'kmcfmf_disable_email_reports',
-				'label'     => $this->is_free ? __( 'Enable email reports: ', KMCFMF_TEXT_DOMAIN ) : __( 'Disable email reports: ', KMCFMF_TEXT_DOMAIN ),
+				'label'     => $this->is_free ? __( 'Enable email reports: ', 'cf7-message-filter' ) : __( 'Disable email reports: ', 'cf7-message-filter' ),
 			)
 		);
 		$settings->add_field(
@@ -189,10 +189,10 @@ class SettingsModule extends Module {
 				'read_only'   => $this->is_free,
 				'disabled'    => $this->is_free,
 				'placeholder' => 'admin@yoursite.com',
-				'tip'         => $this->is_free ? __( 'This feature is only available in the premium version', KMCFMF_TEXT_DOMAIN ) : '',
+				'tip'         => $this->is_free ? __( 'This feature is only available in the premium version', 'cf7-message-filter' ) : '',
 				'type'        => 'text',
 				'id'          => 'kmcfmf_report_email',
-				'label'       => __( 'Send Email Report To: ', KMCFMF_TEXT_DOMAIN ),
+				'label'       => __( 'Send Email Report To: ', 'cf7-message-filter' ),
 			)
 		);
 		$settings->save();
@@ -206,7 +206,7 @@ class SettingsModule extends Module {
 			array(
 				'type'        => 'textarea',
 				'id'          => 'kmcfmf_spam_word_error',
-				'label'       => __( 'Error Message For Spam Words: ', KMCFMF_TEXT_DOMAIN ),
+				'label'       => __( 'Error Message For Spam Words: ', 'cf7-message-filter' ),
 				'tip'         => '',
 				'placeholder' => __( 'You have entered a word marked as spam', 'contact-form-7' )
 			)
@@ -215,7 +215,7 @@ class SettingsModule extends Module {
 			array(
 				'type'        => 'textarea',
 				'id'          => 'kmcfmf_spam_email_error',
-				'label'       => __( 'Error Message For Spam Emails: ', KMCFMF_TEXT_DOMAIN ),
+				'label'       => __( 'Error Message For Spam Emails: ', 'cf7-message-filter' ),
 				'tip'         => '',
 				'placeholder' => __( 'The e-mail address entered is invalid.', 'contact-form-7' ),
 			)
@@ -224,8 +224,8 @@ class SettingsModule extends Module {
 			array(
 				'type'  => 'checkbox',
 				'id'    => 'kmcfmf_hide_error_message',
-				'label' => __( 'Hide error messages: ', KMCFMF_TEXT_DOMAIN ),
-				'tip'   => __( "Show a success message instead of an error message if a spam is found", KMCFMF_TEXT_DOMAIN )
+				'label' => __( 'Hide error messages: ', 'cf7-message-filter' ),
+				'tip'   => __( "Show a success message instead of an error message if a spam is found", 'cf7-message-filter' )
 			)
 		);
 
@@ -241,7 +241,7 @@ class SettingsModule extends Module {
 			array(
 				'type'  => 'checkbox',
 				'id'    => 'kmcfmf_enable_contact_form_7_toggle',
-				'label' => __( 'Enable Contact Form 7 filter: ', KMCFMF_TEXT_DOMAIN ),
+				'label' => __( 'Enable Contact Form 7 filter: ', 'cf7-message-filter' ),
 				'tip'   => ''
 			)
 		);
@@ -250,7 +250,7 @@ class SettingsModule extends Module {
 				'type'        => 'textarea',
 				'id'          => 'kmcfmf_tags_by_name',
 				'input_class' => 'select2',
-				'label'       => __( 'Text fields to analyse: ', KMCFMF_TEXT_DOMAIN ),
+				'label'       => __( 'Text fields to analyse: ', 'cf7-message-filter' ),
 				'tip'         => 'Only the fields with the [text] or [text*] tag on your form. Eg: your-subject, your-address, your-lastname, etc.',
 				'placeholder' => ''
 			)
@@ -261,7 +261,7 @@ class SettingsModule extends Module {
 				'type'        => 'textarea',
 				'id'          => 'kmcfmf_contact_form_7_textarea_fields',
 				'input_class' => 'select2',
-				'label'       => __( 'Text area fields to analyse: ', KMCFMF_TEXT_DOMAIN ),
+				'label'       => __( 'Text area fields to analyse: ', 'cf7-message-filter' ),
 				'tip'         => 'Only the fields with the [textarea] or [textarea*] tag on your form. Eg: your-message, etc.',
 				'placeholder' => ''
 			)
@@ -271,7 +271,7 @@ class SettingsModule extends Module {
 				'type'        => 'textarea',
 				'id'          => 'kmcfmf_contact_form_7_email_fields',
 				'input_class' => 'select2',
-				'label'       => __( 'Email fields to analyse: ', KMCFMF_TEXT_DOMAIN ),
+				'label'       => __( 'Email fields to analyse: ', 'cf7-message-filter' ),
 				'tip'         => 'Only the fields with the [email] or [email*] tag on your form. eg: your-email  etc.',
 				'placeholder' => ''
 			)
@@ -280,14 +280,14 @@ class SettingsModule extends Module {
 			array(
 				'read_only' => $this->is_free,
 				'disabled'  => $this->is_free,
-				'tip'       => $this->is_free ? __( 'This feature is only available in the premium version', KMCFMF_TEXT_DOMAIN ) : '',
+				'tip'       => $this->is_free ? __( 'This feature is only available in the premium version', 'cf7-message-filter' ) : '',
 				'type'      => 'select',
 				'id'        => 'kmcfmf_contact_form_7_filter_type',
-				'label'     => __( 'Apply filter to: ', KMCFMF_TEXT_DOMAIN ),
+				'label'     => __( 'Apply filter to: ', 'cf7-message-filter' ),
 				'options'   => array(
-					''                 => __( 'All forms', KMCFMF_TEXT_DOMAIN ),
-					'all_forms_except' => __( 'All forms except', KMCFMF_TEXT_DOMAIN ),
-					'only_these_forms' => __( 'Only these forms', KMCFMF_TEXT_DOMAIN ),
+					''                 => __( 'All forms', 'cf7-message-filter' ),
+					'all_forms_except' => __( 'All forms except', 'cf7-message-filter' ),
+					'only_these_forms' => __( 'Only these forms', 'cf7-message-filter' ),
 				),
 				// 'default_option' => ''
 			)
@@ -301,8 +301,8 @@ class SettingsModule extends Module {
 				'type'        => 'textarea',
 				'id'          => 'kmcfmf_contact_form_7_filter_forms',
 				'input_class' => 'select2',
-				'label'       => __( 'Select forms: ', KMCFMF_TEXT_DOMAIN ),
-				'tip'         => $this->is_free ? __( 'This feature is only available in the premium version', KMCFMF_TEXT_DOMAIN ) : __( "This will not apply if the 'Apply filter to' field is set to '<b>All Forms</b>'", KMCFMF_TEXT_DOMAIN ),
+				'label'       => __( 'Select forms: ', 'cf7-message-filter' ),
+				'tip'         => $this->is_free ? __( 'This feature is only available in the premium version', 'cf7-message-filter' ) : __( "This will not apply if the 'Apply filter to' field is set to '<b>All Forms</b>'", 'cf7-message-filter' ),
 				'placeholder' => ''
 			)
 		);
@@ -318,7 +318,7 @@ class SettingsModule extends Module {
 			array(
 				'type'  => 'checkbox',
 				'id'    => 'kmcfmf_enable_wp_forms_toggle',
-				'label' => __( 'Enable WP Forms filter: ', KMCFMF_TEXT_DOMAIN ),
+				'label' => __( 'Enable WP Forms filter: ', 'cf7-message-filter' ),
 				'tip'   => ''
 			)
 		);
@@ -327,7 +327,7 @@ class SettingsModule extends Module {
 				'type'        => 'textarea',
 				'id'          => 'kmcfmf_wp_forms_text_fields',
 				'input_class' => 'select2',
-				'label'       => __( 'Text fields to analyse: ', KMCFMF_TEXT_DOMAIN ),
+				'label'       => __( 'Text fields to analyse: ', 'cf7-message-filter' ),
 				'tip'         => 'Eg: Name, Subject etc.',
 				'placeholder' => ''
 			)
@@ -338,7 +338,7 @@ class SettingsModule extends Module {
 				'type'        => 'textarea',
 				'id'          => 'kmcfmf_wp_forms_textarea_fields',
 				'input_class' => 'select2',
-				'label'       => __( 'Text area fields to analyse: ', KMCFMF_TEXT_DOMAIN ),
+				'label'       => __( 'Text area fields to analyse: ', 'cf7-message-filter' ),
 				'tip'         => 'Eg: Comment or Message, etc.',
 				'placeholder' => ''
 			)
@@ -348,7 +348,7 @@ class SettingsModule extends Module {
 				'type'        => 'textarea',
 				'id'          => 'kmcfmf_wp_forms_email_fields',
 				'input_class' => 'select2',
-				'label'       => __( 'Email fields to analyse: ', KMCFMF_TEXT_DOMAIN ),
+				'label'       => __( 'Email fields to analyse: ', 'cf7-message-filter' ),
 				'tip'         => 'Eg: Email  etc.',
 				'placeholder' => ''
 			)
@@ -358,13 +358,13 @@ class SettingsModule extends Module {
 				'read_only' => $this->is_free,
 				'disabled'  => $this->is_free,
 				'type'      => 'select',
-				'tip'       => $this->is_free ? __( 'This feature is only available in the premium version', KMCFMF_TEXT_DOMAIN ) : '',
+				'tip'       => $this->is_free ? __( 'This feature is only available in the premium version', 'cf7-message-filter' ) : '',
 				'id'        => 'kmcfmf_wp_forms_filter_type',
-				'label'     => __( 'Apply filter to: ', KMCFMF_TEXT_DOMAIN ),
+				'label'     => __( 'Apply filter to: ', 'cf7-message-filter' ),
 				'options'   => array(
-					''                 => __( 'All forms', KMCFMF_TEXT_DOMAIN ),
-					'all_forms_except' => __( 'All forms except', KMCFMF_TEXT_DOMAIN ),
-					'only_these_forms' => __( 'Only these forms', KMCFMF_TEXT_DOMAIN ),
+					''                 => __( 'All forms', 'cf7-message-filter' ),
+					'all_forms_except' => __( 'All forms except', 'cf7-message-filter' ),
+					'only_these_forms' => __( 'Only these forms', 'cf7-message-filter' ),
 				),
 				// 'default_option' => ''
 			)
@@ -377,8 +377,8 @@ class SettingsModule extends Module {
 				'type'        => 'textarea',
 				'id'          => 'kmcfmf_wp_forms_filter_forms',
 				'input_class' => 'select2',
-				'label'       => __( 'Select forms: ', KMCFMF_TEXT_DOMAIN ),
-				'tip'         => $this->is_free ? __( 'This feature is only available in the premium version', KMCFMF_TEXT_DOMAIN ) : __( "This will not apply if the 'Apply filter to' field is set to '<b>All Forms</b>'", KMCFMF_TEXT_DOMAIN ),
+				'label'       => __( 'Select forms: ', 'cf7-message-filter' ),
+				'tip'         => $this->is_free ? __( 'This feature is only available in the premium version', 'cf7-message-filter' ) : __( "This will not apply if the 'Apply filter to' field is set to '<b>All Forms</b>'", 'cf7-message-filter' ),
 				'placeholder' => ''
 			)
 		);
@@ -428,55 +428,55 @@ class SettingsModule extends Module {
 				'use_tabs'   => true
 			) );
 
-		$settings_page->add_tab( 'settings', __( 'Settings', KMCFMF_TEXT_DOMAIN ), array(
+		$settings_page->add_tab( 'settings', __( 'Settings', 'cf7-message-filter' ), array(
 			$this,
 			'statusTabView'
 		), array( 'tab' => 'settings' ) );
 
-		$settings_page->add_tab( 'messages', __( 'Error Messages', KMCFMF_TEXT_DOMAIN ), array(
+		$settings_page->add_tab( 'messages', __( 'Error Messages', 'cf7-message-filter' ), array(
 			$this,
 			'statusTabView'
 		), array( 'tab' => 'messages' ) );
 
 
-		$settings_page->add_tab( 'contactform7', __( 'Contact Form 7', KMCFMF_TEXT_DOMAIN ), array(
+		$settings_page->add_tab( 'contactform7', __( 'Contact Form 7', 'cf7-message-filter' ), array(
 			$this,
 			'statusTabView'
 		), array( 'tab' => 'contactform7' ) );
 
-		$settings_page->add_tab( 'wpforms', __( 'WP Forms', KMCFMF_TEXT_DOMAIN ), array(
+		$settings_page->add_tab( 'wpforms', __( 'WP Forms', 'cf7-message-filter' ), array(
 			$this,
 			'statusTabView'
 		), array( 'tab' => 'wpforms' ) );
 		/*
-				$settings_page->add_tab( 'extensions', __( 'Extensions', KMCFMF_TEXT_DOMAIN ), array(
+				$settings_page->add_tab( 'extensions', __( 'Extensions', 'cf7-message-filter' ), array(
 					$this,
 					'statusTabView'
 				), array( 'tab' => 'extensions' ) );*/
 
-		$settings_page->add_tab( 'my_filters', __( 'My Filters', KMCFMF_TEXT_DOMAIN ), array(
+		$settings_page->add_tab( 'my_filters', __( 'My Filters', 'cf7-message-filter' ), array(
 			$this,
 			'statusTabView'
 		), array( 'tab' => 'my_filters' ) );
 
-		$settings_page->add_tab( 'data_collection', __( 'Email & Data Collection', KMCFMF_TEXT_DOMAIN ), array(
+		$settings_page->add_tab( 'data_collection', __( 'Email & Data Collection', 'cf7-message-filter' ), array(
 			$this,
 			'statusTabView'
 		), array( 'tab' => 'data_collection' ) );
 
 		if ( kmcf7ms_fs()->can_use_premium_code() && ! kmcf7ms_fs()->is_premium() ) {
-			$settings_page->add_tab( 'upgrade', __( 'Upgrade', KMCFMF_TEXT_DOMAIN ), array(
+			$settings_page->add_tab( 'upgrade', __( 'Upgrade', 'cf7-message-filter' ), array(
 				$this,
 				'statusTabView'
 			), array( 'tab' => 'upgrade' ) );
 		}
 
-		$settings_page->add_tab( 'debug', __( 'Debug Info', KMCFMF_TEXT_DOMAIN ), array(
+		$settings_page->add_tab( 'debug', __( 'Debug Info', 'cf7-message-filter' ), array(
 			$this,
 			'statusTabView'
 		), array( 'tab' => 'debug' ) );
 
-		$settings_page->add_tab( 'plugins', __( 'More Plugins', KMCFMF_TEXT_DOMAIN ), array(
+		$settings_page->add_tab( 'plugins', __( 'More Plugins', 'cf7-message-filter' ), array(
 			$this,
 			'statusTabView'
 		), array( 'tab' => 'plugins' ) );

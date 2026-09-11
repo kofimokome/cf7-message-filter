@@ -32,7 +32,7 @@ class ContactForm7Module extends Module {
      */
     private function getErrorMessages() {
         $this->spam_word_error = ( get_option( 'kmcfmf_spam_word_error', false ) ? get_option( 'kmcfmf_spam_word_error' ) : __( "One or more fields have an error. Please check and try again.", 'contact-form-7' ) );
-        $this->spam_email_error = ( get_option( 'kmcfmf_spam_email_error', false ) ? get_option( 'kmcfmf_spam_email_error' ) : __( 'The e-mail address entered is invalid.', KMCFMF_TEXT_DOMAIN ) );
+        $this->spam_email_error = ( get_option( 'kmcfmf_spam_email_error', false ) ? get_option( 'kmcfmf_spam_email_error' ) : __( 'The e-mail address entered is invalid.', 'cf7-message-filter' ) );
     }
 
     /**
